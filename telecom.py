@@ -10,7 +10,7 @@ class telecom_project(osv.osv):
               "start_date":fields.date(string="Start Date"),
               "end_date":fields.date(string="End Date"),
               'image':fields.binary("Bianry field"),
-              'project_activities':fields.one2many('work.description','workdescription',string="Work Description"),
+              'project_activities':fields.one2many('work.description','description_id',string="Work Description"),
                'contact_no':fields.related('customer','phone',type="char",string="Contact No")
               }
 class telecom_circle(osv.osv):
@@ -20,11 +20,11 @@ class telecom_circle(osv.osv):
               'circle_head':fields.many2one('res.users',string="Circle Head / Regional Manager"),
               }
     
-class work_description(osv.osv):
+class work_description(osv.osv):  # do not make all the objects in one file. You should have created a separate file for it
     _name="work.description"
     _columns={'name':fields.char(string='Work Description'),
               'activity_line':fields.one2many('workdescription.line',"activity_id",string='Activity'),
-              'workdescription':fields.many2one("telecom.project")
+              'description_id':fields.many2one("telecom.project") #always make many2one field as some id ...in this case description_id
               }
     
 class workdescription_line(osv.osv):
