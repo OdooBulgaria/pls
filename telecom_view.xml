@@ -36,18 +36,19 @@
 	                    </div>			
 	                    <group col = "4">
 							<group col="2" colspan="2">
-								<field name="project_manager" colspan = "2">
+								<strong><label for = "project_manager"/></strong>									
+								<field name="project_manager" colspan = "2" nolabel="1">
 									<tree string ="Project Manager / Co-ordinator">
-										<field name="name" class ="oe_inline"/>
+										<field name="name"/>
 									</tree>
 								</field>
 							</group>
-							<group col = "2">	
-								<field name="customer" class ="oe_inline"/>
-								<field name="contact_no" class ="oe_inline"/>
-								<field name="circle" class ="oe_inline"/>
-								<field name="start_date" class ="oe_inline"/>
-								<field name="end_date" class ="oe_inline"/>
+							<group col = "2" colspan="2">	
+								<field name="customer" />
+								<field name="contact_no" />
+								<field name="circle" />
+								<field name="start_date" />
+								<field name="end_date" />
 							</group>
 	                    </group>
 	                    <notebook>
@@ -133,16 +134,20 @@
 							<group>
 								<field name="name"/>
 								<field name="circle_head"/>
-								<field name="project_name">
-									<tree string = "vircle project view">
-										<field name = "name"/>
-										<field name = "customer"/>
-										<field name = "start_date"/>
-										<field name = "end_date"/>
-										
-									</tree>
-					    		</field>
-				    		</group>
+							</group>
+							<notebook>
+								<page string = "Projects">
+									<field name="project_name">
+										<tree string = "vircle project view">
+											<field name = "name"/>
+											<field name = "customer"/>
+											<field name = "start_date"/>
+											<field name = "end_date"/>
+											
+										</tree>
+						    		</field>								
+								</page>
+							</notebook>
 			    		</sheet>
 		    		</form>
 	    		</field>
