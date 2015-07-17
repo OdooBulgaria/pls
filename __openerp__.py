@@ -20,17 +20,17 @@
 ##############################################################################
 
 {
-    'name': 'Telecom',
+    'name': 'PLS',
     'version': '0.1',
     'category': 'telecom management',
     'sequence':1,
     'summary': 'telecom',
     'description': """
-    Telecom Project Management
+    PLS Project Management
     ==========================
     """,
-    'author': 'Manjiri',
-    'website': '',
+    'author': 'J & G Infosystems',
+    'website': 'www.jginfosystems.com',
     'depends': ['base'],
     'data': ['telecom_view.xml'],
     'demo': [],
