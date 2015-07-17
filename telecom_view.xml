@@ -100,7 +100,7 @@
     				<sheet>
 						<group>
 							<field name="name"/>
-							<field name = "sub_activity">
+							<field name = "activity_line">
 								<tree string = "Activity" editable = "top">
 									<field name = "name"/>
 									<field name = "cost"/>

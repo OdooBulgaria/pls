@@ -22,17 +22,17 @@ class telecom_circle(osv.osv):
     
 class work_description(osv.osv):
     _name="work.description"
-    _columns={'name':fields.char(string='Activity Name'),
-              'sub_activity':fields.one2many('project.activity',"activity",string='Project Activity'),
+    _columns={'name':fields.char(string='Work Description'),
+              'activity_line':fields.one2many('workdescription.line',"activity_id",string='Activity'),
               'workdescription':fields.many2one("telecom.project")
               }
     
-class project_activity(osv.osv):
-    _name='project.activity'
+class workdescription_line(osv.osv):
+    _name='workdescription.line'
     _columns={'name':fields.char(string='Activity Name'),
               'cost':fields.float(string="Cost"),
               #'time_to_complete':fields.datetime()
-              'activity':fields.many2one('work.description'),
+              'activity_id':fields.many2one('work.description',string="Activities"),
               }
 class customers_customers(osv.osv):
     _name="telecom.customers"
