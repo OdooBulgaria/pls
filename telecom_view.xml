@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	
+    	<record id="telecom_project_tree_view" model="ir.ui.view">
+    		<field name="name">telecom.project.tree.view</field>
+    		<field name="model">telecom.project</field>
+    		<field name="arch" type="xml">
+    			<tree string="project Tree View">
+					<field name="name"/>
+					<field name="project_manager"/>
+					<field name="customer"/>
+					<field name="circle"/>
+					<field name="start_date"/>
+					<field name="end_date"/>
+					<field name="project_activities"/>
+    			</tree>
+    		</field>
+    	</record>
+    	
+    	
+    	<record id="telecom_project_form_view" model="ir.ui.view">
+    		<field name="name">telecom.project.form.view</field>
+    		<field name="model">telecom.project</field>
+    		<field name="arch" type="xml">
+    			<form string="project Form View">
+    				<sheet>
+						<field name="image" widget='image' class="oe_left oe_avatar"/>
+	                    <div class="oe_title oe_left">
+	                        <div class="oe_edit_only">
+	                            <label for="name"/> 
+	                        </div>
+	                        <h1>
+	                            <field name="name" default_focus="1" placeholder="Name" />
+	                        </h1>
+	                    </div>			
+	                    <group col = "4">
+							<group col="2" colspan="2">
+								<field name="project_manager" colspan = "2">
+									<tree string ="Project Manager / Co-ordinator">
+										<field name="name" class ="oe_inline"/>
+									</tree>
+								</field>
+							</group>
+							<group col = "2">	
+								<field name="customer" class ="oe_inline"/>
+								<field name="contact_no" class ="oe_inline"/>
+								<field name="circle" class ="oe_inline"/>
+								<field name="start_date" class ="oe_inline"/>
+								<field name="end_date" class ="oe_inline"/>
+							</group>
+	                    </group>
+	                    <notebook>
+	                    	<page string = "Work Description">
+								<field name="project_activities" class ="oe_inline" nolabel = "1"/>	                    		
+	                    	</page>
+	                    </notebook>
+					</sheet>    			
+    			</form>
+    		</field>
+    	</record>
+    	
+    	<record id="telecom_action_menu" model="ir.actions.act_window">
+            <field name="name">Projects</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">telecom.project</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    	
+    	
+    	<menuitem id="telecom_main_menuitem" sequence="9700" name="PLS Settings"/>
+    	<menuitem id="telecom_menuitem" parent="telecom_main_menuitem" sequence="1" name="PLS"/>
+    	<menuitem id="telecom_menu" parent="telecom_menuitem" action="telecom_action_menu" sequence="1"/>
+    	
+    	<menuitem id="employee_menuitem" parent="telecom_main_menuitem" sequence="3" name="PLS"/>
+    	<menuitem id="telecom_menu" parent="telecom_menuitem" action="telecom_action_menu" sequence="1"/>
+
+
+    	<menuitem id = "customer_menu" parent = "telecom_menuitem" 
+    	action = "base.action_partner_customer_form" />
+    	
+    	
+    	<record id="telecom_activities_tree_view" model="ir.ui.view">
+    		<field name="name">work.description.tree.view</field>
+    		<field name="model">work.description</field>
+    		<field name="arch" type="xml">
+    			<tree string="activities Tree View">
+					<field name="name"/>
+    			</tree>
+    		</field>
+    	</record>
+    	
+    	
+    	<record id="telecom_activities_form_view" model="ir.ui.view">
+    		<field name="name">work.description.form.view</field>
+    		<field name="model">work.description</field>
+    		<field name="arch" type="xml">
+    			<form string="activities Form View">
+    				<sheet>
+						<group>
+							<field name="name"/>
+							<field name = "sub_activity">
+								<tree string = "Activity" editable = "top">
+									<field name = "name"/>
+									<field name = "cost"/>
+								</tree>
+							</field>
+						</group>
+					</sheet>    			
+    			</form>
+    		</field>
+    	</record>
+    	
+ 		<record id="telecom_circle_tree_view" model="ir.ui.view">
+	    		<field name="name">telecom.circle.tree.view</field>
+	    		<field name="model">telecom.circle</field>
+	    		<field name="arch" type="xml">
+	    			<tree string="circle Tree View">
+						<field name="name"/>
+						<field name="circle_head"/>
+		   			</tree>
+	    		</field>
+	    </record>
+	    	
+	    	
+	    	<record id="telecom_circle_form_view" model="ir.ui.view">
+	    		<field name="name">telecom.circle.form.view</field>
+	    		<field name="model">telecom.circle</field>
+	    		<field name="arch" type="xml">
+	    			<form string="circle Form View">
+	    				<sheet>
+							<group>
+								<field name="name"/>
+								<field name="circle_head"/>
+								<field name="project_name">
+									<tree string = "vircle project view">
+										<field name = "name"/>
+										<field name = "customer"/>
+										<field name = "start_date"/>
+										<field name = "end_date"/>
+										
+									</tree>
+					    		</field>
+				    		</group>
+			    		</sheet>
+		    		</form>
+	    		</field>
+	    	</record>
+	    	
+	    	<record id="circle_action_menu" model="ir.actions.act_window">
+	            <field name="name">Circles</field>
+	            <field name="type">ir.actions.act_window</field>
+	            <field name="res_model">telecom.circle</field>
+	            <field name="view_type">form</field>
+	            <field name="view_mode">tree,form</field>
+	        </record>
+	        
+	    	<menuitem id="circle_menuitem" parent="telecom_main_menuitem" sequence="2" name="PLS"/>
+	    	<menuitem id="circle_menu" parent="telecom_menuitem" action="circle_action_menu" sequence="2"/>
+	    	
+	    	
+    </data>
+</openerp>
