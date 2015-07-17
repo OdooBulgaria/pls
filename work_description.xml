@@ -1,0 +1,62 @@
+<openerp>
+	<data>
+    	<record id="telecom_activities_tree_view" model="ir.ui.view">
+    		<field name="name">work.description.tree.view</field>
+    		<field name="model">work.description</field>
+    		<field name="arch" type="xml">
+    			<tree string="activities Tree View">
+					<field name="name"/>
+    				<field name = "activity_ids" />
+    			</tree>
+    		</field>
+    	</record>
+    	
+    	<record id="telecom_activities_form_view" model="ir.ui.view">
+    		<field name="name">work.description.form.view</field>
+    		<field name="model">work.description</field>
+    		<field name="arch" type="xml">
+    			<form string="activities Form View">
+    				<sheet>
+						<group>
+							<field name="name"/>
+							<field name = "activity_ids">
+								<tree string = "Activity">
+									<field name = "name"/>
+								</tree>
+							</field>
+						</group>
+					</sheet>    			
+    			</form>
+    		</field>
+    	</record>
+    	<record id="action_work_description" model="ir.actions.act_window">
+            <field name="name">Work Description</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">work.description</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>    	
+   		<menuitem id = "menu_line_item" parent = "telecom_main_menuitem" name = "Line Items"/>
+   		<menuitem id = "menu_work_description" action = "action_work_description" parent = "menu_line_item" sequence = "2"/>
+   		
+    	<!--  View for activity.activity -->
+    	<record id = "tree_view_activity" model="ir.ui.view">
+    		<field name="name">activity.activity</field>
+    		<field name="model">activity.activity</field>
+    		<field name="arch" type="xml">
+    			<tree string = "Activities" editable = "top">
+    				<field name  = "name"/>
+    			</tree>
+    		</field>
+   		</record>
+   		
+    	<record id="action_activity_activity" model="ir.actions.act_window">
+            <field name="name">Activities</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">activity.activity</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+        </record>
+    	<menuitem id="menu_activity_activity" parent="menu_line_item" action="action_activity_activity" sequence="3"/>   		   		
+	</data>
+</openerp>

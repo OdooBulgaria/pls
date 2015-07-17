@@ -34,6 +34,7 @@
     'depends': ['base'],
     'data': ['telecom_view.xml',
              'security/pls_security.xml',
+             'work_description.xml'
              ],
     'demo': [],
     'test': [],

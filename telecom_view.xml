@@ -13,12 +13,10 @@
 					<field name="circle"/>
 					<field name="start_date"/>
 					<field name="end_date"/>
-					<field name="project_activities"/>
     			</tree>
     		</field>
     	</record>
-    	
-    	
+		    	
     	<record id="telecom_project_form_view" model="ir.ui.view">
     		<field name="name">telecom.project.form.view</field>
     		<field name="model">telecom.project</field>
@@ -53,7 +51,6 @@
 	                    </group>
 	                    <notebook>
 	                    	<page string = "Work Description">
-								<field name="project_activities" class ="oe_inline" nolabel = "1"/>	                    		
 	                    	</page>
 	                    </notebook>
 					</sheet>    			
@@ -81,38 +78,6 @@
     	<menuitem id = "customer_menu" parent = "telecom_menuitem" 
     	action = "base.action_partner_customer_form" />
     	
-    	
-    	<record id="telecom_activities_tree_view" model="ir.ui.view">
-    		<field name="name">work.description.tree.view</field>
-    		<field name="model">work.description</field>
-    		<field name="arch" type="xml">
-    			<tree string="activities Tree View">
-					<field name="name"/>
-    			</tree>
-    		</field>
-    	</record>
-    	
-    	
-    	<record id="telecom_activities_form_view" model="ir.ui.view">
-    		<field name="name">work.description.form.view</field>
-    		<field name="model">work.description</field>
-    		<field name="arch" type="xml">
-    			<form string="activities Form View">
-    				<sheet>
-						<group>
-							<field name="name"/>
-							<field name = "activity_line">
-								<tree string = "Activity" editable = "top">
-									<field name = "name"/>
-									<field name = "cost"/>
-								</tree>
-							</field>
-						</group>
-					</sheet>    			
-    			</form>
-    		</field>
-    	</record>
-    	
  		<record id="telecom_circle_tree_view" model="ir.ui.view">
 	    		<field name="name">telecom.circle.tree.view</field>
 	    		<field name="model">telecom.circle</field>
@@ -125,45 +90,42 @@
 	    </record>
 	    	
 	    	
-	    	<record id="telecom_circle_form_view" model="ir.ui.view">
-	    		<field name="name">telecom.circle.form.view</field>
-	    		<field name="model">telecom.circle</field>
-	    		<field name="arch" type="xml">
-	    			<form string="circle Form View">
-	    				<sheet>
-							<group>
-								<field name="name"/>
-								<field name="circle_head"/>
-							</group>
-							<notebook>
-								<page string = "Projects">
-									<field name="project_name">
-										<tree string = "vircle project view">
-											<field name = "name"/>
-											<field name = "customer"/>
-											<field name = "start_date"/>
-											<field name = "end_date"/>
-											
-										</tree>
-						    		</field>								
-								</page>
-							</notebook>
-			    		</sheet>
-		    		</form>
-	    		</field>
-	    	</record>
-	    	
-	    	<record id="circle_action_menu" model="ir.actions.act_window">
-	            <field name="name">Circles</field>
-	            <field name="type">ir.actions.act_window</field>
-	            <field name="res_model">telecom.circle</field>
-	            <field name="view_type">form</field>
-	            <field name="view_mode">tree,form</field>
-	        </record>
-	        
-	    	<menuitem id="circle_menuitem" parent="telecom_main_menuitem" sequence="2" name="PLS"/>
-	    	<menuitem id="circle_menu" parent="telecom_menuitem" action="circle_action_menu" sequence="2"/>
-	    	
-	    	
+    	<record id="telecom_circle_form_view" model="ir.ui.view">
+    		<field name="name">telecom.circle.form.view</field>
+    		<field name="model">telecom.circle</field>
+    		<field name="arch" type="xml">
+    			<form string="circle Form View">
+    				<sheet>
+						<group>
+							<field name="name"/>
+							<field name="circle_head"/>
+						</group>
+						<notebook>
+							<page string = "Projects">
+								<field name="project_name">
+									<tree string = "vircle project view">
+										<field name = "name"/>
+										<field name = "customer"/>
+										<field name = "start_date"/>
+										<field name = "end_date"/>
+										
+									</tree>
+					    		</field>								
+							</page>
+						</notebook>
+		    		</sheet>
+	    		</form>
+    		</field>
+    	</record>
+	    
+    	<record id="circle_action_menu" model="ir.actions.act_window">
+            <field name="name">Circles</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">telecom.circle</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    	<menuitem id="circle_menuitem" parent="telecom_main_menuitem" sequence="2" name="PLS"/>
+    	<menuitem id="circle_menu" parent="telecom_menuitem" action="circle_action_menu" sequence="2"/>
     </data>
 </openerp>
