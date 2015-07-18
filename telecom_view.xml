@@ -51,6 +51,33 @@
 	                    </group>
 	                    <notebook>
 	                    	<page string = "Work Description">
+	                    		<field name="line_id" >
+	                    			<tree string= "Work Description Line">
+	                    				<field name="description_id"/>
+	                    				<field name="activity_ids"/>
+	                    			</tree>
+	                    			<form>
+	                    				<sheet>
+	                    					<group>
+	                    						<field name="description_id" required="1" on_change="setof_associated_activities(description_id)"/>
+	                    					</group>
+	                    					<group>
+	                    						<field name="activity_ids">
+	                    							<tree string = "Activity cost" editable="bottom">
+	                    								<field name = "activity_id"  />
+	                    								<field name = "cost" />
+	                    							</tree>
+	                    							<form string = "Activity Cost">
+	                    								<group>
+	                    									<field name = "activity_id" required="1" />
+	                    									<field name = "cost" />	                    								
+	                    								</group>
+	                    							</form>
+	                    						</field>
+	                    					</group>
+	                    				</sheet>
+	                    			</form>
+	                    		</field>
 	                    	</page>
 	                    </notebook>
 					</sheet>    			
