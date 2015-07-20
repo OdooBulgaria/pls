@@ -1,0 +1,17 @@
+<openerp>
+	<data noupdate="1">
+		<record id = "employee_job_title" model = "hr.job">
+			<field name="name">Employee</field>
+		</record>
+		<record id = "director_job_title" model = "hr.job">
+			<field name="name">Director</field>
+		</record>
+		<record id = "manager_job_title" model = "hr.job">
+			<field name="name">Project Manager</field>
+		</record>
+		<record id = "circlehead_job_title" model = "hr.job">
+			<field name="name">Circle Head</field>
+		</record>
+		
+	</data>
+</openerp>
