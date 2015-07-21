@@ -36,6 +36,7 @@
              'security/pls_security.xml',
              'work_description.xml',
              'hr_view.xml',
+             'res_partner_view.xml',
              ],
     'demo': [],
     'test': [],

@@ -102,8 +102,7 @@
     	<menuitem id="telecom_menu" parent="telecom_menuitem" action="telecom_action_menu" sequence="1"/>
 
 
-    	<menuitem id = "customer_menu" parent = "telecom_menuitem" 
-    	action = "base.action_partner_customer_form" />
+    	
     	
  		<record id="telecom_circle_tree_view" model="ir.ui.view">
 	    		<field name="name">telecom.circle.tree.view</field>
@@ -152,7 +151,21 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-    	<menuitem id="circle_menuitem" parent="telecom_main_menuitem" sequence="2" name="PLS"/>
-    	<menuitem id="circle_menu" parent="telecom_menuitem" action="circle_action_menu" sequence="2"/>
+        
+    	<!-- <menuitem id="circle_menuitem" parent="telecom_main_menuitem" sequence="2" name="PLS"/>  -->
+    	<menuitem id="circle_menu" parent="telecom_menuitem" action="circle_action_menu" sequence="10"/>
+    	
+    	
+    	<!-- menuitems for partners customer and vendors-->
+    	<menuitem id="partners_menuitem" parent="telecom_main_menuitem" sequence="20" name="Partners"/>
+    	<menuitem id="vendors_menu" parent="partners_menuitem" action="base.action_partner_supplier_form"
+    	 name="Vendors" sequence="2"/>
+		<menuitem id = "customer_menu" parent = "partners_menuitem" 
+    	action = "base.action_partner_customer_form" sequence="1" />
+    	
+    	
+    	
+    	
+    	
     </data>
 </openerp>
