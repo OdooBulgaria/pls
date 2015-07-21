@@ -16,7 +16,33 @@
     			</tree>
     		</field>
     	</record>
-		    	
+		<record id="activity_line_tree_view" model="ir.ui.view">
+			<field name="name">activity.line.tree.view</field>
+			<field name="model">activity.line</field>
+			<field name="arch" type="xml">
+				<tree string ="Avtivity Line Tree View">
+					<field name = "activity_id"  />
+					<field name = "cost" />
+					<field name = "vendor_cost" />
+				</tree>
+			</field>
+		</record>    
+		<record id="activity_line_form_view" model="ir.ui.view">
+			<field name="name">activity.line.tree.view</field>
+			<field name="model">activity.line</field>
+			<field name="arch" type="xml">
+				<form string ="Avtivity Line Tree View">
+					<sheet>
+						<group>
+							<field name = "activity_id"  />
+							<field name = "cost" />
+							<field name = "vendor_cost" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record> 
+			
     	<record id="telecom_project_form_view" model="ir.ui.view">
     		<field name="name">telecom.project.form.view</field>
     		<field name="model">telecom.project</field>
@@ -66,11 +92,13 @@
 	                    							<tree string = "Activity cost" editable="bottom">
 	                    								<field name = "activity_id"  />
 	                    								<field name = "cost" />
+	                    								<field name = "vendor_cost" />
 	                    							</tree>
 	                    							<form string = "Activity Cost">
 	                    								<group>
 	                    									<field name = "activity_id" required="1" />
-	                    									<field name = "cost" />	                    								
+	                    									<field name = "cost" />	 
+	                    									<field name = "vendor_cost" />                   								
 	                    								</group>
 	                    							</form>
 	                    						</field>
@@ -84,7 +112,7 @@
     			</form>
     		</field>
     	</record>
-    	
+    
     	<record id="telecom_action_menu" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="type">ir.actions.act_window</field>
@@ -159,7 +187,7 @@
     	<!-- menuitems for partners customer and vendors-->
     	<menuitem id="partners_menuitem" parent="telecom_main_menuitem" sequence="20" name="Partners"/>
     	<menuitem id="vendors_menu" parent="partners_menuitem" action="base.action_partner_supplier_form"
-    	 name="Vendors" sequence="2"/>
+    	 name="Vendors" sequence="2" />
 		<menuitem id = "customer_menu" parent = "partners_menuitem" 
     	action = "base.action_partner_customer_form" sequence="1" />
     	
