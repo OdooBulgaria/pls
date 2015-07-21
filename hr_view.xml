@@ -1,261 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-		<!-- menuitem for employee Database -->
-		<menuitem id="telecom_employee_menuitem" parent="telecom_main_menuitem" sequence="100" name="Employee Database"/>
-		
-		<!-- Employee tree view -->
-        <record id="view_partner_tree2" model="ir.ui.view">
-            <field name="name">telecom.employee.tree</field>
-            <field name="model">telecom.employee</field>
-            <field name="field_parent">child_ids</field>
-            <field eval="20" name="priority"/>
+    	<record id="hr_new fields_added" model="ir.ui.view">
+            <field name="name">hr.employee</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form" />
             <field name="arch" type="xml">
-                <tree string="Employees">
-                    <field name="name"/>
-                    <field name="work_phone"/>
-                    <field name="work_email"/>
-                    <field name="department_id"/>
-                    <field name="job_id"/>
-                    <field name="parent_id" invisible="1"/>
-                </tree>
-            </field>
-        </record>
-		
-
-<!-- form view of hr.py  -->
-        <record id="view_employee_form" model="ir.ui.view">
-            <field name="name">telecom.employee.form</field>
-            <field name="model">telecom.employee</field>
-            <field name="arch" type="xml">
-                <form string="Employee">
-                    <sheet>
-                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1>
-                                <field name="name"/>
-                            </h1>
-                            <label for="work_email" class="oe_edit_only"/>
-                            <field name="work_email" widget="email"/>
-                            <label for="emp_type" class="oe_edit_only"/>
-                            <field name="emp_type" required="1" on_change="onchange_company_name(emp_type)"/>
-                            <label for="company_name" class="oe_edit_only" attrs="{'invisible':[('emp_type','=','inhouse')]}"/>
-                            <field name="company_name" attrs="{'required':[('emp_type','=','vendor')],'invisible':[('emp_type','=','inhouse')]}"/>
-                        </div>
-                        <div class="oe_right oe_button_box" name="button_box">
-                            <!-- Put here related buttons -->
-                        </div>
-                        <notebook>
-                            <page string="Public Information">
-                                <group>
-                                    <group string="Contact Information">
-                                    	<field name="joining_date"/>
-                                        <field name="mobile_phone"/>
-                                        <field name="base_location"/>
-                                    </group>
-                                    <group string="Position">
-                                    	<field name="current_project"/>
-                                    	<field name="department_id"/>
-                                        <field name="job_id" required="True" options="{'create': false, 'create_edit': false}" />
-                                        <field name = "access_group" readonly="1"/>
-                                        <field name="parent_id"/>
-                                    </group>
-                                    <group>
-                                        <field name="user_id" 
-                                            context="{'default_groups_ref': ['base.group_user']}"
-                                            attrs = "{'required':[('access_group','in',['manager','director','circle'])]}"
-                                            />
-                                    </group>
-                                </group>
-                                <field name="notes" placeholder="Other Information ..." colspan="4"/>
-                            </page>
-                            <page string="Personal Information" >
-                                <group>
-                                    <group string="Citizenship &amp; Other Info">
-                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="identification_id" />
-                                        <field name="passport_id" />
-                                        <field name="otherid"/>
-                                    </group>
-                                    <group string="Status">
-                                        <field name="gender"/>
-                                        <field name="marital"/>
-                                    </group>
-                                    <group string="Birth">
-                                        <field name="birthday"/>
-                                    </group>
-                                </group>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-        
-        <record id="telecom_employee_action_menu" model="ir.actions.act_window">
-            <field name="name">Employees</field>
+				<xpath expr = "/form/sheet/div/field[@name ='work_phone' ]" position = "after">
+				<group>
+					<group >
+					 <!-- <label for="emp_type" class="oe_edit_only"/>   -->
+					<field name="emp_type" required="1" on_change="reset_company_name(emp_type)"/>
+					</group>
+					<group>
+					<!-- <label for="company_name" class="oe_edit_only" attrs="{'invisible':[('emp_type','=','Inhouse')]}"/>
+				 -->	<field name="company_name" attrs="{'required':[('emp_type','=','Vendor')],'invisible':[('emp_type','=','Inhouse')]}"/>
+				</group>
+				</group>
+				</xpath>
+				<xpath expr = "/form/sheet/notebook/page/group/group/field[@name ='work_location' ]" position = "attributes">
+					<attribute name="string">Base Location</attribute>
+				</xpath>
+				<xpath expr = "/form/sheet/notebook/page/group/group/field[@name ='address_id' ]" position = "before">
+					<field name="doj"/>
+				</xpath>
+				<xpath expr = "/form/sheet/notebook/page/group/group/field[@name ='parent_id' ]" position = "attributes">
+					<attribute name="string">Reporting Manager</attribute>
+				</xpath>
+				<xpath expr = "/form/sheet/notebook/page/group/group/field[@name ='parent_id' ]" position = "after">
+					<field name= "current_project"/>
+				</xpath>
+				<xpath expr = "/form/sheet/notebook/page/group/group/field[@name ='job_id' ]" position = "attributes">
+					<attribute name="string">Designation</attribute>
+				</xpath>
+				<xpath expr = "/form/sheet/notebook/page[@string ='HR Settings' ]" position = "after">
+					<page string="Attendance"/>
+				</xpath>
+			</field>
+       </record>
+       <record id="action3" model="ir.actions.act_window">
+            <field name="name">Subordinate Hierarchy</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">telecom.employee</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="hr.view_partner_tree2"/>
         </record>
-		<menuitem id="telecom_employee_menuitem_employees" parent="telecom_employee_menuitem" action="telecom_employee_action_menu" sequence="1" name="Employees"/>
-        
-        
-        <!-- hr.job view  -->
-        <record id="view_hr_job_tree" model="ir.ui.view">
-            <field name="name">hr.job.tree</field>
-            <field name="model">hr.job</field>
-            <field name="arch" type="xml">
-                <tree string="Job">
-                    <field name="name"/>
-                    <field name="department_id"/>
-                    <field name="no_of_employee"/>
-                    <field name="no_of_recruitment"/>
-                    <field name="expected_employees"/>
-                    <field name="no_of_hired_employee"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-        
-        
-        <record id="view_hr_job_form" model="ir.ui.view">
-            <field name="name">hr.job.form</field>
-            <field name="model">hr.job</field>
-            <field name="arch" type="xml">
-                <form string="Job">
-                    <header>
-                        <button name="set_recruit" string="Launch Recruitment" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
-                        <button name="set_open" string="Stop Recruitment" states="recruit" type="object" class="oe_highlight" groups="base.group_user"/>
-                        <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
-                    </header>
-                    <sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name" class="oe_inline"/></h1>
-                        </div>
-                        <div class="oe_right" name="buttons"/>
-                        <group name="employee_data">
-                        	<field name="access_type" required="1" class = "oe_inline"/>
-                        	<field name="department_id" class="oe_inline"/>
-                            <label for="no_of_employee"/>no_of_recruitment
-                            <div>
-                                <field name="no_of_employee" class="oe_inline"/>
-                                <p><field name="no_of_recruitment" groups="base.group_user" colspan="0" class="oe_inline" style="padding-top: 1px"/> new employee(s) expected</p>
-                            </div>
-                        </group>
-                        <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
-                            <label for="description"/>
-                            <field name="description"/>
-                        </div>
-                        <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
-                            <label for="requirements"/>
-                            <field name="requirements"/>
-                        </div>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-        
-        <record id="telecom_view_job_filter" model="ir.ui.view">
-            <field name="name">Job</field>
-            <field name="model">hr.job</field>
-            <field name="arch" type="xml">
-                <search string="Jobs">
-                    <field name="name" string="Job"/>
-                    <filter domain="[('state','=','open')]" string="In Position"/>
-                    <filter domain="[('state','=','recruit')]" string="In Recruitment" name="in_recruitment"/>
-                    <field name="department_id"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-        
-		<record model="ir.actions.act_window" id="telecom_action_hr_job">
-            <field name="name">Job Positions</field>
-            <field name="res_model">hr.job</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="telecom_view_job_filter"/>
-            <field name="context">{"search_default_Current":1}</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new job position.
-              </p><p>
-                Job Positions are used to define jobs and their requirements.
-                You can keep track of the number of employees you have per job
-                position and follow the evolution according to what you planned
-                for the future.
-              </p><p>
-                You can attach a survey to a job position. It will be used in
-                the recruitment process to evaluate the applicants for this job
-                position.
-              </p>
-            </field>
-        </record>
-        
-        <menuitem id="telecom_employee_menuitem_employees_title" parent="telecom_employee_menuitem" action="telecom_action_hr_job" sequence="2"/>
-        
-        <!-- hr.department view -->
-        <record id="telecom_view_department_form" model="ir.ui.view">
-            <field name="name">hr.department.form</field>
-            <field name="model">hr.department</field>
-            <field name="arch" type="xml">
-                <form string="department">
-                    <sheet>
-                        <group col="4">
-                            <field name="name"/>
-                            <field name="manager_id"/>
-                            <field name="parent_id"/>
-                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-        <record id="telecom_view_department_tree" model="ir.ui.view">
-            <field name="name">hr.department.tree</field>
-            <field name="model">hr.department</field>
-            <field name="field_parent">child_ids</field>
-            <field name="arch" type="xml">
-                <tree string="Companies">
-                    <field name="complete_name"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="manager_id"/>
-                </tree>
-            </field>
-        </record>
-        <record id="telecom_view_department_filter" model="ir.ui.view">
-            <field name="name">Departments</field>
-            <field name="model">hr.department</field>
-            <field name="arch" type="xml">
-                <search string="Departments">
-                    <field name="name" string="Department"/>
-                    <field name="manager_id" />
-                </search>
-             </field>
-        </record>
-        <record id="telecom_open_module_tree_department" model="ir.actions.act_window">
-            <field name="name">Departments</field>
-            <field name="res_model">hr.department</field>
-            <field name="view_type">form</field>
-            <field name="search_view_id" ref="telecom_view_department_filter"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a department.
-              </p><p>
-                Odoo's department structure is used to manage all documents
-                related to employees by departments: expenses, timesheets,
-                leaves and holidays, recruitments, etc.
-              </p>
-            </field>
-        </record>
-        <menuitem action="telecom_open_module_tree_department" id="telecom_menu_hr_department_tree" parent="telecom_employee_menuitem" sequence="5"/>
+       
+	   <menuitem name="Employee Chart" id="employee_chart" parent="hr.menu_hr_main" action="action3" sequence="100"/>    
 	</data>
 </openerp>

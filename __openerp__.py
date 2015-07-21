@@ -31,7 +31,7 @@
     """,
     'author': 'J & G Infosystems',
     'website': 'www.jginfosystems.com',
-    'depends': ['base'],
+    'depends': ['base','hr'],
     'data': ['telecom_view.xml',
              'security/pls_security.xml',
              'work_description.xml',

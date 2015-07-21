@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-     
         <record id="partner_remove_customer_suplier" model="ir.ui.view">
             <field name="name">res.partner</field>
             <field name="model">res.partner</field>
