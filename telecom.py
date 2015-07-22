@@ -3,7 +3,7 @@ from openerp.osv import fields, osv
 class telecom_project(osv.osv):
     _name="telecom.project"
     
-    _columns={'name':fields.char(string='Project Name'),
+    _columns={'name':fields.char(string='Project Name',required =True),
               'project_manager':fields.many2many('res.users','project_manager_rel','project_id','manager_id',string='Project Manager / Project Coordinator',help="Project Coordinator"),
               'circle':fields.many2one("telecom.circle",string="Circle"),
               'customer':fields.many2one("res.partner",string="Customer"),
@@ -18,18 +18,14 @@ class project_description_line(osv.osv):
     _name="project.description.line"  
     
     def setof_associated_activities(self,cr,uid,ids,description_id,context=None):
-        print "=========================================ids",ids,description_id
         description=self.pool.get('work.description').browse(cr, uid, description_id,context)
         values=[]
         for i in description.activity_ids:
             values.append((0,0,{'activity_id':i.id}))
-        print "===================values",values
         return {
                 'value':{'activity_ids':values}
                  
                }
-        
-        
     _columns={
               'description_id':fields.many2one('work.description',string="Work Description"),
               'activity_ids':fields.one2many('activity.line','activity_line',string="Activities"),
@@ -42,12 +38,14 @@ class activity_line(osv.osv):
               'activity_line':fields.many2one('project.description.line'),
               'activity_id':fields.many2one('activity.activity',string = "Activity Name"),
               'cost':fields.float(string='Customer Cost'),
-              'vendor_cost':fields.float(string="Vendor Cost")
+              'vendor_cost':fields.float(string="Vendor Cost"),
+              'project_id':fields.related('activity_line','project_id',relation = "telecom.project",type="many2one",store=True,string="Project",readonly=True),
+              'vendor_id':fields.many2one('res.partner',string = "Vendor",domain = [('supplier','=',True)]),
               }
       
 class telecom_circle(osv.osv):
     _name='telecom.circle'
-    _columns={'name':fields.char(string='Circle Name'),
+    _columns={'name':fields.char(string='Circle Name',required=True),
               'project_name':fields.one2many('telecom.project','circle',string='Projects'),
               'circle_head':fields.many2one('res.users',string="Circle Head / Regional Manager"),
               }
@@ -55,12 +53,12 @@ class telecom_circle(osv.osv):
 class work_description(osv.osv):  
     _name="work.description"
       
-    _columns={'name':fields.char(string='Work Description'),
+    _columns={'name':fields.char(string='Work Description',required = True),
               'activity_ids':fields.many2many('activity.activity',"work_description_activity_activity_rel",'description_id','activity_id',string='Activities'),
               }
     
 class activity_activity(osv.osv):
     _name = "activity.activity"
     _columns = {
-                'name':fields.char('Activity Name'),
+                'name':fields.char('Activity Name',required = True),
                 }

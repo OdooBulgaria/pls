@@ -15,36 +15,35 @@
 				<xpath expr = "/form/sheet/notebook/page[@name ='sales_purchases' ]" position = "after">
 					<page string="Costs"  attrs = "{'invisible':[('customer','=',True)]}" >
 						<group>
-							<field name="costs" nolabel="1">
-								<tree>
-									<field name= "project_id" required="1" on_change="onchange_project_id(project_id)"/>
-									<field name="activity"/>
-								</tree>
-								<form string="projects">
-										<sheet>
-											<group>
-												<field name="project_id" required = "1" on_change="onchange_project_id(project_id)"/>
-												<field name="activity" >
-													<tree string = "Cost Line" editable="top">
-														<field name = "activity_id" />
-														<field name = "cost"  string = "Customer Cost" readonly="1"/>
-														<field name="vendor_cost"/>
-													</tree>	
-													<form string="Cost line">
-														<sheet>
-															<group>
-																<field name = "activity_id" />
-																<field name = "cost"  string = "Customer Cost*" readonly="1"/>
-																<field name="vendor_cost"/>
-															</group>
-														</sheet>
-													</form>											
-												</field>
-											</group>
-										</sheet>
-								</form>
-							</field>
+							<group>
+								<field name = "project_filter_id" />
+							</group>
+							<group>
+								<button name = "apply_project_filter" string = "Apply Project Filter" type = "object" class = "oe_right" />
+							</group>
 						</group>
+						<field name = "activity_ids">
+							<tree string = "Vendor Activity View" editable="bottom">
+								<field name = "project_id" />
+								<field name = "activity_id"  readonly="1" />
+								<field name = "cost" readonly="1" />
+								<field name = "vendor_cost" />
+							</tree>
+							<form string = "Vendor Activity Form View" >
+								<sheet>
+									<group>
+										<group >
+											<field name = "project_id" />
+											<field name	= "activity_id" readonly="1" />
+											<field name = "cost" readonly="1" />							
+										</group>
+										<group>
+											<field name = "vendor_cost" />
+										</group>								
+									</group>								
+								</sheet>
+							</form>
+						</field>
 					</page>
 				</xpath>
             </field>

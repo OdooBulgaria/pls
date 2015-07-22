@@ -21,22 +21,26 @@
 			<field name="model">activity.line</field>
 			<field name="arch" type="xml">
 				<tree string ="Avtivity Line Tree View">
+					<field name = "project_id" />
 					<field name = "activity_id"  />
 					<field name = "cost" />
 					<field name = "vendor_cost" />
+					<field name = "vendor_id" />
 				</tree>
 			</field>
 		</record>    
 		<record id="activity_line_form_view" model="ir.ui.view">
-			<field name="name">activity.line.tree.view</field>
+			<field name="name">activity.line.form.view</field>
 			<field name="model">activity.line</field>
 			<field name="arch" type="xml">
 				<form string ="Avtivity Line Tree View">
 					<sheet>
 						<group>
+							<field name = "project_id" />
 							<field name = "activity_id"  />
 							<field name = "cost" />
 							<field name = "vendor_cost" />
+							<field name = "vendor_id" />
 						</group>
 					</sheet>
 				</form>
@@ -55,7 +59,7 @@
 	                            <label for="name"/> 
 	                        </div>
 	                        <h1>
-	                            <field name="name" default_focus="1" placeholder="Name" />
+	                            <field name="name" required = "1" default_focus="1" placeholder="Name" />
 	                        </h1>
 	                    </div>			
 	                    <group col = "4">
@@ -93,12 +97,14 @@
 	                    								<field name = "activity_id"  />
 	                    								<field name = "cost" />
 	                    								<field name = "vendor_cost" />
+	                    								<field name = "vendor_id" />
 	                    							</tree>
 	                    							<form string = "Activity Cost">
 	                    								<group>
 	                    									<field name = "activity_id" required="1" />
 	                    									<field name = "cost" />	 
-	                    									<field name = "vendor_cost" />                   								
+	                    									<field name = "vendor_cost" />
+	                    									<field name = "vendor_id" />
 	                    								</group>
 	                    							</form>
 	                    						</field>

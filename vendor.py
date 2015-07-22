@@ -1,33 +1,35 @@
 from openerp.osv import fields, osv
 
+class one2many_mod2(fields.one2many):
+    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
+        res = {}
+        for id in ids:
+            cr.execute('''
+                select project_filter_id from res_partner where id = %s
+            ''' %(id))
+            project_id = cr.fetchone()[0]
+            if project_id:
+                cr.execute('''
+                    select id from activity_line where vendor_id=%s and project_id=%s
+                '''%(id,project_id))
+                activity_ids = cr.fetchall()
+                list = []
+                for activity in activity_ids:
+                     list.append(activity[0])
+                res.update({id:list})
+            else:
+                res_val = super(one2many_mod2,self).get(cr, obj, [id], name, user, offset, context, values)
+                res.update(res_val)
+        return res
+
 class res_partner(osv.osv):
     _inherit='res.partner'
+
+    def apply_project_filter(self,cr,uid,id,context=None):
+        return True
+    
     _columns={
-              'costs':fields.one2many('cost.line','partner_id',string='Cost line')
+              'project_filter_id':fields.many2one('telecom.project',"Project Filter"),
+              'activity_ids':one2many_mod2('activity.line','vendor_id',string='Activity Cost')
               }
     
-class cost_line(osv.osv):
-    _name='cost.line'
-    
-    def onchange_project_id(self,cr,uid,id,project_id,context=None):
-        list_ids = []
-        if project_id:
-            cr.execute('''
-                       select line.id from activity_line as line join project_description_line as project on line.activity_line = project.id where project.project_id = %s  
-                       ''' %(project_id))
-            line_ids = cr.fetchall()
-            for i in line_ids:
-                list_ids.append(i[0])
-        return {
-                'value':{
-                         'activity':[
-                                     (6,0,list_ids)
-                                     ]
-                         }
-                }
-    _columns={
-            'project_id':fields.many2one('telecom.project',string='Project'),
-            'activity':fields.many2many('activity.line','vendor_cost_line_activities','activity_id','project_id',string="Activities"),
-            'partner_id':fields.many2one('res.partner'),
-            
-              }
