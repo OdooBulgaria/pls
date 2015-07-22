@@ -37,10 +37,12 @@ class project_description_line(osv.osv):
               }
 class activity_line(osv.osv):
     _name='activity.line'
+    _rec_name='activity_id'
     _columns={
               'activity_line':fields.many2one('project.description.line'),
               'activity_id':fields.many2one('activity.activity',string = "Activity Name"),
-              'cost':fields.float(string='Cost')
+              'cost':fields.float(string='Customer Cost'),
+              'vendor_cost':fields.float(string="Vendor Cost")
               }
       
 class telecom_circle(osv.osv):

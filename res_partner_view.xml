@@ -12,6 +12,41 @@
 				<xpath expr = "/form/sheet/notebook/page/group/group/field[@name ='supplier' ]" position = "attributes">
 					<attribute name="invisible">1</attribute>
 				</xpath>
+				<xpath expr = "/form/sheet/notebook/page[@name ='sales_purchases' ]" position = "after">
+					<page string="Costs"  attrs = "{'invisible':[('customer','=',True)]}" >
+						<group>
+							<field name="costs" nolabel="1">
+								<tree>
+									<field name= "project_id" required="1" on_change="onchange_project_id(project_id)"/>
+									<field name="activity"/>
+								</tree>
+								<form string="projects">
+										<sheet>
+											<group>
+												<field name="project_id" required = "1" on_change="onchange_project_id(project_id)"/>
+												<field name="activity" >
+													<tree string = "Cost Line" editable="top">
+														<field name = "activity_id" />
+														<field name = "cost"  string = "Customer Cost" readonly="1"/>
+														<field name="vendor_cost"/>
+													</tree>	
+													<form string="Cost line">
+														<sheet>
+															<group>
+																<field name = "activity_id" />
+																<field name = "cost"  string = "Customer Cost*" readonly="1"/>
+																<field name="vendor_cost"/>
+															</group>
+														</sheet>
+													</form>											
+												</field>
+											</group>
+										</sheet>
+								</form>
+							</field>
+						</group>
+					</page>
+				</xpath>
             </field>
        </record>
 	</data>
