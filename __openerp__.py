@@ -37,6 +37,7 @@
              'work_description.xml',
              'hr_view.xml',
              'res_partner_view.xml',
+             'security/ir.model.access.csv'
              ],
     'demo': [],
     'test': [],
