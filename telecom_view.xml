@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    	
     	<record id="telecom_project_tree_view" model="ir.ui.view">
     		<field name="name">telecom.project.tree.view</field>
     		<field name="model">telecom.project</field>
@@ -128,7 +127,7 @@
         </record>
     	
     	
-    	<menuitem id="telecom_main_menuitem" sequence="9700" name="PLS Settings"/>
+    	<menuitem id="telecom_main_menuitem" sequence="2" name="PLS" />
     	<menuitem id="telecom_menuitem" parent="telecom_main_menuitem" sequence="1" name="PLS"/>
     	<menuitem id="telecom_menu" parent="telecom_menuitem" action="telecom_action_menu" sequence="1"/>
     	

@@ -27,7 +27,6 @@
     'summary': 'telecom',
     'description': """
     PLS Project Management
-    ==========================
     """,
     'author': 'J & G Infosystems',
     'website': 'www.jginfosystems.com',

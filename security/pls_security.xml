@@ -1,37 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data noupdate="1">
-	<!--  Created a category  -->
-	<record id = "telecom_module_category" model = "ir.module.category">
-		<field name = "name">Telecom</field>
-		<field name = "sequence">1</field>
-		<field name = "description">Project Management for Telecom</field>
-	</record>
+	<data noupdate="1">
+		<!--  Created a category  -->
+		<record id = "telecom_module_category" model = "ir.module.category">
+			<field name = "name">Telecom</field>
+			<field name = "sequence">1</field>
+			<field name = "description">Project Management for Telecom</field>
+		</record>
+		
+		<!-- Creating Groups  -->
+		<record id = "telecom_employee" model = "res.groups">
+			<field name = "category_id" ref = "pls.telecom_module_category" />
+			<field name = "name">Employee</field>
+			<field name="users" eval="[(4, ref('base.user_root'))]"/>
+			<field name = "comment">This user will have access to activities and attendance lines</field>
+	        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+		</record>	
 	
-	<!-- Creating Groups  -->
-	<record id = "telecom_employee" model = "res.groups">
-		<field name = "category_id" ref = "pls.telecom_module_category" />
-		<field name = "name">Employee</field>
-		<field name = "comment">This user will have access to activities and attendance lines</field>
-	</record>	
-
-	<record id = "telecom_project_manager" model = "res.groups">
-		<field name = "category_id" ref = "pls.telecom_module_category" />
-		<field name = "name">Project Manager</field>
-		<field name = "comment">This user will have all accessed restricted to the projects alloted to the user</field>
-	</record>
-	
-	<record id = "telecom_circle_head" model = "res.groups">
-		<field name = "category_id" ref = "pls.telecom_module_category" />
-		<field name = "name">Circle Head</field>
-		<field name = "comment">This user will all the accesses restricted to the projects in the circle </field>
-	</record>
-	
-	<record id = "telecom_corporate" model = "res.groups">
-		<field name = "category_id" ref= "pls.telecom_module_category" />
-		<field name = "name">Corporate</field>
-		<field name = "comment">This is the super access after Admin</field>
-	</record>
-
-</data>
+		<record id = "telecom_project_manager" model = "res.groups">
+			<field name = "category_id" ref = "pls.telecom_module_category" />
+			<field name = "name">Project Manager</field>
+			<field name = "comment">This user will have all accessed restricted to the projects alloted to the user</field>
+			<field name="implied_ids" eval="[(4, ref('telecom_employee'))]"/>
+		</record>
+		
+		<record id = "telecom_circle_head" model = "res.groups">
+			<field name = "category_id" ref = "pls.telecom_module_category" />
+			<field name = "name">Circle Head</field>
+			<field name = "comment">This user will all the accesses restricted to the projects in the circle </field>
+			<field name="implied_ids" eval="[(4, ref('telecom_project_manager'))]"/>
+		</record>
+		
+		<record id = "telecom_corporate" model = "res.groups">
+			<field name = "category_id" ref= "pls.telecom_module_category" />
+			<field name = "name">Corporate</field>
+			<field name = "comment">This is the super access after Admin</field>
+			<field name="implied_ids" eval="[(4, ref('telecom_circle_head'))]"/>
+		</record>
+	</data>
 </openerp>
