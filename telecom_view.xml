@@ -127,7 +127,7 @@
         </record>
     	
     	
-    	<menuitem id="telecom_main_menuitem" sequence="2" name="PLS" />
+    	<menuitem id="telecom_main_menuitem" sequence="10" name="PLS Corporate Panel"  />
     	<menuitem id="telecom_menuitem" parent="telecom_main_menuitem" sequence="1" name="PLS"/>
     	<menuitem id="telecom_menu" parent="telecom_menuitem" action="telecom_action_menu" sequence="1"/>
     	
@@ -185,20 +185,34 @@
             <field name="view_mode">tree,form</field>
         </record>
         
-    	<!-- <menuitem id="circle_menuitem" parent="telecom_main_menuitem" sequence="2" name="PLS"/>  -->
     	<menuitem id="circle_menu" parent="telecom_menuitem" action="circle_action_menu" sequence="10"/>
-    	
-    	
+
     	<!-- menuitems for partners customer and vendors-->
     	<menuitem id="partners_menuitem" parent="telecom_main_menuitem" sequence="20" name="Partners"/>
     	<menuitem id="vendors_menu" parent="partners_menuitem" action="base.action_partner_supplier_form"
     	 name="Vendors" sequence="2" />
+
 		<menuitem id = "customer_menu" parent = "partners_menuitem" 
     	action = "base.action_partner_customer_form" sequence="1" />
     	
-    	
-    	
-    	
-    	
+        <record id="hr.open_view_employee_list_my" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{'circle':True}</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="hr.view_employee_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new employee.
+              </p><p>
+                With just a quick glance on the Odoo employee screen, you
+                can easily find all the information you need for each person;
+                contact data, job position, availability, etc.
+              </p>
+            </field>
+        </record>
     </data>
 </openerp>

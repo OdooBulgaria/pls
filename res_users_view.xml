@@ -1,0 +1,14 @@
+<openerp>
+	<data>
+		<record id = "add_employee_field_user" model= "ir.ui.view">
+            <field name="name">res.users</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form" />
+            <field name="arch" type="xml">
+				<xpath expr = "/form/sheet/div/group/field[@name='partner_id']" position = "after">
+					<field name = "emp_id" />
+				</xpath>            
+            </field>
+		</record>
+	</data>
+</openerp>

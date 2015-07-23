@@ -1,5 +1,6 @@
 from openerp.osv import fields, osv
 from openerp import tools
+from openerp import SUPERUSER_ID
 
 class hr_employee(osv.osv):
     
@@ -15,3 +16,9 @@ class hr_employee(osv.osv):
               'company_name':fields.many2one('res.partner',string='Vendor Company'),
               'current_project':fields.many2one('telecom.project',string='Current Project'),
               }
+    
+class resource_resource(osv.osv):
+    _inherit = "resource.resource"
+    _sql_constraints = [
+        ('user_id_unique', 'unique(user_id)', 'The Related User must be unique per Employee!'),
+    ]
