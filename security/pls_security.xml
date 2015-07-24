@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data noupdate="0">
+	<data noupdate="1">
 		<!--  Created a category  -->
 		<record id = "telecom_module_category" model = "ir.module.category">
 			<field name = "name">Telecom</field>
@@ -45,5 +45,11 @@
 	        <field name="domain_force">[('parent_id.user_id','=',user.id)]</field>
 			<field name="groups" eval="[(4, ref('telecom_project_manager'))]" />
 	    </record>
+	    <record model="ir.rule" id="hr_employee_access_circle_head">
+	        <field name="name">Employee Access Rule for Circle Head</field>
+	        <field name="model_id" ref="model_hr_employee"/>
+	        <field name="domain_force">[('parent_id','child_of',user.emp_id.id)]</field>
+			<field name="groups" eval="[(4, ref('telecom_circle_head'))]" />
+	    </record>	    
 	</data>
 </openerp>

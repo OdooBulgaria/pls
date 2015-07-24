@@ -4,6 +4,8 @@ class res_users(osv.osv):
     _inherit = "res.users"
     _description = "Adding employee field"
     
+    
+    
     def _find_user_employee(self, cr, uid, ids, field_name, args, context=None):
         #ids ---> these are the ids of res.users for which the employee will change send from the method _get_hr_employee
         res = {}
@@ -26,7 +28,8 @@ class res_users(osv.osv):
         return list
     
     _columns = {
-                "emp_id":fields.function(_find_user_employee, string='Related Employee', type='many2one',relation = "hr.employee",
+                "emp_id":fields.function(_find_user_employee,fnct_search=_employee_field_search, 
+                                         string='Related Employee', type='many2one',relation = "hr.employee",method=True,
             store={
                 'hr.employee': (_get_hr_employee, [], 1),
             }),
