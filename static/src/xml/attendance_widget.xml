@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+	<t t-name = "attendance_base">
+		<div class="attendance_base" >
+					
+		</div>
+	</t>
+
+	<t t-name = "select_project">
+		<div class = "select_project oe_form create_form" style = "display:inline-block;">
+			
+		</div>
+	</t>
+
+    <t t-name="button_select_project">
+		<button type="button"  class = "oe_highlight" style='margin-left:8px;float:right;display:inline' id = "select_project">Select Project</button>
+    </t>
+	
+</templates>

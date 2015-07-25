@@ -1,0 +1,67 @@
+<openerp>
+	<data>
+		<!-- Creating a client action for the widget -->
+        <record id="action_attendance_page" model="ir.actions.client">
+            <field name="name">Attendance Page</field>
+            <field name="tag">local.attendance_base</field>
+        </record>
+
+		<!-- Creating menuitems for the attendance module -->
+		<menuitem id = "parent_menu_attendance" name = "Attendance" />
+        <menuitem id="child_parent_menu_attendance" name="Attendance"  parent="parent_menu_attendance" />
+        <menuitem id="subchild_menu_take_attendance" name="Take Attendance" parent="child_parent_menu_attendance" action="action_attendance_page"/>
+		
+		<record id = "view_attendace_attendance_corporate" model="ir.ui.view">
+            <field name="name">attendance.attendance for corporate</field>
+            <field name="model">attendance.attendance</field>
+            <field name="arch" type="xml">
+				<form string = "Attendance">
+					<header>
+						<field name="state" widget="statusbar" statusbar_visible="draft,pending,submitted" />
+					</header>
+					<sheet>	
+                        <div class="oe_title">
+                            <label for="user_id" class="oe_edit_only" />
+                            <h1>
+								<field name = "user_id" readonly="1" placeholder = "Created By"/>                                
+                            </h1>
+                            <label for="date" class="oe_edit_only" />
+							<field name="date" placeholder="Today's Date" />
+						</div>
+						<notebook>
+							<page string = "Project Wise Attendance">
+								<field name = "attendance_line" />
+							</page>
+						</notebook>
+					</sheet>
+				</form>					            
+            </field>
+        </record> 
+        
+		<record id = "view_attendace_attendance_tree" model="ir.ui.view">
+            <field name="name">attendance.attendance tree view for project manager</field>
+            <field name="model">attendance.attendance</field>
+            <field name="arch" type="xml">
+				<tree string = "Attendace" colors = "red:state == 'pending';">
+					<field name = "date" />
+					<field name = "user_id" />
+					<field name = "state" />
+					<field name = "attendance_line" />
+				</tree>					            
+            </field>
+        </record> 
+        
+        <record id="action_attendance_attendance" model="ir.actions.act_window">
+            <field name="name">Attendance Archive</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">attendance.attendance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--  <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter"/> -->
+        </record>
+        
+        <menuitem id = "child_parent_menu_archive" parent = "parent_menu_attendance" name = "Archive" />        
+		<menuitem id = "subchild_attendace_archive"  action = "action_attendance_attendance" parent = "child_parent_menu_archive" />      
+               
+	</data>
+</openerp>
