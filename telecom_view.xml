@@ -127,7 +127,7 @@
         </record>
     	
     	
-    	<menuitem id="telecom_main_menuitem" sequence="10" name="PLS Corporate Panel" groups="pls.telecom_corporate" />
+    	<menuitem id="telecom_main_menuitem" sequence="10" name="PLS Corporate Panel" groups="telecom_corporate" />
     	<menuitem id="telecom_menuitem" parent="telecom_main_menuitem" sequence="1" name="PLS"/>
     	<menuitem id="telecom_menu" parent="telecom_menuitem" action="telecom_action_menu" sequence="1"/>
     	

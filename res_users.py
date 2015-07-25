@@ -28,7 +28,7 @@ class res_users(osv.osv):
         return list
     
     _columns = {
-                "emp_id":fields.function(_find_user_employee,fnct_search=_employee_field_search, 
+                "emp_id":fields.function(_find_user_employee, 
                                          string='Related Employee', type='many2one',relation = "hr.employee",method=True,
             store={
                 'hr.employee': (_get_hr_employee, [], 1),

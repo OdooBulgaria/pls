@@ -37,10 +37,13 @@
              'hr_view.xml',
              'res_partner_view.xml',
              'security/ir.model.access.csv',
-             'res_users_view.xml'
+             'res_users_view.xml',
+             'pls.xml',
+             'attendance_attendance_view.xml'
              ],
     'demo': [],
     'test': [],
+    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'auto_install': False,
     'application': True,

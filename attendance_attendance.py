@@ -1,6 +1,8 @@
 from openerp.osv import fields, osv
+from lxml import  etree
+from openerp.osv.orm import setup_modifiers
 
-class attendance_attendace(osv.osv):
+class attendance_attendance(osv.osv):
     _name = "attendance.attendance"
     _description = "Attendance"
     
@@ -14,14 +16,38 @@ class attendance_attendace(osv.osv):
     For this purpose ir.rule will be added on attendance.line so that project manager can only edit those records that have been made by them
     
     In short-: 
+    
     1. There will only be a single attendance line for each project per day.
-    2. There will only be a single attendance.attendance record per project manager and circle head per day
+    2. There will only be a single attendance.attendance record per user per day
     3. Directors cannot take attendance
+    4. The attendance.attendace field will only be accessible by the corporate account
     
     '''
+    
+    # The date field is only accessible by the corporate account
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res=super(attendance_attendance,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        if view_type =="form":
+            groups = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'pls', 'telecom_corporate')[1]
+            user_group=self.pool.get('res.groups').browse(cr,uid,groups)
+            user_ids=map(int,user_group.users or [])            
+            if not(uid in user_ids):
+                doc = etree.XML(res['arch'])
+                for node in doc.xpath("//field[@name='date']"):
+                    node.set('readonly','1')
+                    setup_modifiers(node, res['fields']['date'])
+                    res['arch'] = etree.tostring(doc)
+        return res
+    
+    _defaults = {
+                 'date':fields.datetime.now,
+                 'user_id':lambda self,cr,uid,context:uid,
+                 'state':"draft"
+                 }
+    
     _columns = {
                 'user_id':fields.many2one('res.users',string="Created By"),
-                'date':fields.date('Creation Date'),
+                'date':fields.date('Creation Date',read=['telecom_circle_head','telecom_project_manager']),
                 'attendance_line':fields.one2many('attendance.line','attendance_id','Attendance'),
                 'state':fields.selection([
                                           ('draft','Draft'),
@@ -67,7 +93,7 @@ class employee_status_line(osv.osv):
     _columns ={
                'employee_id':fields.many2one('hr.employee',"Employee Name"),
                'designation':fields.related('employee_id','job_id',type="many2one",relation="hr.job",string="Designation"),
-               'state':fields.state([
+               'state':fields.selection([
                                      ('present','Present'),
                                      ('absent','Absent'),
                                      ('leave','Leave'),
@@ -75,6 +101,7 @@ class employee_status_line(osv.osv):
                                      ('tour',"On Tour"),
                                      ],string = "Status" ),
                'remarks':fields.text('Remarks'),
+               'line_id':fields.many2one('attendance.line'),
                }
     
     
