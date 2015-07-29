@@ -4,7 +4,7 @@ class telecom_project(osv.osv):
     _name="telecom.project"
     
     _columns={'name':fields.char(string='Project Name',required =True),
-              'project_manager':fields.many2many('res.users','project_manager_rel','project_id','manager_id',string='Project Manager / Project Coordinator',help="Project Coordinator"),
+              'project_manager':fields.many2many('hr.employee','telecom_project_hr_employee_rel','project_id','manager_id',string='Project Manager / Project Coordinator',help="Project Coordinator"),
               'circle':fields.many2one("telecom.circle",string="Circle"),
               'customer':fields.many2one("res.partner",string="Customer"),
               'start_date':fields.date(string="Start Date"),

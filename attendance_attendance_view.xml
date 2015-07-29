@@ -55,6 +55,20 @@
         </record> 
         
         <!-- Search View -->
+        <record id="view_attendance_attendace_filter" model="ir.ui.view">
+            <field name="name">attendance.attendance</field>
+            <field name="model">attendance.attendance</field>
+            <field name="arch" type="xml">
+                <search string="Search Attendance">
+                    <field name="date" string="Date" />
+                    <field name = "user_id" string = "User" />
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Manager" domain="[]" context="{'group_by':'user_id'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
         
         <record id="action_attendance_attendance" model="ir.actions.act_window">
             <field name="name">Attendance Archive</field>

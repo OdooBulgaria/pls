@@ -29,6 +29,18 @@ class attendance_attendance(osv.osv):
         ('restrict_one_attendance_peruser', 'unique(user_id,date)', 'A user can create a single attendance record/day!'),
     ]
 
+    #called from javascript
+    def fetch_ids_user(self,cr,uid,context=None):
+        emp_id = self.pool.get('res.users').read(cr,uid,uid,{'emp_id'},context=context)
+        if emp_id:
+            print "========================================",emp_id
+            return 1
+        cr.execute('''
+            
+        ''')
+        return 1
+        
+    
     # The date field is only accessible by the corporate account
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res=super(attendance_attendance,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)

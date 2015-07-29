@@ -24,10 +24,9 @@
         </record>
 
     	
-    	<!-- Changing the access rights of the Human Resource menu item to project manager,circle head,corporate or admin -->
         <menuitem name="Employee Database"
             id="hr.menu_hr_root"
-            groups="telecom_project_manager,telecom_circle_head,telecom_corporate"
+            groups="base.group_hr_manager,base.group_hr_user,base.group_user"
             sequence="90"/>
     	
     	<record id="hr_new fields_added" model="ir.ui.view">
@@ -75,6 +74,6 @@
             <field name="view_id" ref="hr.view_partner_tree2"/>
         </record>
        
-	   <menuitem name="Employee Chart" id="employee_chart" parent="hr.menu_hr_main" action="action3" sequence="100"/>    
+	   <menuitem name="Employee Chart" id="employee_chart" groups = "telecom_project_manager,telecom_circle_head,telecom_corporate" parent="hr.menu_hr_main" action="action3" sequence="100"/>    
 	</data>
 </openerp>

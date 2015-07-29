@@ -23,24 +23,6 @@ openerp.pls = function(instance, local) {
         },
     	init:function(parent){
     		this._super(parent);
-    		this.create_form_fields = {
-                    project_id: {
-                        id: "project_id",
-                        index: 0,
-                        corresponding_property: "project_id", // a account.move field name
-                        label: _t("Select Project"),
-                        required: true,
-                        tabindex: 10,
-                        constructor: instance.web.form.FieldMany2One,
-                        field_properties: {
-                            relation: "telecom.project",
-                            string: _t("Select Project"),
-                            type: "many2one",
-                            //domain: [], //[['type','not in',['view', 'closed', 'consolidation']]]
-                        },
-    		
-                    },
-              };
     	},
     	
     	pop_up_wizard:function(){
@@ -60,6 +42,16 @@ openerp.pls = function(instance, local) {
     		return self.createFormWidget();
     	},
     	
+    	//query to find the ids for the domain defined in attendance_attendance.py
+    	fetch_ids_user:function(){
+    		var attendance = new openerp.Model('attendance.attendance');
+    		attendance.call('fetch_ids_user', [],
+                    {}).then(function (result) {
+                    	console.log("=============================shivam",result)
+                });
+    	},
+    	
+    	//creates and renders the many2one field and the button
     	createFormWidget: function() { //working
     		var self = this;
     		if (self.dfm)
@@ -70,8 +62,10 @@ openerp.pls = function(instance, local) {
                     relation: "telecom.project",
                 },
             });
+            var uid = self.session.uid
+            domain_ids = self.fetch_ids_user(uid);
             self.project_m2o = new instance.web.form.FieldMany2One(self.dfm, {
-                attrs: {
+            	attrs: {
                     name: "project_id",
                     type: "many2one",
                     domain: [
@@ -83,7 +77,6 @@ openerp.pls = function(instance, local) {
             });
             var $button = $(QWeb.render("button_select_project", {}));
             self.project_m2o.prependTo(self.$el);
-            console.log(self.$el.children().find('span.oe_form_field'));
             self.$el.first().find('span.oe_form_field').prepend($button);
     	},    	
     });
