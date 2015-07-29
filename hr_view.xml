@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
+		<!-- Changing the default Human Resource employee.employee view to Tree View -->    	
+        <record id="hr.open_view_employee_list_my" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="hr.view_employee_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new employee.
+              </p><p>
+                With just a quick glance on the Odoo employee screen, you
+                can easily find all the information you need for each person;
+                contact data, job position, availability, etc.
+              </p>
+            </field>
+        </record>
+
+    	
+    	<!-- Changing the access rights of the Human Resource menu item to project manager,circle head,corporate or admin -->
+        <menuitem name="Employee Database"
+            id="hr.menu_hr_root"
+            groups="telecom_project_manager,telecom_circle_head,telecom_corporate"
+            sequence="90"/>
+    	
     	<record id="hr_new fields_added" model="ir.ui.view">
             <field name="name">hr.employee</field>
             <field name="model">hr.employee</field>

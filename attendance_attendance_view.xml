@@ -1,5 +1,6 @@
 <openerp>
 	<data>
+
 		<!-- Creating a client action for the widget -->
         <record id="action_attendance_page" model="ir.actions.client">
             <field name="name">Attendance Page</field>
@@ -7,10 +8,11 @@
         </record>
 
 		<!-- Creating menuitems for the attendance module -->
-		<menuitem id = "parent_menu_attendance" name = "Attendance" />
+		<menuitem id = "parent_menu_attendance" name = "Attendance" groups = "telecom_project_manager,telecom_circle_head,telecom_project_manager" />
         <menuitem id="child_parent_menu_attendance" name="Attendance"  parent="parent_menu_attendance" />
         <menuitem id="subchild_menu_take_attendance" name="Take Attendance" parent="child_parent_menu_attendance" action="action_attendance_page"/>
 		
+		<!-- Form View Attendance -->
 		<record id = "view_attendace_attendance_corporate" model="ir.ui.view">
             <field name="name">attendance.attendance for corporate</field>
             <field name="model">attendance.attendance</field>
@@ -38,6 +40,7 @@
             </field>
         </record> 
         
+        <!-- Tree View Attendance -->
 		<record id = "view_attendace_attendance_tree" model="ir.ui.view">
             <field name="name">attendance.attendance tree view for project manager</field>
             <field name="model">attendance.attendance</field>
@@ -50,6 +53,8 @@
 				</tree>					            
             </field>
         </record> 
+        
+        <!-- Search View -->
         
         <record id="action_attendance_attendance" model="ir.actions.act_window">
             <field name="name">Attendance Archive</field>

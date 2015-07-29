@@ -5,6 +5,7 @@ from openerp.osv.orm import setup_modifiers
 class attendance_attendance(osv.osv):
     _name = "attendance.attendance"
     _description = "Attendance"
+    _order = "date"
     
     '''
     This is the main record where all the attendance lines will be attached. It has state field. This state field will
@@ -21,9 +22,13 @@ class attendance_attendance(osv.osv):
     2. There will only be a single attendance.attendance record per user per day
     3. Directors cannot take attendance
     4. The attendance.attendace field will only be accessible by the corporate account
-    
+    5. Search View --> filter by date,group by user_id only for corporate users and circle heads
     '''
-    
+
+    _sql_constraints = [
+        ('restrict_one_attendance_peruser', 'unique(user_id,date)', 'A user can create a single attendance record/day!'),
+    ]
+
     # The date field is only accessible by the corporate account
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res=super(attendance_attendance,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
@@ -88,7 +93,7 @@ class employee_status_line(osv.osv):
         1. Only one employee status line per day.
         2. If attendance already taken and then the employee is transferred to another project then the existing attendace line
         will be deleted and a new employee.status.line will be created for that day
-        3. This will be the lines that the corporate will see for the attendace report
+        3. This will be the lines that the corporate will see for the attendance report
     '''
     _columns ={
                'employee_id':fields.many2one('hr.employee',"Employee Name"),

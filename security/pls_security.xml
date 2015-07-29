@@ -50,6 +50,21 @@
 	        <field name="model_id" ref="model_hr_employee"/>
 	        <field name="domain_force">[('parent_id','child_of',user.emp_id.id)]</field>
 			<field name="groups" eval="[(4, ref('telecom_circle_head'))]" />
+	    </record>
+	    
+   	    <record model="ir.rule" id="attendance_attendance_access_project_manager">
+	        <field name="name">Attendance Access Rule for Manager</field>
+	        <field name="model_id" ref="model_attendance_attendance"/>
+	        <field name="domain_force">[('user_id','=',user.id)]</field>
+			<field name="groups" eval="[(4, ref('telecom_project_manager'))]" />
+	    </record>
+	    
+	    <record model="ir.rule" id="attendance_attendance_access_circle_head">
+	        <field name="name">Circle Head Rule for Manager</field>
+	        <field name="model_id" ref="model_attendance_attendance"/>
+	        <field name="domain_force">[('user_id.emp_id.id','child_of',user.emp_id.id)]</field>
+			<field name="groups" eval="[(4, ref('telecom_project_manager'))]" />
 	    </record>	    
+	    
 	</data>
 </openerp>
