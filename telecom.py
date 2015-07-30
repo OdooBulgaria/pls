@@ -3,6 +3,12 @@ from openerp.osv import fields, osv
 class telecom_project(osv.osv):
     _name="telecom.project"
     
+    
+    #attendance will only be considered for the wip state
+    _defaults = {
+                 'state':'draft'
+                 }
+    
     _columns={'name':fields.char(string='Project Name',required =True),
               'project_manager':fields.many2many('hr.employee','telecom_project_hr_employee_rel','project_id','manager_id',string='Project Manager / Project Coordinator',help="Project Coordinator"),
               'circle':fields.many2one("telecom.circle",string="Circle"),
@@ -11,8 +17,10 @@ class telecom_project(osv.osv):
               'end_date':fields.date(string="End Date"),
               'image':fields.binary("Bianry field"),
               'contact_no':fields.related('customer','phone',type="char",string="Contact No"),
-              'line_id':fields.one2many('project.description.line','project_id',string="Work Description")
-              
+              'line_id':fields.one2many('project.description.line','project_id',string="Work Description"),
+              'state':fields.selection([
+                                    ('draft','Draft'),('wip','WIP'),('close','Close')
+                                    ],help = "Attendance will only be considered for the WIP state"),
               }
 class project_description_line(osv.osv):
     _name="project.description.line"  

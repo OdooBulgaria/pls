@@ -45,10 +45,8 @@ openerp.pls = function(instance, local) {
     	//query to find the ids for the domain defined in attendance_attendance.py
     	fetch_ids_user:function(){
     		var attendance = new openerp.Model('attendance.attendance');
-    		attendance.call('fetch_ids_user', [],
-                    {}).then(function (result) {
-                    	console.log("=============================shivam",result)
-                });
+    		return attendance.call('fetch_ids_user', [],
+                    {})
     	},
     	
     	//creates and renders the many2one field and the button
@@ -59,25 +57,27 @@ openerp.pls = function(instance, local) {
             self.dfm = new instance.web.form.DefaultFieldManager(self);
             self.dfm.extend_field_desc({
                 project_id: {
+                	string:'Project',
                     relation: "telecom.project",
                 },
             });
             var uid = self.session.uid
             domain_ids = self.fetch_ids_user(uid);
-            self.project_m2o = new instance.web.form.FieldMany2One(self.dfm, {
-            	attrs: {
-                    name: "project_id",
-                    type: "many2one",
-                    domain: [
-                    ],
-                    context: {
+            $.when(domain_ids).then(function(domain_ids){
+                self.project_m2o = new instance.web.form.FieldMany2One(self.dfm, {
+                	attrs: {
+                        name: "project_id",
+                        type: "many2one",
+                        domain: domain_ids,
+                        context: {
+                        },
+                        modifiers: '{"required": true}',
                     },
-                    modifiers: '{"required": true}',
-                },
+                });
+                var $button = $(QWeb.render("button_select_project", {}));
+                self.project_m2o.prependTo(self.$el);
+                self.$el.first().find('span.oe_form_field').prepend($button);
             });
-            var $button = $(QWeb.render("button_select_project", {}));
-            self.project_m2o.prependTo(self.$el);
-            self.$el.first().find('span.oe_form_field').prepend($button);
     	},    	
     });
     

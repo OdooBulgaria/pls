@@ -39,7 +39,8 @@
              'security/ir.model.access.csv',
              'res_users_view.xml',
              'pls.xml',
-             'attendance_attendance_view.xml'
+             'attendance_attendance_view.xml',
+             'attendance_workflow.xml'
              ],
     'demo': [],
     'test': [],

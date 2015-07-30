@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="wkf_attendance" model="workflow">
+            <field name="name">attendance.attendance</field>
+            <field name="osv">attendance.attendance</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <!-- Activity -->
+        <record id="act_draft" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_attendance"/>
+            <field name="flow_start">True</field>
+            <field name="name">draft</field>
+        </record>
+
+        <record id="act_pending" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_attendance"/>
+            <field name="name">Pending</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'pending'})</field>
+        </record>
+
+        <record id="act_submitted" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_attendance"/>
+            <field name="name">Submitted</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">stopall</field>
+            <field name="action">change_pending_done()</field>
+        </record>
+        
+        <!-- Transitions -->
+        
+        <record id="trans_draft_pendings" model="workflow.transition">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_pending"/>
+            <field name="condition" eval="True"></field>
+        </record>
+
+        <record id="trans_pending_done" model="workflow.transition">
+            <field name="act_from" ref="act_pending"/>
+            <field name="act_to" ref="act_submitted"/>
+            <field name="signal">change_pending_done</field>
+        </record>
+        
+        
+        <!-- Attendance.line -->
+        <record id="wkf_attendance_line" model="workflow">
+            <field name="name">attendance.lines</field>
+            <field name="osv">attendance.line</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <!-- Activity -->
+        <record id="act_pending_lines" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_attendance_line"/>
+            <field name="flow_start">True</field>
+            <field name="name">pending</field>
+            <field name="action">write({'state':'pending'})</field>
+        </record>
+
+
+        <record id="act_submitted_lines" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_attendance_line"/>
+            <field name="name">submitted</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">stopall</field>
+            <field name="action">change_pending_done()</field>		
+        </record>
+
+        <!-- Transitions -->
+        
+        <record id="trans_pending_submitted_lines" model="workflow.transition">
+            <field name="act_from" ref="act_pending_lines"/>
+            <field name="act_to" ref="act_submitted_lines"/>
+            <field name="signal">change_pending_done</field>
+        </record>
+
+    </data>
+</openerp>

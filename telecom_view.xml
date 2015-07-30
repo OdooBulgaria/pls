@@ -51,6 +51,9 @@
     		<field name="model">telecom.project</field>
     		<field name="arch" type="xml">
     			<form string="project Form View">
+    				<header>
+    					<field name="state" widget="statusbar" clickable="1"  statusbar_visible="draft,wip,close" />
+    				</header>
     				<sheet>
 						<field name="image" widget='image' class="oe_left oe_avatar"/>
 	                    <div class="oe_title oe_left">

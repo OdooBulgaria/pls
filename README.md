@@ -12,3 +12,11 @@ To set up the users and accesses
 3. Warning -: Do not leave the porject managers,circle heads without related users in hr.employee
 4. Access Rights for Telecom Module -->Project Manager --> manager , Circle Head --> Circle Head , Admin or Corporrate ---> Corporate
 5. Access Rights for HR Module --> Employee, Project Manager,Circle Head should be employee and the corporate and admin will be manager
+
+
+Attendance Workflow --->
+ 
+1. Only when all the project lines are submitted the atendance will be allowed to be submitted manually
+2. When any project line is changed to state pending then the attendace record also changes to pending
+ 
+ 

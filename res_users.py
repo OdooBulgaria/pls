@@ -12,7 +12,6 @@ class res_users(osv.osv):
         if ids:
             for id in ids:
                 emp_id = self.pool.get('hr.employee').search(cr,uid,[('user_id','=',id)])
-                print "=================================emp_id",emp_id
                 if emp_id:
                     res.update({id:emp_id[0]})
                 else:

@@ -1,6 +1,5 @@
 <openerp>
 	<data>
-
 		<!-- Creating a client action for the widget -->
         <record id="action_attendance_page" model="ir.actions.client">
             <field name="name">Attendance Page</field>
@@ -14,22 +13,30 @@
 		
 		<!-- Form View Attendance -->
 		<record id = "view_attendace_attendance_corporate" model="ir.ui.view">
-            <field name="name">attendance.attendance for corporate</field>
+            <field name="name">Project Attendance Record</field>
             <field name="model">attendance.attendance</field>
             <field name="arch" type="xml">
 				<form string = "Attendance">
 					<header>
-						<field name="state" widget="statusbar" statusbar_visible="draft,pending,submitted" />
+						<button name = "change_pending_done" string = "Submit Attendance" groups = "pls.telecom_corporate" states = "pending" class = "oe_highlight" />
+						<button name = "change_done_pending" type="object" string = "Pending" groups = "pls.telecom_corporate" states = "submitted" class = "oe_highlight" />
 					</header>
 					<sheet>	
-                        <div class="oe_title">
+                        <div class="oe_title oe_left">
                             <label for="user_id" class="oe_edit_only" />
                             <h1>
 								<field name = "user_id" readonly="1" placeholder = "Created By"/>                                
                             </h1>
-                            <label for="date" class="oe_edit_only" />
-							<field name="date" placeholder="Today's Date" />
 						</div>
+                        <div class="oe_title">
+                            <label for="date" class="oe_edit_only" />
+                            <h1>
+								<field name="date" placeholder="Today's Date" />                                
+                            </h1>
+						</div>				
+						<div class = "oe_title oe_right">
+							<field name="state" widget="statusbar" statusbar_visible="draft,pending,submitted"/>							
+						</div>		
 						<notebook>
 							<page string = "Project Wise Attendance">
 								<field name = "attendance_line" />
@@ -42,7 +49,7 @@
         
         <!-- Tree View Attendance -->
 		<record id = "view_attendace_attendance_tree" model="ir.ui.view">
-            <field name="name">attendance.attendance tree view for project manager</field>
+            <field name="name">Attendance</field>
             <field name="model">attendance.attendance</field>
             <field name="arch" type="xml">
 				<tree string = "Attendace" colors = "red:state == 'pending';">
@@ -81,6 +88,70 @@
         
         <menuitem id = "child_parent_menu_archive" parent = "parent_menu_attendance" name = "Archive" />        
 		<menuitem id = "subchild_attendace_archive"  action = "action_attendance_attendance" parent = "child_parent_menu_archive" />      
-               
+	
+		<!-- Attendance Line  -->
+
+		<record id = "view_attendace_line_corporate" model="ir.ui.view">
+			<field name = "name">Project Daily Attendance Record</field>
+            <field name="model">attendance.line</field>
+            <field name="arch" type="xml">
+				<form string = "Attendance">
+					<header>
+						<button name = "change_pending_done"  string = "Submit" states = "pending" class = "oe_highlight" groups = "pls.telecom_corporate" />
+						<button name = "change_done_pending"  string = "Pending" type="object" states = "submitted" class = "oe_highlight" groups = "pls.telecom_corporate" />
+					</header>
+					<sheet>
+                        <div class="oe_title oe_left">
+                            <label for="project_id" class="oe_edit_only" />
+                            <h1>
+								<field name = "project_id" />
+                            </h1>
+                            <label for="manager_id" class="oe_edit_only" />
+							<field name = "manager_id"/>
+                            <label for="attendance_id" class="oe_edit_only" />
+							<field name = "attendance_id"/>                            
+						</div>						
+                        <div class="oe_title">
+                            <label for="date" class="oe_edit_only" />
+                            <h1>
+								<field name = "date"  placeholder = "Date"/>
+                            </h1>
+						</div>
+                        <div class="oe_title oe_right">
+							<field name="state" widget="statusbar"  statusbar_visible="pending,submitted" />
+						</div>
+						
+						<notebook>
+							<page string = "Employee Attendance" >
+								<field name = "emploee_status_line" nolabel = "1" />
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+     	<record id = "view_attendace_line_corporate_tree" model="ir.ui.view">
+			<field name = "name">Project Daily Attendance Record</field>
+            <field name="model">attendance.line</field>
+            <field name="arch" type="xml">
+            	<tree string = "Project Attendance" colors = "red:state == 'pending';">
+            		<field name = "project_id" />
+            		<field name = "date" />
+            		<field name = "state" />
+            		<field name = "manager_id" />
+            	</tree>
+            </field>
+        </record>
+		
+		<record id = "action_attendance_line" model="ir.actions.act_window">
+            <field name="name">Project Wise Attendance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">attendance.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+		</record>
+		<menuitem id = "subchild_attendace_lines" groups = "telecom_corporate"  action = "action_attendance_line" parent = "child_parent_menu_archive" />				
+
 	</data>
 </openerp>
