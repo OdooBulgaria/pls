@@ -43,7 +43,7 @@
 	- [ ] To do this create a field in project manager (hr.employee,boolean field)
 
 - [ ] Create a cron job that does the following
-	> ** Make sure that 'Allow overriding the time limit option' is taken into consideration each time ** 
+	> **Make sure that 'Allow overriding the time limit option' is taken into consideration each time** 
 	- [ ] If within the allowed time the attendance.attendance record is not closed then a log for that project manager will be created ('mail.message') and a mail will be dispatched to the follower of that document ("send a message" functionality).
 	- [ ] Check if the project manager has taken all the attendances. If not then log an internal note 
     - [ ] At allowed time the cron job will run and that time automatically all unsubmitted attendances will be submitted and all the project manager attendance.attendance records will close.
