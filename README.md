@@ -22,8 +22,13 @@
 	- Project Manager -
 	- Manager
 	- Circle Head -- Circle Head , 
-	- Admin or Corporrate --- Corporate
--  Access Rights for HR Module --> Employee, Project Manager,Circle Head should be employee and the corporate and admin will be manager
+	- Admin or Corporate --- Corporate
+-  Access Rights for HR Module 
+	> **The first three users will be hr employees**
+	- Employee 
+	- Project Manager 
+	- Circle Head should be employee 
+	- Corporate and admin will be Manager
 
 ----------------------------------------
 # Attendance Functionality
