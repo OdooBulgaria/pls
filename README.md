@@ -17,14 +17,14 @@
 	- Project Manager 
 	- Employees
 -  Make related user for all the Circle Heads ,Project Manager, Director otherwise they wont be able to see their employee database
->  Warning -: Do not leave the project managers,circle heads without related users in hr.employee
+> **Do not leave the project managers,circle heads without related users in hr.employee**
 -  Access Rights for Telecom Module 
 	- Project Manager -
 	- Manager
 	- Circle Head -- Circle Head , 
 	- Admin or Corporate --- Corporate
 -  Access Rights for HR Module 
-> **The first three users will be hr employees**
+	> **The first three users will be hr employees**
 	- Employee 
 	- Project Manager 
 	- Circle Head should be employee 
