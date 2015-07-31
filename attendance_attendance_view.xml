@@ -89,11 +89,68 @@
         <menuitem id = "child_parent_menu_archive" parent = "parent_menu_attendance" name = "Archive" />        
 		<menuitem id = "subchild_attendace_archive"  action = "action_attendance_attendance" parent = "child_parent_menu_archive" />      
 	
-		<!-- Attendance Line  -->
 
+		<!-- Attendance line view while taking attendance -->
+		<record id = "view_attendace_line_take_attendance" model="ir.ui.view">
+			<field name = "name">Project Daily Attendance Record</field>
+            <field name="model">attendance.line</field>
+            <field name = "priority">2</field>
+            <field name="arch" type="xml">
+				<form string = "Project Attendance">
+					<header>
+						<button name = "change_pending_done"  string = "Submit" states = "pending" class = "oe_highlight" groups="pls.telecom_employee" />
+					</header>
+					<sheet>
+	                       <div class="oe_title oe_left">
+	                           <label for="project_id" class="oe_edit_only" />
+	                           <h1>
+								<field name = "project_id" readonly="1" />
+	                           </h1>
+	                           <label for="manager_id" class="oe_edit_only"  />
+	     						<field name = "manager_id" readonly='1'/>
+								<field name = "manager_employee_id" invisible="1"/> <!-- To set domain on employee_id field -->
+						</div>						
+	                       <div class="oe_title">
+	                           <label for="date" class="oe_edit_only" />
+	                           <h1>
+								<field name = "date"  placeholder = "Date" readonly='1'/>
+	                           </h1>
+						</div>
+	                       <div class="oe_title oe_right">
+							<field name="state" widget="statusbar"  statusbar_visible="pending,submitted" />
+						</div>
+						
+						<notebook>
+							<page string = "Employee Attendance" >
+								<field name = "emploee_status_line" nolabel = "1" context="{'project_write':True}">
+									<tree string = "Employee Attendance" editable="bottom"   >
+										<field name="employee_id" on_change="onchange_employee_id(employee_id,parent.project_id)" 
+										domain = "['|',('current_project','=',parent.project_id),('parent_id','child_of',[parent.manager_employee_id]),('id','!=',parent.manager_employee_id),]"
+										context="{'read_access':True,}"
+										/>    <!-- The context passed out here is for name_search field -->
+										<field name = "manager_id" readonly='1' />
+										<field name = "designation" readonly="1"/>
+										<field name = "state" />
+										<field name = "remarks" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+						<footer>
+							<button name = "save_attendance_line" class = "oe_highlight" string = "Save but not Submit" type="object" />
+							or
+							<button string="Cancel" class="oe_link" special="cancel"/>
+						</footer>
+					</sheet>            						
+				</form>
+            </field>
+        </record>		
+
+		<!-- Attendance Line View for admin panel -->
 		<record id = "view_attendace_line_corporate" model="ir.ui.view">
 			<field name = "name">Project Daily Attendance Record</field>
             <field name="model">attendance.line</field>
+            <field name = "priority">1</field>
             <field name="arch" type="xml">
 				<form string = "Attendance">
 					<header>
@@ -152,6 +209,18 @@
             <field name="view_mode">tree,form</field>
 		</record>
 		<menuitem id = "subchild_attendace_lines" groups = "telecom_corporate"  action = "action_attendance_line" parent = "child_parent_menu_archive" />				
+
+		<!-- Employee Status Line -->
+		<record id = "view_employee_status_line" model="ir.ui.view">
+			<field name = "name">Employee Attendance Line</field>
+            <field name="model">employee.status.line</field>
+            <field name = "priority">1</field>
+            <field name="arch" type="xml">
+            	<form string = "Employee Attendance" >
+            		
+            	</form>
+            </field>
+       </record>
 
 	</data>
 </openerp>

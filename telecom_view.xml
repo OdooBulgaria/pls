@@ -45,10 +45,26 @@
 				</form>
 			</field>
 		</record> 
-			
+		
+		<!-- This view is for circle head and project manager to see when they are taking attendance -->
+    	<record id="telecom_project_form_view_many2o" model="ir.ui.view">
+    		<field name ="name">telecom.project.form.view.m2o</field>
+    		<field name = "model">telecom.project</field>
+    		<field name = "priority">2</field>
+    		<field name = "arch" type = "xml">
+    			<form string = "Project Link">
+    				<group>
+    					<field name = "name" />
+    				</group>
+    			</form>
+    		</field>
+    	</record>
+		
+    	<!--  This view for the admin or corporate to see -->
     	<record id="telecom_project_form_view" model="ir.ui.view">
     		<field name="name">telecom.project.form.view</field>
     		<field name="model">telecom.project</field>
+    		<field name = "priority">1</field>
     		<field name="arch" type="xml">
     			<form string="project Form View">
     				<header>
@@ -66,8 +82,8 @@
 	                    </div>			
 	                    <group col = "4">
 							<group col="2" colspan="2">
-								<strong><label for = "project_manager"/></strong>									
-								<field name="project_manager" colspan = "2" nolabel="1">
+								<label for = "project_manager" style="font-weight:600;" />									
+								<field name="project_manager" colspan = "2" nolabel="1" >
 									<tree string ="Project Manager / Co-ordinator">
 										<field name="name"/>
 									</tree>

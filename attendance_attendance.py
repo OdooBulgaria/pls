@@ -4,6 +4,7 @@ from openerp.osv.orm import setup_modifiers
 from openerp import SUPERUSER_ID
 from openerp import workflow
 from openerp.tools.translate import _
+import time
 
 class attendance_attendance(osv.osv):
     _name = "attendance.attendance"
@@ -95,14 +96,21 @@ class attendance_attendance(osv.osv):
                     list_ids.append(i[0])
         return [['id','in',list_ids]]
         
+    def _get_user_ids_group(self,cr,uid,module,group_xml_id):
+        '''
+        This method takes in the module and xml_id of the group and return the list of users present in that group
+        '''
+        groups = self.pool.get('ir.model.data').get_object_reference(cr, uid, module, group_xml_id)[1]
+        user_group=self.pool.get('res.groups').browse(cr,uid,groups)
+        user_ids=map(int,user_group.users or [])
+        return user_ids                    
+    
     
     # The date field is only accessible by the corporate account
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res=super(attendance_attendance,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         if view_type =="form":
-            groups = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'pls', 'telecom_corporate')[1]
-            user_group=self.pool.get('res.groups').browse(cr,uid,groups)
-            user_ids=map(int,user_group.users or [])            
+            user_ids=self._get_user_ids_group(cr,SUPERUSER_ID,'pls','telecom_corporate')      
             if not(uid in user_ids):
                 doc = etree.XML(res['arch'])
                 for node in doc.xpath("//field[@name='date']"):
@@ -132,10 +140,54 @@ class attendace_line(osv.osv):
     _name = "attendance.line"
     _description = "Attendance Line"
     
+    def _check_project_exist(self,cr,uid,project_id):
+        '''
+            return the id, of the attendance line if taken today
+        '''
+        id = self.search(cr,SUPERUSER_ID,[('project_id','=',project_id),('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=1, order=None, context=None, count=False)
+        return id
+    
+    #called from javascript while takiing attendance
+    def check_line_exist(self,cr,uid,project_id,context=None):
+        '''
+        It checks whether the project for which attendance is being taken,whether attendance for that project has already been taken or not
+        * If the attendance for that project is already taken it then checks of the same project manager has taken the attendance.
+            - if the same project manager has taken the attendance then  it returns [attendance_line id ,True]
+            - if the same project manager has not taken the attendance then  it returns [attendance_line id , False]
+        * If the attendance for the project is not taken then it return False simply
+        '''
+        
+        line_id = self._check_project_exist(cr,uid,project_id)
+        if line_id:
+            manager_id = self.read(cr,SUPERUSER_ID,line_id[0],['manager_id'],context)
+            if manager_id and manager_id.get('manager_id',False) and manager_id.get('manager_id',False)[0] == uid :return [line_id,True]
+            else :return [line_id,False]
+        else: return False
+    
+    def _check_attendance_record_created(self,cr,uid):
+        id = self.pool.get('attendance.attendance').search(cr,SUPERUSER_ID,[('user_id','=',uid),('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=1, order=None, context=None, count=False)
+        return id
+    
+    def save_attendance_line(self,cr,uid,ids,context=None):
+        '''
+            if attendance record exists then just attach the line to the existing attendance record else create a attendance record and then attach the line
+        '''
+        # ids --> [1]
+        assert len(ids) == 1,'This option should only be used for a single id at a time'
+        attendance_created = self._check_attendance_record_created(cr,uid) 
+        attendance_obj = self.pool.get('attendance.attendance')
+        if attendance_created:
+            self.write(cr,SUPERUSER_ID,ids,{'attendance_id':attendance_created[0]},context)
+        else:
+            attendance_obj.pool.get('attendance.attendance').create(cr,SUPERUSER_ID,{
+                                                                  'user_id':uid,
+                                                                  'date':time.strftime('%Y-%m-%d'),
+                                                                  'attendance_line':[(6,0,ids)]
+                                                                  },context)
+        return True
+    
     def change_pending_done(self,cr,uid,ids,context=None):
         self.write(cr,SUPERUSER_ID,ids,{'state':'submitted'},context)
-#         for line in self.browse(cr,uid,ids,context):
-#             workflow.trg_write(SUPERUSER_ID, 'attendance.attendance',line.attendance_id.id, cr)
         return True
     
     def change_done_pending(self,cr,uid,ids,context=None):
@@ -155,10 +207,45 @@ class attendace_line(osv.osv):
     
     _rec_name = "date"
     
+    #context passed from javascript
+    def _get_project_id(self,cr,uid,context):
+        if context.get('project_id',False):
+            return context.get('project_id',False)
+        else:
+            return False
+        
+    #Automatically pupuate the all the employees in this project on create
+    def _get_employee_status_line(self,cr,uid,context):
+        project_id = context.get('project_id',False)
+        list_return = []
+        if project_id:
+            cr.execute('''
+                select id,job_id,parent_id from hr_employee where current_project = %s 
+            ''' %(project_id))
+            employee_id = cr.fetchall()
+            for id in employee_id:
+                list_return.append((0,0,{'employee_id':id[0],
+                                         'designation':id[1],
+                                         'manager_id':id[2]
+                                         }))
+            return list_return
+        else: return False
+        
+    def _get_manager_employee_id(self,cr,uid,context=None):
+        context = {}
+        context.update({'read_access':True})
+        emp_id = self.pool.get('res.users').read(cr,uid,uid,['emp_id'],context)
+        if emp_id.get('emp_id',False):
+            return emp_id.get('emp_id',False)[0]
+        else:return False
+        
     _defaults = {
                  'state':'pending',
                  'date':fields.datetime.now,
                  'manager_id':lambda self,cr,uid,context:uid,
+                 'project_id':_get_project_id,
+                 'emploee_status_line':_get_employee_status_line,
+                 'manager_employee_id':_get_manager_employee_id,
                  }
     
     '''
@@ -170,8 +257,9 @@ class attendace_line(osv.osv):
     _columns = {
                 'date':fields.date('Date',states={'submitted':[('readonly',True)]},required=True),
                 'manager_id':fields.many2one('res.users','Created By',states={'submitted':[('readonly',True)]},required=True),
+                'manager_employee_id':fields.many2one('hr.employee'), #this field is required to set domain on employee_id field in xml view
                 'project_id':fields.many2one('telecom.project',"Project",states={'submitted':[('readonly',True)]},required=True),
-                'attendance_id':fields.many2one('attendance.attendance',"Attendance Record",states={'submitted':[('readonly',True)]},required=True),
+                'attendance_id':fields.many2one('attendance.attendance',"Attendance Record",states={'submitted':[('readonly',True)]}),
                 'state':fields.selection([
                                           ('pending','Pending'),
                                           ('submitted','Submitted')
@@ -183,6 +271,21 @@ class employee_status_line(osv.osv):
     _name = "employee.status.line" 
     _description = "Employee Status Line"
     
+    def create(self,cr,uid,vals,context=None):
+        '''
+        Make sure that the project from which attendance is taken,the employee status line is overwritten on employee current project
+        '''
+        # vals = {'line_id': 16, u'state': u'present', u'employee_id': 3, u'manager_id': 2, u'designation': 1}
+        if context.get('project_write',False):
+            project_id = self.pool.get('attendance.line').browse(cr,SUPERUSER_ID,vals.get('line_id'),context).project_id.id
+            # write it in the current_project field of the employee
+            self.pool.get('hr.employee').write(cr,SUPERUSER_ID,vals.get('employee_id',False),{'current_project':project_id},context)
+        return super(employee_status_line,self).create(cr,uid,vals,context)
+    
+    _sql_constraints = [
+        ('restrict_one_employee_perday', 'unique(employee_id,date)', 'An employee can only have single attendance/day!'),
+    ]
+    
     '''
         In this the employee today's attendance will be taken
         1. Only one employee status line per day.
@@ -190,16 +293,42 @@ class employee_status_line(osv.osv):
         will be deleted and a new employee.status.line will be created for that day
         3. This will be the lines that the corporate will see for the attendance report
     '''
+    
+    def onchange_employee_id(self,cr,uid,id,employee_id,project_id,context=None):
+        info = self.pool.get('hr.employee').read(cr,uid,employee_id,['job_id','parent_id','current_project'],context)
+        warning = {}
+        if info and info.get('current_project',False) and info.get('current_project',False)[0]:
+            if project_id != info.get('current_project',False)[0]:
+                warning.update({
+                                'title':"Employee Project",
+                                'message':"This employee currently belongs to %s project. If you continue then the project of the employee will change" %(info.get('current_project',False)[1])
+                                })
+        return {
+                    'value':{
+                             'designation':info and info.get('job_id',False) and info.get('job_id',False)[0] or False,
+                             'manager_id':info and info.get('parent_id',False) and info.get('parent_id',False)[0] or False,
+                             },
+                    'warning':warning,
+                }
+    
+    _defaults = {
+                 'date':fields.datetime.now,
+                 }
+    _rec_name = 'employee_id'
+    
     _columns ={
-               'employee_id':fields.many2one('hr.employee',"Employee Name"),
-               'designation':fields.related('employee_id','job_id',type="many2one",relation="hr.job",string="Designation"),
+               'employee_id':fields.many2one('hr.employee',"Employee Name",required=True),
+               'manager_id':fields.many2one('hr.employee',"Reporting Manager"),
+               'current_project':fields.many2one('telecom.project',"Current Project"),
+               'date':fields.date('Date'),
+               'designation':fields.many2one("hr.job",string="Designation"),
                'state':fields.selection([
                                      ('present','Present'),
                                      ('absent','Absent'),
                                      ('leave','Leave'),
                                      ('terminated','Terminated'),
                                      ('tour',"On Tour"),
-                                     ],string = "Status" ),
+                                     ],string = "Status",required=True ),
                'remarks':fields.text('Remarks'),
                'line_id':fields.many2one('attendance.line'),
                }
