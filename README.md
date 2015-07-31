@@ -24,7 +24,7 @@
 	- Circle Head -- Circle Head , 
 	- Admin or Corporate --- Corporate
 -  Access Rights for HR Module 
-	> **The first three users will be hr employees**
+> **The first three users will be hr employees**
 	- Employee 
 	- Project Manager 
 	- Circle Head should be employee 
