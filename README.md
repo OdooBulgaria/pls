@@ -17,7 +17,7 @@ To set up the users and accesses
 #Attendance Workflow --->
 ------------------- 
 - [x] Only when all the project lines are submitted the attendance.attendance will be allowed to be submitted manually
-- [] When any project line is changed to state pending then the attendance record also changes to pending 
+- [ ] When any project line is changed to state pending then the attendance record also changes to pending 
  
 Attendance Functionality
 
