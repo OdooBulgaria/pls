@@ -1,3 +1,4 @@
+-----------------
 # PLS SETUP
 --------------
 
@@ -16,22 +17,25 @@
 -  Access Rights for Telecom Module -->Project Manager --> manager , Circle Head --> Circle Head , Admin or Corporrate ---> Corporate
 -  Access Rights for HR Module --> Employee, Project Manager,Circle Head should be employee and the corporate and admin will be manager
 
+----------------------------------------
+# Attendance Functionality
+--------------------------------
 
-# Attendance Workflow 
--------------------------
+## Attendance Functionality
 
 - [x] Only when all the project lines are submitted the attendance.attendance will be allowed to be submitted manually
 - [x] When any project line is changed to state pending then the attendance record also changes to pending 
  
-## Attendance Functionality
-
-- [ ] when the submit button is clicked the project attendance is submitted
+- [x] when the submit button is clicked the project attendance is submitted
 
 - [ ] In the submit button there will be a check that if all the project's attendance of that project manager is submitted then attendance will close 
 
-- [ ] If within the allowed time the attendance.attendance record is not closed then a log for that project manager will be created ('mail.message') and a mail will be dispatched to the follower of that document ("send a message" functionality)
+- [ ] Create a setting panel where the time limit for attendance can be setup.
 
-- [ ] At allowed time the cron job will run and that time automatically all unsubmitted attendances will be submitte and all the project manager attendance.attendance records will close.
+- [ ] Create a cron job that does the following
+	- [ ] If within the allowed time the attendance.attendance record is not closed then a log for that project manager will be created ('mail.message') and a mail will be dispatched to the follower of that document ("send a message" functionality).
+	
+    - [ ] At allowed time the cron job will run and that time automatically all unsubmitted attendances will be submitted and all the project manager attendance.attendance records will close.
 
 - [ ] In order to override the time limit the admin will tick on "Allow overriding the time limit option" in hr.employee to let him override.Every time this option is ticked a note will be logged stating the reason for overriding. Also after one hour that option will close it self. The reason for overriding will be logged to display the project manager monthly report
 
