@@ -1,5 +1,5 @@
 -----------------
-# PLS SETUP
+# SETUP
 --------------
 
 ## Restrictions
@@ -11,10 +11,18 @@
 ## To set up the users and accesses
 
 
--  Create all Director --> Circle Head --> Project Manager ---> Employees
+-  Create all users 
+	- Director 
+	- Circle Head 
+	- Project Manager 
+	- Employees
 -  Make related user for all the Circle Heads ,Project Manager, Director otherwise they wont be able to see their employee database
--  Warning -: Do not leave the project managers,circle heads without related users in hr.employee
--  Access Rights for Telecom Module -->Project Manager --> manager , Circle Head --> Circle Head , Admin or Corporrate ---> Corporate
+>  Warning -: Do not leave the project managers,circle heads without related users in hr.employee
+-  Access Rights for Telecom Module 
+	- Project Manager -
+	- Manager
+	- Circle Head -- Circle Head , 
+	- Admin or Corporrate --- Corporate
 -  Access Rights for HR Module --> Employee, Project Manager,Circle Head should be employee and the corporate and admin will be manager
 
 ----------------------------------------
