@@ -23,10 +23,10 @@
 
 ## Manager Note Logging
 - [ ] Create a functional field many2many that will automatically fetch all the mail.message regarding that manager and display
-	- [ ] For this just enter the realed model as "hr.employee"
+	- [ ] For this just enter the related model as "hr.employee"
 	- [ ] Create own subtype 
-	- [ ] Enter the related id as the id of the project maanger 
-
+	- [ ] Enter the related id as the id of the project manager 
+	- [ ] In the many2many field look for the same subtype
 
 ## Attendance Functionality
 
@@ -42,13 +42,17 @@
 - [ ] In order to override the time limit the admin will tick on 'Allow overriding the time limit option' in hr.employee to let him override.Every time this option is ticked a note will be logged stating the reason for overriding. Also after one hour that option will close it self. The reason for overriding will be logged to display the project manager monthly report
 	- [ ] To do this create a field in project manager (hr.employee,boolean field)
 
+- [ ] If after the allowed time the manager tries to take attendance they wont be alowed until and unless they are allowed to override by admin panel
+- [ ] The overriding option will always be open for only 1 hour. 
+
 - [ ] Create a cron job that does the following
 	> **Make sure that 'Allow overriding the time limit option' is taken into consideration each time** 
 	- [ ] If within the allowed time the attendance.attendance record is not closed then a log for that project manager will be created ('mail.message') and a mail will be dispatched to the follower of that document ("send a message" functionality).
 	- [ ] Check if the project manager has taken all the attendances. If not then log an internal note 
     - [ ] At allowed time the cron job will run and that time automatically all unsubmitted attendances will be submitted and all the project manager attendance.attendance records will close.
-
-- [ ] Once all the attendances are submitted a new cron job will trigger that will check if the manager has taken all the attendances. If not then an internal note will be logged for him and a mail will be dispatched to the follower of the documents
+	- [ ] Once all the attendances are submitted a new cron job will trigger that will check if the manager has taken all the attendances. If not then an internal note will be logged for him and a mail will be dispatched to the follower of the documents
+	- [ ] A final cron summary will be logged in a seperate document that the admin can check and know the status of everything
+		- [ ] This will also show the projects for which the attendace was not taken at all
 
 - [ ] Attendance Dash Board 
 	- [ ] Corporate
