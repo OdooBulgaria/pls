@@ -9,13 +9,13 @@ class hr_job(osv.osv):
         return super(hr_job,self).name_get(cr, SUPERUSER_ID, ids, context=None)
     
 class hr_employee(osv.osv):
-    
     _inherit='hr.employee'
-    
-    
-    # read_access is basically passed from javascript wwhile calling the attendance.line wizard
-    # This is because by this we are giving project manager the access to other employees too whereas they only have a record rule to access their own employees
-    # So for this time we are just overriding the record rule in name_get,name_search,read method
+     
+    '''
+     read_access is basically passed from javascript wwhile calling the attendance.line wizard
+     This is because by this we are giving project manager the access to other employees too whereas they only have a record rule to access their own employees
+     So for this time we are just overriding the record rule in name_get,name_search,read method
+    '''
     
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if context == None:

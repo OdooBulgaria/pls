@@ -34,7 +34,7 @@
 	- Circle Head should be employee 
 	- Corporate and admin will be Manager
 
-----------------------------------------
+------------------------------------
 # Attendance Functionality
 --------------------------------
 
@@ -44,7 +44,10 @@
 	- [ ] Create own subtype 
 	- [ ] Enter the related id as the id of the project manager 
 	- [ ] In the many2many field look for the same subtype
-
+	
+	> In short all the mail.message with subtype 'complaints' related document hr.employee and related id = id of employee will give
+	> the biodata of the employee (This will be our standard employee log)  
+	
 ## Attendance Functionality
 
 - [x] Only when all the project lines are submitted the attendance.attendance will be allowed to be submitted manually
