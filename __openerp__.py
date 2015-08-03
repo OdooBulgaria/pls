@@ -30,7 +30,7 @@
     """,
     'author': 'J & G Infosystems',
     'website': 'www.jginfosystems.com',
-    'depends': ['base','hr'],
+    'depends': ['base','hr','complaint_system'],
     'data': [
              'security/pls_security.xml',
              'telecom_view.xml',
@@ -41,7 +41,7 @@
              'res_users_view.xml',
              'pls.xml',
              'attendance_attendance_view.xml',
-             'attendance_workflow.xml'
+             'attendance_workflow.xml',
              ],
     'demo': [],
     'test': [],

@@ -38,18 +38,9 @@
 # Attendance Functionality
 --------------------------------
 
-## Manager Note Logging
-- [ ] Create a functional field many2many that will automatically fetch all the mail.message regarding that manager and display
-	- [ ] For this just enter the related model as "hr.employee"
-	- [ ] Create own subtype 
-	- [ ] Enter the related id as the id of the project manager 
-	- [ ] In the many2many field look for the same subtype
-	
-	> In short all the mail.message with subtype 'complaints' related document hr.employee and related id = id of employee will give
-	> the biodata of the employee (This will be our standard employee log)  
-	
 ## Attendance Functionality
 
+- [ ] Create todays attendance.attendance menuitem 'Probably will make a dashboar and server this purpose' 
 - [x] Only when all the project lines are submitted the attendance.attendance will be allowed to be submitted manually
 - [x] When any project line is changed to state pending then the attendance record also changes to pending 
  
