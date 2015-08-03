@@ -40,7 +40,7 @@
 
 ## Attendance Functionality
 
-- [ ] Create todays attendance.attendance menuitem 'Probably will make a dashboar and server this purpose' 
+- [ ] Create todays attendance.attendance menuitem `Probably will make a dashboar and server this purpose` 
 - [x] Only when all the project lines are submitted the attendance.attendance will be allowed to be submitted manually
 - [x] When any project line is changed to state pending then the attendance record also changes to pending 
  
