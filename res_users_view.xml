@@ -8,6 +8,7 @@
 				<xpath expr = "/form/sheet/div/group/field[@name='partner_id']" position = "after">
 					<field name = "emp_id" />
 					<field name = "allowed_attendance_time" widget = "float_time" />
+					<field name = "override_time" />
 				</xpath>            
             </field>
 		</record>

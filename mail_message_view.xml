@@ -1,0 +1,15 @@
+<openerp>
+	<data>
+		<!-- Creating an action and menuitem for Attendance Override logs in order to set the particular context for this purpose -->
+		
+        <record id="action_mail_message_log_a_attendance_override" model="ir.actions.act_window">
+            <field name="name">Attendance Override Logs</field>
+            <field name = "context">{'render_javascript':True,'subtype':'attendance_override'}</field>
+            <field name="res_model">mail.message</field>
+            <field name= "view_type">form</field>
+			<field name= "view_mode">tree_mail_message_quickadds</field>
+        </record>			
+        <menuitem  id="menuitem_complaints_empployees_subchild_log_a_attedance_log" groups = "base.group_hr_manager" parent="complaint_system.complaints_empployees_child" action="action_mail_message_log_a_attendance_override" sequence="90"/>		
+		
+	</data>
+</openerp>

@@ -53,7 +53,6 @@ openerp.pls = function(instance, local) {
 	               			 * project-write -: used by employee.status.line create() to overwrite the employee current project while taking attendance
 	               			 */
 	               			})
-	               		console.log("===========================action",action);
     					self.do_action(action);
             		});
     			});

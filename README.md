@@ -52,8 +52,13 @@
 	- [x] Make ir.property for this field and set the default time to 11:00
 
 - [ ] In order to override the time limit the admin will tick on 'Allow overriding the time limit option' in hr.employee to let him override.Every time this option is ticked a note will be logged stating the reason for overriding. Also after one hour that option will close it self. The reason for overriding will be logged to display the project manager monthly report
+	- [x] Created a new subtype "overrides"
+	- [x] Created Menu item Permission Override Logs 
+	
+	> Inheritted and customized the default complaint_system module. So that the pls module and complaint_system modules are completely independent of each other
+	
 	- [ ] Put a restriction on "Take attendance button based on time and permission to override
-	- [ ] To do this create a field in project manager (hr.employee,boolean field)
+	- [x] To do this create a field in project manager (res.users,boolean field)
 	
 - [ ] In the submit button there will be a check that if all the project's attendance of that project manager is submitted then attendance will close 
 

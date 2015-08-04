@@ -43,7 +43,8 @@
              'pls.xml',
              'attendance_attendance_view.xml',
              'attendance_workflow.xml',
-             'res_config_view.xml'
+             'res_config_view.xml',
+             'mail_message_view.xml'
              ],
     'demo': [],
     'test': [],

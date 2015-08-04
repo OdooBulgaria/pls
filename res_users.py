@@ -40,5 +40,8 @@ class res_users(osv.osv):
              type='float',
              string ='Allowed Attendance Submission Time',
              help="Enter only for project manager. Otherwise does not have any functionality"),
-                }
+                
+                'override_time':fields.boolean('Allow Override Time Limit',help = "Overrides the time limit for submitting the attendance for Project Manager "),
+                
+            }
     

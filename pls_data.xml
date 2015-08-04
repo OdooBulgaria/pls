@@ -1,11 +1,19 @@
 <openerp>
 	<!-- Properties-->
-	<data noupdate = "1">
+	<data noupdate = "0">
 		<record forcecreate="True" id = "default_time_attendances" model = "ir.property">
 			<field name = "name">default_attendance_time</field>
             <field name="fields_id" search="[('model','=','res.users'),('name','=','allowed_attendance_time')]"/>
 			<field name = "type">float</field>
 			<field name = "value_float">11</field>
 		</record>
+
+        <!-- Attendance Override subtype for messaging / Chatter -->
+        <record id="mt_comment_attendance_override" model="mail.message.subtype">
+            <field name="name">Attendance Override</field>
+            <field name="sequence" eval="0"/>
+            <field name = "description">This subtype is used to identify the Attendance Override logged for the Project Manager</field>
+        </record>
+        		
 	</data>
 </openerp>
