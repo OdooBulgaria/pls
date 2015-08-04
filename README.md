@@ -40,8 +40,6 @@
 --------------------------------
 
 > The user who creates the attendance line will show in the created by field
-> The user who submits the attendance line will finally have the attendance line in their attendance record
-> So finally if there are three lines in attendance record of a user then it surely means that the user has submitted the attendance but not force 	that the user has created it
  
 
 ## Cron logs
