@@ -174,20 +174,81 @@ class attendace_line(osv.osv):
         '''
         # ids --> [1]
         assert len(ids) == 1,'This option should only be used for a single id at a time'
-        attendance_created = self._check_attendance_record_created(cr,uid) 
+        user_id = self.read(cr,uid,ids[0],['manager_id'],context)
+        attendance_created = self._check_attendance_record_created(cr,user_id.get('manager_id',False)[0])
         attendance_obj = self.pool.get('attendance.attendance')
         if attendance_created:
             self.write(cr,SUPERUSER_ID,ids,{'attendance_id':attendance_created[0]},context)
         else:
             attendance_obj.pool.get('attendance.attendance').create(cr,SUPERUSER_ID,{
-                                                                  'user_id':uid,
+                                                                  'user_id':user_id.get('manager_id',False)[0],
                                                                   'date':time.strftime('%Y-%m-%d'),
                                                                   'attendance_line':[(6,0,ids)]
                                                                   },context)
         return True
     
+    def _get_employee_id(self,cr,uid,context=None):
+        '''
+            takes in a single user id and returns a employee_id
+        '''
+        cr.execute('''
+            select id from hr_employee where resource_id = (select id from resource_resource where user_id = %s) 
+        ''' %(uid))
+        user_id = cr.fetchone()
+        return user_id and user_id[0] or False
+    
+    def close_attendance_record(self,cr,uid,context=None):
+        '''
+
+            - This method takes the uid and searches for all the project related to that uid
+            - Then it looks for all the attendace.line which were created today,state=submitted and were related to the uid 
+            - If the length of both is same then it closes the attendance record created by the uid
+            - If all the project attendance are taken then it will close the attendance record otherwise will send a list of all the project
+            - for which either attendance is not taken or not submitted
+            
+            - In case of cron job ---> First all the attendance.line will be submitted and their corresponding attendance.attendance will be closed if the project manager has taken all his attendance
+            - To close the attendance records this function will be called
+            - Thus this functional will now return the list of all the projects for which the project manager did not create the attendance
+            - This will all be logged as a complaint
+            - All the unsubmitted attendance.lines will also be logged as complaints
+            
+        '''
+        
+        employee_id = self._get_employee_id(cr, uid, context)
+        if employee_id:
+            cr.execute('''
+                select project_id from telecom_project_hr_employee_rel where manager_id = %s 
+            ''' %(employee_id))
+            all_project_ids = map(lambda x: x[0],cr.fetchall()) # All the project in which the manager is involved
+            if all_project_ids:
+                project_lines_taken = self.search(cr,SUPERUSER_ID,[('state','=','submitted'),('project_id.project_manager','in',[employee_id]),('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=200, order=None, context=None, count=False)
+                if project_lines_taken:
+                    project_ids_taken = map(lambda x: x.project_id.id,self.browse(cr,uid,project_lines_taken,context))
+                    if set(project_ids_taken) == set(all_project_ids):
+                        attendance_id = self._check_attendance_record_created(cr, uid)
+                        if attendance_id:
+                            workflow.trg_validate(SUPERUSER_ID, 'attendance.attendance', attendance_id[0], 'change_pending_done', cr)
+                            return True
+                    else:
+                        return set(all_project_ids) - set(project_ids_taken)  
+        else:
+            return False # This indicates that there is no employee attached to the uid and should be logged in the cron report
+        
+        
     def change_pending_done(self,cr,uid,ids,context=None):
+        self.save_attendance_line(cr,uid,ids,context)
         self.write(cr,SUPERUSER_ID,ids,{'state':'submitted'},context)
+        corporate_ids = self.pool.get('attendance.attendance')._get_user_ids_group(cr,uid,'pls','telecom_corporate')
+        if uid not in corporate_ids: # This will allow the admin to be able to submit anyone's project attendance line
+            self.close_attendance_record(cr,uid,context)
+        else:
+            # it is a corporate user
+            # check all the project lines are submitted
+            attendance_id = self._check_attendance_record_created(cr, uid)
+            if attendance_id:
+                project_ids_pending = self.search(cr,SUPERUSER_ID,[('state','=','pending'),('attendance_id','in',attendance_id),('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=200, order=None, context=None, count=False)
+                if not project_ids_pending:
+                    return workflow.trg_validate(SUPERUSER_ID,'attendance.attendance',attendance_id[0],"change_pending_done",cr)
         return True
     
     def change_done_pending(self,cr,uid,ids,context=None):
@@ -214,7 +275,7 @@ class attendace_line(osv.osv):
         else:
             return False
         
-    #Automatically pupuate the all the employees in this project on create
+    #Automatically populate the all the employees in this project on create
     def _get_employee_status_line(self,cr,uid,context):
         project_id = context.get('project_id',False)
         list_return = []

@@ -2,6 +2,25 @@
 	<data>
 		<!-- Creating an action and menuitem for Attendance Override logs in order to set the particular context for this purpose -->
 		
+		<record id = "override_log_attendance" model ="ir.ui.view">
+        	<field name = "name">Reson For Overriding Alloted Time</field>
+        	<field name = "model">mail.message</field>
+        	<field name = "priority">200</field>
+			<field name = "arch" type="xml">
+				<form string = "Reason">
+					<group>
+						<field name = "employee_id" />
+						<field name = "complaint"  required = "1"/>					
+					</group>
+					<footer>
+						<button name = "allow_override_attendance" string = "Allow" type = "object" clas = "oe_highlight" />
+						or
+						<button string="Cancel" class="oe_link" special="cancel"/>
+					</footer>
+				</form>
+			</field>
+		</record>
+
         <record id="action_mail_message_log_a_attendance_override" model="ir.actions.act_window">
             <field name="name">Attendance Override Logs</field>
             <field name = "context">{'render_javascript':True,'subtype':'attendance_override'}</field>

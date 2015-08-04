@@ -137,7 +137,7 @@
 							</page>
 						</notebook>
 						<footer>
-							<button name = "save_attendance_line" class = "oe_highlight" string = "Save but not Submit" type="object" />
+							<button name = "save_attendance_line" attrs="{'invisible':[('state','=','submitted')]}" class = "oe_highlight" string = "Save but not Submit" type="object" />
 							or
 							<button string="Cancel" class="oe_link" special="cancel"/>
 						</footer>

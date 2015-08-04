@@ -5,10 +5,19 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form" />
             <field name="arch" type="xml">
+				<xpath expr = "/form/sheet" position = "before">
+					<header>
+						<button string = "Override Attendance Time Limit" name = "override_time_true" 
+						type = "object" attrs = "{'invisible':[('override_time','=',True)]}" class = "oe_highlight" />
+						
+						<button string = "Cancel Override Attendance Time Limit" name = "override_time_false" 
+						type = "object" attrs = "{'invisible':[('override_time','=',False)]}"  class = "oe_highlight"/>
+					</header>
+				</xpath>
 				<xpath expr = "/form/sheet/div/group/field[@name='partner_id']" position = "after">
 					<field name = "emp_id" />
 					<field name = "allowed_attendance_time" widget = "float_time" />
-					<field name = "override_time" />
+					<field name = "override_time" readonly="1"/>
 				</xpath>            
             </field>
 		</record>

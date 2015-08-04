@@ -8,9 +8,9 @@
 -  Make sure that the circle manager and project manager have the right hierarchy and an employee. is always there for them also the related user field should be filled
 -  To ensure this there is a not null constraint on related user for employees if the user is project manager or circle head 
 - Do not delete the default property created by this module for setting the default timings for project manager
+- Make sure that there is one employee made for the admin user too otherwise there will lot places where the admin will not be able to override
 
 ## To set up the users and accesses
-
 
 -  Create all users 
 	- Director 
@@ -39,6 +39,17 @@
 # Attendance Functionality
 --------------------------------
 
+> The user who creates the attendance line will show in the created by field
+> The user who submits the attendance line will finally have the attendance line in their attendance record
+> So finally if there are three lines in attendance record of a user then it surely means that the user has submitted the attendance but not force 	that the user has created it
+ 
+
+## Cron logs
+- [ ] Unsubmitted attendance.lines of each user
+- [ ] Project Manager who did not submit their attendance
+- [ ] UID who do not have an emp_id
+- [ ] All attendance.attendance records that are unsubmitted (Warning to close it)
+
 ## Attendance Functionality
 
 - [ ] Create todays attendance.attendance menuitem `(Probably will make a dashboard and serve this purpose)` 
@@ -56,8 +67,8 @@
 	- [x] Created Menu item Permission Override Logs 
 	
 	> Inheritted and customized the default complaint_system module. So that the pls module and complaint_system modules are completely independent of each other
-	
-	- [ ] Put a restriction on "Take attendance button based on time and permission to override
+
+	- [x] Put a restriction on "Take attendance button based on time and permission to override
 	- [x] To do this create a field in project manager (res.users,boolean field)
 	
 - [ ] In the submit button there will be a check that if all the project's attendance of that project manager is submitted then attendance will close 
@@ -68,7 +79,7 @@
 			
 
 
-- [ ] If after the allowed time the manager tries to take attendance they wont be alowed until and unless they are allowed to override by admin panel
+- [ ] If after the allowed time the manager tries to take attendance they wont be allowed until and unless they are allowed to override by admin panel
 - [ ] The overriding option will always be open for only 1 hour. 
 
 - [ ] Create a cron job that does the following
