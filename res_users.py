@@ -35,5 +35,10 @@ class res_users(osv.osv):
             store={
                 'hr.employee': (_get_hr_employee, [], 1),
             }),
+                
+                'allowed_attendance_time':fields.property(
+             type='float',
+             string ='Allowed Attendance Submission Time',
+             help="Enter only for project manager. Otherwise does not have any functionality"),
                 }
     

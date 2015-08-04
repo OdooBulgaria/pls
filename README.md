@@ -7,6 +7,7 @@
 - A user can have only one employee
 -  Make sure that the circle manager and project manager have the right hierarchy and an employee. is always there for them also the related user field should be filled
 -  To ensure this there is a not null constraint on related user for employees if the user is project manager or circle head 
+- Do not delete the default property created by this module for setting the default timings for project manager
 
 ## To set up the users and accesses
 
@@ -40,18 +41,27 @@
 
 ## Attendance Functionality
 
-- [ ] Create todays attendance.attendance menuitem `(Probably will make a dashboar and serve this purpose)` 
+- [ ] Create todays attendance.attendance menuitem `(Probably will make a dashboard and serve this purpose)` 
 - [x] Only when all the project lines are submitted the attendance.attendance will be allowed to be submitted manually
 - [x] When any project line is changed to state pending then the attendance record also changes to pending 
  
 - [x] when the submit button is clicked the project attendance is submitted
 
-- [ ] In the submit button there will be a check that if all the project's attendance of that project manager is submitted then attendance will close 
-
-- [ ] Create a setting panel where the time limit for attendance can be setup.
+- [x] Create a setting panel where the time limit for attendance can be setup
+	- [x] Create a property field to hold  default attendance time in res.users named `permitted_attendance_time`
+	- [x] Make ir.property for this field and set the default time to 11:00
 
 - [ ] In order to override the time limit the admin will tick on 'Allow overriding the time limit option' in hr.employee to let him override.Every time this option is ticked a note will be logged stating the reason for overriding. Also after one hour that option will close it self. The reason for overriding will be logged to display the project manager monthly report
+	- [ ] Put a restriction on "Take attendance button based on time and permission to override
 	- [ ] To do this create a field in project manager (hr.employee,boolean field)
+	
+- [ ] In the submit button there will be a check that if all the project's attendance of that project manager is submitted then attendance will close 
+
+- [ ] Check if the attendance is submitted by the circle head or project manager
+		- [ ] If circle head submits the attendance then the attendance.attendance record will get submitted automatically
+		- [ ] If the project manager submits the attendance then the attendance record will get submitted either after allowed time or after all his project attendance is submitted
+			
+
 
 - [ ] If after the allowed time the manager tries to take attendance they wont be alowed until and unless they are allowed to override by admin panel
 - [ ] The overriding option will always be open for only 1 hour. 

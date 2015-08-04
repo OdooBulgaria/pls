@@ -32,6 +32,7 @@
     'website': 'www.jginfosystems.com',
     'depends': ['base','hr','complaint_system'],
     'data': [
+             'pls_data.xml',
              'security/pls_security.xml',
              'telecom_view.xml',
              'work_description.xml',
@@ -42,6 +43,7 @@
              'pls.xml',
              'attendance_attendance_view.xml',
              'attendance_workflow.xml',
+             'res_config_view.xml'
              ],
     'demo': [],
     'test': [],

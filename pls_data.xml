@@ -1,17 +1,11 @@
 <openerp>
-	<data noupdate="1">
-		<record id = "employee_job_title" model = "hr.job">
-			<field name="name">Employee</field>
+	<!-- Properties-->
+	<data noupdate = "1">
+		<record forcecreate="True" id = "default_time_attendances" model = "ir.property">
+			<field name = "name">default_attendance_time</field>
+            <field name="fields_id" search="[('model','=','res.users'),('name','=','allowed_attendance_time')]"/>
+			<field name = "type">float</field>
+			<field name = "value_float">11</field>
 		</record>
-		<record id = "director_job_title" model = "hr.job">
-			<field name="name">Director</field>
-		</record>
-		<record id = "manager_job_title" model = "hr.job">
-			<field name="name">Project Manager</field>
-		</record>
-		<record id = "circlehead_job_title" model = "hr.job">
-			<field name="name">Circle Head</field>
-		</record>
-		
 	</data>
 </openerp>

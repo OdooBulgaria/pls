@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
 				<xpath expr = "/form/sheet/div/group/field[@name='partner_id']" position = "after">
 					<field name = "emp_id" />
+					<field name = "allowed_attendance_time" widget = "float_time" />
 				</xpath>            
             </field>
 		</record>
