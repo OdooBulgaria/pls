@@ -9,6 +9,8 @@
 -  To ensure this there is a not null constraint on related user for employees if the user is project manager or circle head 
 - Do not delete the default property created by this module for setting the default timings for project manager
 - Make sure that there is one employee made for the admin user too otherwise there will lot places where the admin will not be able to override
+- Set the attendance cron job timer. During the installation set randomly
+- To take project attendance or use attendance functionality it's state should be 'wip'
 
 ## To set up the users and accesses
 
@@ -43,7 +45,9 @@
  
 
 ## Cron logs
-- [ ] Unsubmitted attendance.lines of each user
+- [ ] Unsubmitted attendance lines of each user
+	- [ ] It could be created by project manager since it is a single man project
+	- [ ] It culd have been created by other sharing project manager but both of them did not submit it
 - [ ] Project Manager who did not submit their attendance
 - [ ] UID who do not have an emp_id
 - [ ] All attendance.attendance records that are unsubmitted (Warning to close it)
@@ -60,7 +64,7 @@
 	- [x] Create a property field to hold  default attendance time in res.users named `permitted_attendance_time`
 	- [x] Make ir.property for this field and set the default time to 11:00
 
-- [ ] In order to override the time limit the admin will tick on 'Allow overriding the time limit option' in hr.employee to let him override.Every time this option is ticked a note will be logged stating the reason for overriding. Also after one hour that option will close it self. The reason for overriding will be logged to display the project manager monthly report
+- [x] In order to override the time limit the admin will tick on 'Allow overriding the time limit option' in hr.employee to let him override.Every time this option is ticked a note will be logged stating the reason for overriding. Also after one hour that option will close it self. The reason for overriding will be logged to display the project manager monthly report
 	- [x] Created a new subtype "overrides"
 	- [x] Created Menu item Permission Override Logs 
 	
@@ -69,15 +73,12 @@
 	- [x] Put a restriction on "Take attendance button based on time and permission to override
 	- [x] To do this create a field in project manager (res.users,boolean field)
 	
-- [ ] In the submit button there will be a check that if all the project's attendance of that project manager is submitted then attendance will close 
+- [x] In the submit button there will be a check that if all the project's attendance of that project manager is submitted then attendance will close 
 
-- [ ] Check if the attendance is submitted by the circle head or project manager
-		- [ ] If circle head submits the attendance then the attendance.attendance record will get submitted automatically
-		- [ ] If the project manager submits the attendance then the attendance record will get submitted either after allowed time or after all his project attendance is submitted
-			
+- [x] Check if the attendance is submitted by the corporate or project manager/circle head)
+		- [x] If the project manager submits the attendance then the attendance record will get submitted either after allowed time or after all his project attendance is submitted
 
-
-- [ ] If after the allowed time the manager tries to take attendance they wont be allowed until and unless they are allowed to override by admin panel
+- [x] If after the allowed time the manager tries to take attendance they wont be allowed until and unless they are allowed to override by admin panel
 - [ ] The overriding option will always be open for only 1 hour. 
 
 - [ ] Create a cron job that does the following

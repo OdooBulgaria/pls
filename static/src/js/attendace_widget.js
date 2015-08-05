@@ -114,7 +114,9 @@ openerp.pls = function(instance, local) {
             });
             var uid = self.session.uid
             domain_ids = self.fetch_ids_user(uid);
+            
             $.when(domain_ids).then(function(domain_ids){
+            	domain_ids.push(['state','=','wip'])
                 self.project_m2o = new instance.web.form.FieldMany2One(self.dfm, {
                 	attrs: {
                         name: "project_id",

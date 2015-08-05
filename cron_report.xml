@@ -1,0 +1,78 @@
+<openerp>
+	<data>
+		<record id = "cron_report_form" model = "ir.ui.view">
+        	<field name = "name">Cron Report</field>
+        	<field name = "model">cron.report</field>
+			<field name = "arch" type="xml">
+				<form string = "Report">
+					<sheet>
+                       <div class="oe_title">
+                            <label for="date" class="oe_edit_only" />
+                            <h1>
+								<field name="date" placeholder="Today's Date" readonly="1" />                                
+                            </h1>
+						</div>				
+						<notebook>
+							<page string = "Uncleared Project Attendances" >
+								<field name = "unclear_attendance_lines" nolabel = "1">
+									<tree>
+										<field name = "complaint" string="Logs"/>
+									</tree>
+								</field>
+							</page>						
+							<page string = "Attendance Record" >
+								<group col="4" colspan = "4">
+									<div class = "oe_title">
+										<label for="unclear_attendance_records_passed" style="font-weight:600;"/>
+										<field name = "unclear_attendance_records_passed" nolabel = "1" colspan="2">
+											<tree>
+												<field name = "complaint" string="Logs" />
+											</tree>
+										</field>								
+									</div>
+									<div class = "oe_title oe_right">
+										<label for="unclear_attendance_records_failed" style="font-weight:600;" />
+										<field name = "unclear_attendance_records_failed" nolabel = "1" colspan="2">
+											<tree>
+												<field name = "complaint" string="Logs" />
+											</tree>
+										</field>								
+									</div>								
+								</group>
+							</page>
+							<page string = "Unattended Projects">
+								<field name = "project_ids">
+									<tree string = "Projects">
+										<field name = "name" />
+										<field name = "project_manager" />
+									</tree>
+								</field>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>			
+		</record>
+		
+		<record id = "cron_report_tree" model = "ir.ui.view">
+        	<field name = "name">Cron Report</field>
+        	<field name = "model">cron.report</field>
+			<field name = "arch" type="xml">
+				<tree string = "Cron Job">
+					<field name = "date" />
+				</tree>
+			</field>		
+		</record>		
+		
+		<record id = "action_cron_report" model = "ir.actions.act_window">
+            <field name="name">Cron Reports</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cron.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>			
+		</record>
+		
+		<menuitem id = "menu_child_cron" parent = "parent_menu_attendance" name = "Cron"/>
+		<menuitem id = "subchild_child_cron" parent = "menu_child_cron" action = "action_cron_report" name = "Reports" />
+	</data>
+</openerp>

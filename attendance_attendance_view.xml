@@ -20,6 +20,7 @@
 					<header>
 						<button name = "change_pending_done" string = "Submit Attendance" groups = "pls.telecom_corporate" states = "pending" class = "oe_highlight" />
 						<button name = "change_done_pending" type="object" string = "Pending" groups = "pls.telecom_corporate" states = "submitted" class = "oe_highlight" />
+						<button name = "run_cron" type ="object" string = "Cron" />
 					</header>
 					<sheet>	
                         <div class="oe_title oe_left">
@@ -62,13 +63,14 @@
         </record> 
         
         <!-- Search View -->
-        <record id="view_attendance_attendace_filter" model="ir.ui.view">
+        <record id="view_attendance_attendace_filters" model="ir.ui.view">
             <field name="name">attendance.attendance</field>
             <field name="model">attendance.attendance</field>
             <field name="arch" type="xml">
                 <search string="Search Attendance">
                     <field name="date" string="Date" />
                     <field name = "user_id" string = "User" />
+                    <filter string="Today's Attendance" domain="[['date','=',context_today().strftime('%Y-%m-%d')]]" name="date_filter"/>
                     <separator/>
                     <group expand="0" string="Group By">
                         <filter string="Manager" domain="[]" context="{'group_by':'user_id'}"/>
@@ -80,14 +82,15 @@
         <record id="action_attendance_attendance" model="ir.actions.act_window">
             <field name="name">Attendance Archive</field>
             <field name="type">ir.actions.act_window</field>
+            <field name = "context">{'search_default_date_filter':1}</field>
             <field name="res_model">attendance.attendance</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <!--  <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter"/> -->
+            <field name="search_view_id" ref="view_attendance_attendace_filters"/>
         </record>
         
         <menuitem id = "child_parent_menu_archive" parent = "parent_menu_attendance" name = "Archive" />        
-		<menuitem id = "subchild_attendace_archive"  action = "action_attendance_attendance" parent = "child_parent_menu_archive" />      
+		<menuitem id = "subchild_attendace_archives"  action = "action_attendance_attendance" parent = "child_parent_menu_archive" />      
 	
 
 		<!-- Attendance line view while taking attendance -->
@@ -107,7 +110,9 @@
 								<field name = "project_id" readonly="1" />
 	                           </h1>
 	                           <label for="manager_id" class="oe_edit_only"  />
-	     						<field name = "manager_id" readonly='1'/>
+	     						<field name = "manager_id" readonly='1' />
+	                           <label for="submitted_by" class="oe_edit_only"  />
+	     						<field name = "submitted_by" readonly='1'  />	     						
 								<field name = "manager_employee_id" invisible="1"/> <!-- To set domain on employee_id field -->
 						</div>						
 	                       <div class="oe_title">
@@ -180,7 +185,14 @@
 						
 						<notebook>
 							<page string = "Employee Attendance" >
-								<field name = "emploee_status_line" nolabel = "1" />
+								<field name = "emploee_status_line" nolabel = "1" >
+					            	<tree string = "Employee Attendance Lines" editable="bottom">
+					            		<field name = "employee_id" />
+					            		<field name = "state" />
+					            		<field name = "designation"  readonly='1'/>
+					            		<field name = "current_project"  readonly='1' />
+					            	</tree>								
+								</field>
 							</page>
 						</notebook>
 					</sheet>
@@ -197,9 +209,30 @@
             		<field name = "date" />
             		<field name = "state" />
             		<field name = "manager_id" />
+            		<field name = "submitted_by" />
             	</tree>
             </field>
         </record>
+
+        <!-- Search View -->
+        <record id="view_attendance_line_filters" model="ir.ui.view">
+            <field name="name">attendance.line</field>
+            <field name="model">attendance.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Attendance">
+                    <field name="date" string="Date" />
+                    <field name = "project_id" string = "Project Name" />
+                    <field name = "manager_id" string = "Project Manager" />
+                    <filter string="Today's Attendance" domain="[['date','=',context_today().strftime('%Y-%m-%d')]]" name="date_filter_line"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Manager" domain="[]" context="{'group_by':'manager_id'}"/>
+                        <filter string="Projects" domain="[]" context="{'group_by':'project_id'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+
 		
 		<record id = "action_attendance_line" model="ir.actions.act_window">
             <field name="name">Project Wise Attendance</field>
@@ -207,17 +240,44 @@
             <field name="res_model">attendance.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name = "context">{'search_default_date_filter_line':1}</field>
+            <field name = "search_view_id" ref="view_attendance_line_filters"/>
 		</record>
 		<menuitem id = "subchild_attendace_lines" groups = "telecom_corporate"  action = "action_attendance_line" parent = "child_parent_menu_archive" />				
 
+
+
 		<!-- Employee Status Line -->
+		<record id = "view_employee_status_line_tree" model="ir.ui.view">
+			<field name = "name">Employee Attendance Line</field>
+            <field name="model">employee.status.line</field>
+            <field name = "priority">1</field>
+            <field name="arch" type="xml">
+            	<tree string = "Employee Attendance Lines">
+            		<field name = "employee_id" />
+            		<field name = "state" />
+            		<field name = "designation" />
+            		<field name = "current_project" />
+            	</tree>
+            </field>
+        </record>
+
 		<record id = "view_employee_status_line" model="ir.ui.view">
 			<field name = "name">Employee Attendance Line</field>
             <field name="model">employee.status.line</field>
             <field name = "priority">1</field>
             <field name="arch" type="xml">
             	<form string = "Employee Attendance" >
-            		
+	            	<group>
+	            		<group>
+            				<field name = "employee_id" />
+            				<field name = "state" />	            		            		
+	            		</group>
+						<group>
+							<field name = "designation" readonly="1" />
+							<field name = "current_project" readonly = "1" />
+						</group>
+	            	</group>
             	</form>
             </field>
        </record>

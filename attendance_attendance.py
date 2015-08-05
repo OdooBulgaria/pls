@@ -33,6 +33,127 @@ class attendance_attendance(osv.osv):
         ('restrict_one_attendance_peruser', 'unique(user_id,date)', 'A user can create a single attendance record/day!'),
     ]
 
+    def submits_all_lines(self,cr,uid):
+        '''
+            Submits all the attendance.line created today and return their ID's
+        '''
+        
+        #search for all the attendance.line that were created and left in pending state today
+        line_ids = self.pool.get('attendance.line').search(cr,uid,[('state','=','pending'),('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=200, order=None, context=None, count=False)
+        for line in line_ids: #working
+            workflow.trg_validate(SUPERUSER_ID, 'attendance.line', line, 'change_pending_done', cr)
+        return line_ids
+
+    def log_complaint(self,cr,uid,emp_id,complaint,context=None):
+        obj = self.pool.get('mail.message')
+        id = obj.create(cr,uid,{
+                                 'employee_id':emp_id,
+                                 'complaint':complaint,
+                                 },context)
+        obj.log_complaint(cr,uid,[id],context)
+        return id
+        
+    def create_message_cron(self,cr,uid,cron_id,message_id,field,context=None):
+        '''
+            Takes in the cron report id,message and the field to which the message has to be logged in the cron report
+            and then attaches the message to the appropriate field in cron report
+            
+        '''
+        self.pool.get('cron.report').write(cr,uid,cron_id,{
+                                                           field:[(4,message_id)]
+                                                           },context)
+        
+    def submit_all_attendance(self,cr,uid):
+        '''
+            Submits all the attendance.attendance created today and returns their ID's
+        '''
+        
+        #search for all the attendance.attendance that were created and left in pending state today
+        attendance_ids = self.pool.get('attendance.attendance').search(cr,uid,[('state','=','pending'),('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=200, order=None, context=None, count=False)
+        ids_passed,ids_failed = [],[]
+        
+        for attendance in attendance_ids: #working
+            try:
+                workflow.trg_validate(SUPERUSER_ID, 'attendance.attendance', attendance, 'change_pending_done', cr)
+                ids_passed.append(attendance)
+            except:
+                ids_failed.append(attendance)
+                
+        return [ids_passed,ids_failed]
+    
+    def _get_unattended_project(self,cr,uid):
+        '''
+        This module returns the projects for which the attendance was not taken or False if all the attendances were
+        '''
+        
+        line_obj = self.pool.get('attendance.line')
+        project = self.pool.get('telecom.project')
+        #all wip projects
+        
+        all_project_ids = project.search(cr,uid,[('state','=','wip')], offset=0, limit=200, order=None, context=None, count=False)
+        
+        #all projects for which attendance was taken
+        attendance_taken = line_obj.search(cr,uid,[('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=200, order=None, context=None, count=False)
+        project_ids = []
+        if attendance_taken:
+            project_ids = line_obj.read(cr,uid,attendance_taken,['project_id'],context=None)
+        attendance_taken = map(lambda x:x.get('project_id')[0],project_ids)
+        if not (set(all_project_ids) == set(attendance_taken)):
+            diff = set(all_project_ids) - set(attendance_taken)
+            return diff
+        else:
+            return False
+        
+    def run_cron(self,cr,uid,ids=None,context=None):
+        line_obj = self.pool.get('attendance.line')
+        attendance_obj  = self.pool.get('attendance.attendance')
+        cron_obj = self.pool.get('cron.report')
+        project_obj = self.pool.get('telecom.project')
+        
+        #Create a cron report
+        cron_id = cron_obj.create(cr,uid,{},context)
+        # Submits all the attendance.line created today
+        line_ids = self.submits_all_lines(cr,uid)
+        if line_ids:
+            #Create a notification that the attendance.line was not submitted in the Cron report
+            #Log a complaint for the project manager who created this attendance.line
+            line_brw = line_obj.browse(cr,uid,line_ids,context)
+            for brw in line_brw:
+#                 self.create_message_cron(cr,uid)
+                complaint = "The attendance for the project "+brw.project_id.name+ " was created by the manager "+brw.manager_id.name+ " but not submitted. It was submitted by cron job"
+                message_id = self.log_complaint(cr,uid,brw.manager_id.emp_id.id,complaint,context={'default_subtype_complaint':True})
+                self.create_message_cron(cr,uid,cron_id,message_id,'unclear_attendance_lines',context)
+        
+        #Submits all the attendance.attendance 
+        attendance_ids = self.submit_all_attendance(cr,uid)
+        #Check the one's that were closed successfully
+        if attendance_ids[0]:
+            attendacne_passed = attendance_obj.browse(cr,uid,attendance_ids[0],context)
+            for brw in attendacne_passed:
+                complaint = "The attendance record created by " + brw.user_id.name + " was successfully closed by the cron job and not by the manager."
+                message_id = self.log_complaint(cr,uid,brw.user_id.emp_id.id,complaint,context={'default_subtype_complaint':True})
+                self.create_message_cron(cr,uid,cron_id,message_id,'unclear_attendance_records_passed',context)
+        #Check the one's that were not closed successfully                
+        if attendance_ids[1]:
+            attendacne_failed = attendance_obj.browse(cr,uid,attendance_ids[0],context)
+            for brw in attendacne_passed:
+                complaint = "The attendance record created by " + brw.user_id.name + " was not closed by the manager.This implies that there are project for which the  manager either did not create the attendance or submit it\n The cron job also failed to close the attendance record due to some reason"
+                message_id = self.log_complaint(cr,uid,brw.user_id.emp_id.id,complaint,context={'default_subtype_complaint':True})
+                self.create_message_cron(cr,uid,cron_id,message_id,'unclear_attendance_records_failed',context)                            
+        
+        # Look for the projects for which the attendance was not taken and create a cron report log and complaint for project manager
+        project_ids = self._get_unattended_project(cr,uid)    
+        if project_ids:
+            project_ids = list(project_ids) #those project for which attendance was not taken
+            cron_obj.write(cr,uid,cron_id,{
+                                           'project_ids':[(6,0,project_ids)]
+                                           })
+            for project in project_obj.browse(cr,uid,project_ids,context):
+                for manager in project.project_manager:
+                    complaint = "The project manager "+ manager.name + " did not submit the attendance for the project " + project.name  
+                    message_id = self.log_complaint(cr,uid,manager.id,complaint,context={'default_subtype_complaint':True})                
+        return True
+    
     def _check_attendance_record_done(self,cr,uid,attendance):
         '''Checks whether attendance record with attendance line 'line' needs to be validated to 'submitted' or not 
         '''
@@ -217,7 +338,7 @@ class attendace_line(osv.osv):
         employee_id = self._get_employee_id(cr, uid, context)
         if employee_id:
             cr.execute('''
-                select project_id from telecom_project_hr_employee_rel where manager_id = %s 
+                select project_id from telecom_project_hr_employee_rel as rel left join telecom_project as project on rel.project_id = project.id where rel.manager_id = %s and project.state = 'wip' 
             ''' %(employee_id))
             all_project_ids = map(lambda x: x[0],cr.fetchall()) # All the project in which the manager is involved
             if all_project_ids:
@@ -237,13 +358,15 @@ class attendace_line(osv.osv):
         
     def change_pending_done(self,cr,uid,ids,context=None):
         self.save_attendance_line(cr,uid,ids,context)
-        self.write(cr,SUPERUSER_ID,ids,{'state':'submitted'},context)
+        self.write(cr,SUPERUSER_ID,ids,{'state':'submitted','submitted_by':uid},context)
         corporate_ids = self.pool.get('attendance.attendance')._get_user_ids_group(cr,uid,'pls','telecom_corporate')
         if uid not in corporate_ids: # This will allow the admin to be able to submit anyone's project attendance line
             self.close_attendance_record(cr,uid,context)
         else:
             # it is a corporate user
             # check all the project lines are submitted
+            # This ensures that when cron job is run the no log is created for super user id becasue first all the attendance.line are closed
+            # and in the process the admin attendance record is closed
             attendance_id = self._check_attendance_record_created(cr, uid)
             if attendance_id:
                 project_ids_pending = self.search(cr,SUPERUSER_ID,[('state','=','pending'),('attendance_id','in',attendance_id),('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=200, order=None, context=None, count=False)
@@ -252,7 +375,7 @@ class attendace_line(osv.osv):
         return True
     
     def change_done_pending(self,cr,uid,ids,context=None):
-        self.write(cr,SUPERUSER_ID,ids,{'state':'pending'},context)
+        self.write(cr,SUPERUSER_ID,ids,{'state':'pending','submitted_by':False},context)
         attendance = self.pool.get('attendance.attendance')
         for line in self.browse(cr,uid,ids,context):
             workflow.trg_delete(SUPERUSER_ID, 'attendance.line', line.id, cr)
@@ -318,6 +441,7 @@ class attendace_line(osv.osv):
     _columns = {
                 'date':fields.date('Date',states={'submitted':[('readonly',True)]},required=True),
                 'manager_id':fields.many2one('res.users','Created By',states={'submitted':[('readonly',True)]},required=True),
+                'submitted_by':fields.many2one('res.users',"Submitted By"),
                 'manager_employee_id':fields.many2one('hr.employee'), #this field is required to set domain on employee_id field in xml view
                 'project_id':fields.many2one('telecom.project',"Project",states={'submitted':[('readonly',True)]},required=True),
                 'attendance_id':fields.many2one('attendance.attendance',"Attendance Record",states={'submitted':[('readonly',True)]}),

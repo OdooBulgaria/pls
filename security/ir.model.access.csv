@@ -14,3 +14,4 @@ access_work_description,work.description,model_work_description,,1,1,1,1
 access_activity_activity,activity.activity,model_activity_activity,,1,1,1,1
 access_attendance_line,attendace.line,model_attendance_line,,1,1,1,1
 access_employee_status_line,employee_status_line,model_employee_status_line,,1,1,1,1
+access_cron_report,cron.report,model_cron_report,,1,1,1,1
