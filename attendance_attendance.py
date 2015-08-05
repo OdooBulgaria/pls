@@ -5,6 +5,8 @@ from openerp import SUPERUSER_ID
 from openerp import workflow
 from openerp.tools.translate import _
 import time
+from datetime import datetime
+from pytz import timezone
 
 class attendance_attendance(osv.osv):
     _name = "attendance.attendance"
@@ -241,7 +243,7 @@ class attendance_attendance(osv.osv):
         return res
     
     _defaults = {
-                 'date':fields.datetime.now,
+                 'date':datetime.now(timezone('Asia/Kolkata')),
                  'user_id':lambda self,cr,uid,context:uid,
                  'state':"draft"
                  }
@@ -294,6 +296,16 @@ class attendace_line(osv.osv):
             if attendance record exists then just attach the line to the existing attendance record else create a attendance record and then attach the line
         '''
         # ids --> [1]
+        corporate_ids = self.pool.get('attendance.attendance')._get_user_ids_group(cr,uid,'pls','telecom_corporate')
+        if uid not in corporate_ids:
+            info = self.pool.get('res.users').read(cr,SUPERUSER_ID,uid,['override_time','allowed_attendance_time'],context)
+            if not info.get('override_time',False): # if the overriding power is not allowed check the time
+                current_time = datetime.now(timezone('Asia/Kolkata'))
+                hours = current_time.hour 
+                minutes = float(current_time.minute)/float(60)
+                time = hours+minutes
+                if time >= info.get('allowed_attendance_time',0):
+                    raise osv.except_osv(_('Sorry!'), _('Time to submit attendance is over'))
         assert len(ids) == 1,'This option should only be used for a single id at a time'
         user_id = self.read(cr,uid,ids[0],['manager_id'],context)
         attendance_created = self._check_attendance_record_created(cr,user_id.get('manager_id',False)[0])
@@ -357,9 +369,9 @@ class attendace_line(osv.osv):
         
         
     def change_pending_done(self,cr,uid,ids,context=None):
+        corporate_ids = self.pool.get('attendance.attendance')._get_user_ids_group(cr,uid,'pls','telecom_corporate')
         self.save_attendance_line(cr,uid,ids,context)
         self.write(cr,SUPERUSER_ID,ids,{'state':'submitted','submitted_by':uid},context)
-        corporate_ids = self.pool.get('attendance.attendance')._get_user_ids_group(cr,uid,'pls','telecom_corporate')
         if uid not in corporate_ids: # This will allow the admin to be able to submit anyone's project attendance line
             self.close_attendance_record(cr,uid,context)
         else:
@@ -425,7 +437,7 @@ class attendace_line(osv.osv):
         
     _defaults = {
                  'state':'pending',
-                 'date':fields.datetime.now,
+                 'date':datetime.now(timezone('Asia/Kolkata')),
                  'manager_id':lambda self,cr,uid,context:uid,
                  'project_id':_get_project_id,
                  'emploee_status_line':_get_employee_status_line,
@@ -497,7 +509,7 @@ class employee_status_line(osv.osv):
                 }
     
     _defaults = {
-                 'date':fields.datetime.now,
+                 'date':datetime.now(timezone('Asia/Kolkata')),
                  }
     _rec_name = 'employee_id'
     

@@ -11,6 +11,8 @@
 - Make sure that there is one employee made for the admin user too otherwise there will lot places where the admin will not be able to override
 - Set the attendance cron job timer. During the installation set randomly
 - To take project attendance or use attendance functionality it's state should be 'wip'
+- Make Sure that Admin gets the corporate account otherwise the cron jobs will not work
+- easy_install pytz
 
 ## To set up the users and accesses
 
@@ -45,16 +47,16 @@
  
 
 ## Cron logs
-- [ ] Unsubmitted attendance lines of each user
-	- [ ] It could be created by project manager since it is a single man project
-	- [ ] It culd have been created by other sharing project manager but both of them did not submit it
-- [ ] Project Manager who did not submit their attendance
-- [ ] UID who do not have an emp_id
-- [ ] All attendance.attendance records that are unsubmitted (Warning to close it)
+- [x] Unsubmitted attendance lines of each user
+	- [x] It could be created by project manager since it is a single man project
+	- [x] It culd have been created by other sharing project manager but both of them did not submit it
+- [x] Project Manager who did not submit their attendance
+- [x] UID who do not have an emp_id
+- [x] All attendance.attendance records that are unsubmitted (Warning to close it)
 
 ## Attendance Functionality
 
-- [ ] Create todays attendance.attendance menuitem `(Probably will make a dashboard and serve this purpose)` 
+- [x] Create todays attendance.attendance menuitem `(Done by adding todays filter)` 
 - [x] Only when all the project lines are submitted the attendance.attendance will be allowed to be submitted manually
 - [x] When any project line is changed to state pending then the attendance record also changes to pending 
  
@@ -79,17 +81,19 @@
 		- [x] If the project manager submits the attendance then the attendance record will get submitted either after allowed time or after all his project attendance is submitted
 
 - [x] If after the allowed time the manager tries to take attendance they wont be allowed until and unless they are allowed to override by admin panel
-- [ ] The overriding option will always be open for only 1 hour. 
+- [x] The overriding option will always be open for only 1 hour. 
 
-- [ ] Create a cron job that does the following
+- [x] Create a cron job that does the following
 	> **Make sure that 'Allow overriding the time limit option' is taken into consideration each time** 
-	- [ ] If within the allowed time the attendance.attendance record is not closed then a log for that project manager will be created ('mail.message') and a mail will be dispatched to the follower of that document ("send a message" functionality).
-	- [ ] Check if the project manager has taken all the attendances. If not then log an internal note 
-    - [ ] At allowed time the cron job will run and that time automatically all unsubmitted attendances will be submitted and all the project manager attendance.attendance records will close.
-	- [ ] Once all the attendances are submitted a new cron job will trigger that will check if the manager has taken all the attendances. If not then an internal note will be logged for him and a mail will be dispatched to the follower of the documents
-	- [ ] A final cron summary will be logged in a seperate document that the admin can check and know the status of everything
-		- [ ] This will also show the projects for which the attendace was not taken at all
+	- [x] If within the allowed time the attendance.attendance record is not closed then a log for that project manager will be created ('mail.message') and a mail will be dispatched to the follower of that document ("send a message" functionality).
+	- [x] Check if the project manager has taken all the attendances. If not then log an internal note 
+    - [x] At allowed time the cron job will run and that time automatically all unsubmitted attendances will be submitted and all the project manager attendance.attendance records will close.
+	- [x] Once all the attendances are submitted a new cron job will trigger that will check if the manager has taken all the attendances. If not then an internal note will be logged for him and a mail will be dispatched to the follower of the documents
+	- [x] A final cron summary will be logged in a seperate document that the admin can check and know the status of everything
+		- [x] This will also show the projects for which the attendance was not taken at all
 
+- [ ] Remove the cron button from the attendance and test it with actual cron
+- [ ] Create the attendance widget for the project manager
 - [ ] Attendance Dash Board 
 	- [ ] Corporate
 	- [ ] Manager

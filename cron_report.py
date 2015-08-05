@@ -1,10 +1,12 @@
 from openerp.osv import fields, osv
+from datetime import datetime
+from pytz import timezone
 
 class cron_report(osv.osv):
     _name = "cron.report"
     _rec_name = "date"
     _defaults = {
-                 'date':fields.datetime.now
+                 'date':datetime.now(timezone('Asia/Kolkata'))
                  }
     _columns = {
                     'date':fields.date('Date'),
