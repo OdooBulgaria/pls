@@ -67,10 +67,10 @@
 	    </record>	
 	    
 	    <record model="ir.rule" id="hr_employee_access_telecom_employee">
-	        <field name="name">HR EMPLOYEE Acess for Telecom Employees</field>
+	        <field name="name">HR EMPLOYEE Access for Telecom Employees</field>
 	        <field name="model_id" ref="model_hr_employee"/>
 	        <field name="domain_force">[('user_id','=',user.id)]</field>
 			<field name="groups" eval="[(4, ref('telecom_employee'))]" />
-	    </record>		    
+	    </record>	
 	</data>
 </openerp>

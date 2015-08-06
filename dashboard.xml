@@ -1,0 +1,16 @@
+<openerp>
+	<data>
+		<record id = "action_attendance_dashboard" model="ir.actions.act_window">
+            <field name="name">Attendance Dashboard</field>
+            <field name="res_model">employee.status.line</field>
+            <field name = "context">{'hide_date':True}</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree_attendance_dashboard</field>
+         </record>
+
+		<menuitem id = "menu_dashboard" name = "Dashboard" sequence = "0" />
+		<menuitem id = "child_menu_dashboard" name = "Dashboard" parent = "menu_dashboard" />
+		<menuitem id = "subchild_menu_attendance_dashboard" name = "Attendance Dashboard" parent = "child_menu_dashboard" action = "action_attendance_dashboard" />
+
+	</data>
+</openerp>

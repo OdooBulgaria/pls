@@ -39,10 +39,9 @@ class attendance_attendance(osv.osv):
         '''
             Submits all the attendance.line created today and return their ID's
         '''
-        
         #search for all the attendance.line that were created and left in pending state today
         line_ids = self.pool.get('attendance.line').search(cr,uid,[('state','=','pending'),('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=200, order=None, context=None, count=False)
-        for line in line_ids: #working
+        for line in line_ids: 
             workflow.trg_validate(SUPERUSER_ID, 'attendance.line', line, 'change_pending_done', cr)
         return line_ids
 
@@ -74,7 +73,7 @@ class attendance_attendance(osv.osv):
         attendance_ids = self.pool.get('attendance.attendance').search(cr,uid,[('state','=','pending'),('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=200, order=None, context=None, count=False)
         ids_passed,ids_failed = [],[]
         
-        for attendance in attendance_ids: #working
+        for attendance in attendance_ids: 
             try:
                 workflow.trg_validate(SUPERUSER_ID, 'attendance.attendance', attendance, 'change_pending_done', cr)
                 ids_passed.append(attendance)
@@ -202,7 +201,8 @@ class attendance_attendance(osv.osv):
     #called from javascript
     def fetch_ids_user(self,cr,uid,context=None):
         list_ids = [] #final projects list
-        if uid == SUPERUSER_ID:
+        corporate_ids = self.pool.get('attendance.attendance')._get_user_ids_group(cr,uid,'pls','telecom_corporate')
+        if uid in corporate_ids:
             return []
         # Find the employee id of the user
         emp_id = self.pool.get('res.users').read(cr,uid,uid,{'emp_id'},context=context)
@@ -263,6 +263,23 @@ class attendace_line(osv.osv):
     _name = "attendance.line"
     _description = "Attendance Line"
     
+    def create(self,cr,uid,vals,context=None):
+        if vals.get('date',False) and vals.get('emploee_status_line',False) :
+            employee_status_line = []
+            for line in vals.get('emploee_status_line',False):
+                line[2]['date'] = vals.get('date',False)
+                employee_status_line.append(line)
+            vals['emploee_status_line'] = employee_status_line
+        return super(attendace_line,self).create(cr,uid,vals,context)
+    
+    def write(self,cr,uid,ids,vals,context=None):
+        for id in ids:
+            line_obj = self.pool.get('employee.status.line')
+            if vals.get('date',False):
+                lines = line_obj.search(cr,SUPERUSER_ID,[('line_id','=',id)], offset=0, limit=1000, order=None, context=None, count=False)
+                line_obj.write(cr,uid,lines,{'date':vals.get('date',False)},context)
+        return super(attendace_line,self).write(cr,uid,ids,vals,context)
+        
     def _check_project_exist(self,cr,uid,project_id):
         '''
             return the id, of the attendance line if taken today
@@ -315,7 +332,7 @@ class attendace_line(osv.osv):
         else:
             attendance_obj.pool.get('attendance.attendance').create(cr,SUPERUSER_ID,{
                                                                   'user_id':user_id.get('manager_id',False)[0],
-                                                                  'date':time.strftime('%Y-%m-%d'),
+                                                                  'date':datetime.now(timezone('Asia/Kolkata')),
                                                                   'attendance_line':[(6,0,ids)]
                                                                   },context)
         return True
@@ -420,7 +437,9 @@ class attendace_line(osv.osv):
             ''' %(project_id))
             employee_id = cr.fetchall()
             for id in employee_id:
-                list_return.append((0,0,{'employee_id':id[0],
+                list_return.append((0,0,{
+                                         'date':datetime.now(timezone('Asia/Kolkata')),
+                                         'employee_id':id[0],
                                          'designation':id[1],
                                          'manager_id':id[2]
                                          }))
@@ -456,7 +475,7 @@ class attendace_line(osv.osv):
                 'submitted_by':fields.many2one('res.users',"Submitted By"),
                 'manager_employee_id':fields.many2one('hr.employee'), #this field is required to set domain on employee_id field in xml view
                 'project_id':fields.many2one('telecom.project',"Project",states={'submitted':[('readonly',True)]},required=True),
-                'attendance_id':fields.many2one('attendance.attendance',"Attendance Record",states={'submitted':[('readonly',True)]}),
+                'attendance_id':fields.many2one('attendance.attendance',"Attendance Record",states={'submitted':[('readonly',True)]},required =True,ondelete="cascade",select=True),
                 'state':fields.selection([
                                           ('pending','Pending'),
                                           ('submitted','Submitted')
@@ -517,7 +536,7 @@ class employee_status_line(osv.osv):
                'employee_id':fields.many2one('hr.employee',"Employee Name",required=True),
                'manager_id':fields.many2one('hr.employee',"Reporting Manager"),
                'current_project':fields.many2one('telecom.project',"Current Project"),
-               'date':fields.date('Date'),
+               'date':fields.date('Date',required = True),
                'designation':fields.many2one("hr.job",string="Designation"),
                'state':fields.selection([
                                      ('present','Present'),
@@ -527,7 +546,7 @@ class employee_status_line(osv.osv):
                                      ('tour',"On Tour"),
                                      ],string = "Status",required=True ),
                'remarks':fields.text('Remarks'),
-               'line_id':fields.many2one('attendance.line'),
+               'line_id':fields.many2one('attendance.line',ondelete='cascade',select=True),
                }
     
     

@@ -45,7 +45,8 @@
              'attendance_workflow.xml',
              'res_config_view.xml',
              'mail_message_view.xml',
-             'cron_report.xml'
+             'cron_report.xml',
+             'dashboard.xml'
              
              ],
     'demo': [],

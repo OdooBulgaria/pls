@@ -133,6 +133,7 @@
 										domain = "['|',('current_project','=',parent.project_id),('parent_id','child_of',[parent.manager_employee_id]),('id','!=',parent.manager_employee_id),]"
 										context="{'read_access':True,}"
 										/>    <!-- The context passed out here is for name_search field -->
+
 										<field name = "manager_id" readonly='1' />
 										<field name = "designation" readonly="1"/>
 										<field name = "state" />
@@ -254,10 +255,13 @@
             <field name = "priority">1</field>
             <field name="arch" type="xml">
             	<tree string = "Employee Attendance Lines">
-            		<field name = "employee_id" />
-            		<field name = "state" />
-            		<field name = "designation" />
-            		<field name = "current_project" />
+            		<field name = "date" invisible="not context.get('hide_date',False)" />
+					<field name = "employee_id" />
+					<field name = "designation" />
+					<field name = "manager_id" />
+					<field name = "state" />
+					<field name = "current_project" />
+					<field name = "remarks" />
             	</tree>
             </field>
         </record>
