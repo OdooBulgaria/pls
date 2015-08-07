@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record model="ir.actions.report.xml" id="aeroo_attendance_project_ods">
+			<field name="name">Project Attendances</field>
+			<field name="model">employee.status.line</field>
+			<field name="report_name">attendance_dashboard_aeroo</field>
+			<field name="tml_source">file</field>
+			<field name="report_rml">pls/report/attendance_dashboard.ods</field>
+			<field name="parser_state">loc</field>
+			<field name="parser_loc">pls/report/report_parser.py</field>
+			<field name="report_type">aeroo</field>
+			<field name="in_format">oo-ods</field>
+			<field name="out_format" ref="report_aeroo.report_mimetypes_xls_odt"/>
+		</record>
+		
+		<record id="attendance_dashboard_aeroo_report_value_pdf_payment_odt" model="ir.values">
+            <field name="name">Attendance Dashboard</field>
+            <field name="model">employee.status.line</field>
+            <field eval="'client_print_multi'" name="key2"/>
+            <field eval="'ir.actions.report.xml,' +str(aeroo_attendance_project_ods)" name="value_unpickle"/>
+        </record>
+        
+   </data>
+</openerp>

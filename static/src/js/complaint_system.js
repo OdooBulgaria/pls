@@ -76,7 +76,7 @@ openerp.pls.quickadd = function(instance) {
                     	o = new Option(self.project[i][1], self.project[i][0]);
                         self.$el.parent().find('.oe_select').append(o);
                     }            	
-                    self.$el.parent().find('.oe_select')[0].value = self.project;
+                    self.$el.parent().find('.oe_select')[0].value = self.current_project;
                 }                        	
             });
             return self.search_by_project_id();    		
@@ -87,7 +87,7 @@ openerp.pls.quickadd = function(instance) {
             var domain = [];
             if (self.current_project!== null) domain.push(["line_id.project_id", "=", self.current_project]);
             else{
-            	domain.push(["line_id.project_id", "=", false]);
+            	domain.push(["line_id.manager_id", "=", self.session.uid]);
             }
             if (self.date ) {
             	domain.push(['date','=',self.date])

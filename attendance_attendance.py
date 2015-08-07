@@ -189,7 +189,7 @@ class attendance_attendance(osv.osv):
         new_list = []
         for i in res:
             record = self.read(cr,uid,i[0],{'user_id'},context)
-            new_list.append((i[0],record.get('user_id',False)[1]+'['+i[1]+']'))
+            new_list.append((i[0],record.get('user_id',False) and record.get('user_id',False)[1] or "No user defined" +'['+i[1]+']'))
         return new_list
 
     def reset_workflow(self,cr,uid,id,context):
@@ -249,7 +249,7 @@ class attendance_attendance(osv.osv):
                  }
     
     _columns = {
-                'user_id':fields.many2one('res.users',string="Created By",states={'submitted':[('readonly',True)]}),
+                'user_id':fields.many2one('res.users',required=True,string="Created By",states={'submitted':[('readonly',True)]}),
                 'date':fields.date('Creation Date',states={'submitted':[('readonly',True)]}),
                 'attendance_line':fields.one2many('attendance.line','attendance_id','Attendance',states={'submitted':[('readonly',True)]}),
                 'state':fields.selection([
@@ -263,7 +263,15 @@ class attendace_line(osv.osv):
     _name = "attendance.line"
     _description = "Attendance Line"
     
-    def create(self,cr,uid,vals,context=None):
+    def create(self,cr,uid,vals,context=None): #working
+        # create an attendance record for the manager who created the record
+        if not vals.get('attendance_id',False):
+            attendance_id = self.pool.get('attendance.attendance').create(cr,SUPERUSER_ID,{
+                                                                  'user_id':vals.get('manager_id',False),
+                                                                  'date':vals.get('date',False) or datetime.now(timezone('Asia/Kolkata')),
+                                                                  },context)
+            vals.update({'attendance_id':attendance_id})            
+        #Ensure that the date of the employee.status.line and attendance.line is same
         if vals.get('date',False) and vals.get('emploee_status_line',False) :
             employee_status_line = []
             for line in vals.get('emploee_status_line',False):
@@ -324,7 +332,7 @@ class attendace_line(osv.osv):
                 if time >= info.get('allowed_attendance_time',0):
                     raise osv.except_osv(_('Sorry!'), _('Time to submit attendance is over'))
         assert len(ids) == 1,'This option should only be used for a single id at a time'
-        user_id = self.read(cr,uid,ids[0],['manager_id'],context)
+        user_id = self.read(cr,uid,ids[0],['manager_id'],context)#working
         attendance_created = self._check_attendance_record_created(cr,user_id.get('manager_id',False)[0])
         attendance_obj = self.pool.get('attendance.attendance')
         if attendance_created:
@@ -341,6 +349,7 @@ class attendace_line(osv.osv):
         '''
             takes in a single user id and returns a employee_id
         '''
+        
         cr.execute('''
             select id from hr_employee where resource_id = (select id from resource_resource where user_id = %s) 
         ''' %(uid))

@@ -46,8 +46,8 @@
              'res_config_view.xml',
              'mail_message_view.xml',
              'cron_report.xml',
-             'dashboard.xml'
-             
+             'dashboard.xml',
+             'report/report.xml'
              ],
     'demo': [],
     'test': [],
