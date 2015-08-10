@@ -12,7 +12,7 @@
 - Set the attendance cron job timer. During the installation set randomly
 - To take project attendance or use attendance functionality it's state should be 'wip'
 - Make Sure that Admin gets the corporate account otherwise the cron jobs will not work
-- easy_install pytz
+- easy_install pytz(for timezone)
 - Install the Aeroo Reports. The installation instructions are given in the report folder
 
 ## To set up the users and accesses

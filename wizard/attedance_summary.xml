@@ -1,0 +1,46 @@
+<openerp>
+	<data>
+		<record id = "attendance_summary_form" model = "ir.ui.view">
+			<field name="name">Attendance Report</field>
+			<field name="model">attendance.summary</field>
+			<field name="arch" type="xml">
+				<form string ="Avtivity Line Tree View">
+					<sheet>
+						<group col="4">
+							<group  col="2" colspan="2">
+								<field name = "from" />
+								<field name = "project_ids" context="{'account_summary':True}">
+									<tree string = "Attendance Report" editbale = "1" create = "False">
+										<field name = "project_manager" invisible="1" />
+										<field name = "name" />
+									</tree>
+								</field>
+							</group>
+							<group  col="2" colspan="2">
+								<field name = "to" />
+								<field name = "employee_ids">
+									<tree string = "Attendance Report" editbale = "1" create = "False">
+										<field name = "name" />
+									</tree>
+								</field>
+							</group>							
+						</group>
+						<footer>
+							<button name = "print_attendance" class = "oe_highlight" string = "Print" type="object" />
+							or
+							<button string="Cancel" class="oe_link" special="cancel"/>
+						</footer>						
+					</sheet>
+				</form>
+			</field>			
+		</record>
+		<record id = "action_attendance_summary" model="ir.actions.act_window">
+            <field name="name">Attendance Report</field>
+            <field name="res_model">attendance.summary</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name = "target">new</field>
+         </record>		
+		<menuitem id = "subchild_menu_attendance_summary" name = "Employee Attendance" parent = "child_menu_dashboard" action = "action_attendance_summary" />         
+	</data>
+</openerp>

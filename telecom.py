@@ -2,28 +2,23 @@ from openerp.osv import fields, osv
 
 class telecom_project(osv.osv):
     _name="telecom.project"
-    
-    
     #attendance will only be considered for the wip state
     _defaults = {
                  'state':'draft'
                  }
-
+    
     def list_project(self, cr, uid, context=None):
         result = []
         list_ids = self.pool.get('attendance.attendance').fetch_ids_user(cr,uid,context)
         if list_ids:
-            print "================employee",list_ids
             ng = dict(self.pool.get('telecom.project').name_search(cr,uid,'',[('id','in',list_ids[0][2])]))
         else:
             list_ids = self.pool.get("telecom.project").search(cr,uid,[], offset=0, limit=200, order=None, context=None, count=False)
-            print "==========================",list_ids 
             ng = dict(self.pool.get('telecom.project').name_search(cr,uid,'',[('id','in',list_ids)]))            
         if ng:
             ids = ng.keys()
             for project in self.pool.get('telecom.project').browse(cr, uid, ids, context=context):
                 result.append((project.id,ng[project.id]))
-        print "=====================result==================",result
         return result
 
     

@@ -45,6 +45,7 @@ e--'com.sun.star.bridge.XProtocolPropertiesUrpProtocolProperties.UrpProtocolProp
 -     `sudo ln -s /opt/aeroo/aeroo_docs/aeroo-docs /etc/init.d/aeroo-docs`
 -     `sudo update-rc.d aeroo-docs defaults`
 -     `sudo service aeroo-docs start`
+       
        `
                  [ ! ]  If you encounter and error "Unable to lock on the pidfile while trying #16 just restart your server (sudo shutdown -r now)                         and try #16 again after reboot.`
 

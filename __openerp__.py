@@ -47,7 +47,8 @@
              'mail_message_view.xml',
              'cron_report.xml',
              'dashboard.xml',
-             'report/report.xml'
+             'report/report.xml',
+             'wizard/attedance_summary.xml'
              ],
     'demo': [],
     'test': [],

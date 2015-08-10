@@ -7,3 +7,4 @@ import res_config
 import mail_message
 import cron_report
 import report
+import wizard
