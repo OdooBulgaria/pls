@@ -124,7 +124,6 @@
 	                       <div class="oe_title oe_right">
 							<field name="state" widget="statusbar"  statusbar_visible="pending,submitted" />
 						</div>
-						
 						<notebook>
 							<page string = "Employee Attendance" >
 								<field name = "emploee_status_line" nolabel = "1" context="{'project_write':True}">
@@ -133,7 +132,7 @@
 										domain = "['|',('current_project','=',parent.project_id),('parent_id','child_of',[parent.manager_employee_id]),('id','!=',parent.manager_employee_id),]"
 										context="{'read_access':True,}"
 										/>    <!-- The context passed out here is for name_search field -->
-
+										<field name = "current_project" required = "1" domain = "[('project_manager','child_of',[parent.manager_employee_id]),('state','=','wip')]" />
 										<field name = "manager_id" readonly='1' />
 										<field name = "designation" readonly="1"/>
 										<field name = "state" />

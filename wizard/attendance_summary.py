@@ -45,14 +45,16 @@ class attendance_summary(osv.osv_memory):
              'model': 'employee.status.line',
              'form': info
                  }
-        print "===============================================data",datas,context
-        print "============================================",domain
         return {
                     'type': 'ir.actions.report.xml',
                     'report_name': 'attendance_dashboard_aeroo',
                     'datas': datas,
                     'context':context
                 }    
+    _defaults = {
+                 "from":datetime.now(timezone('Asia/Kolkata')),
+                 "to":datetime.now(timezone('Asia/Kolkata'))
+                 }
     _columns ={
                'employee_ids':fields.many2many('hr.employee','attendance_summary_hr_employee_rel','summary_id','employee_id',string = "Employees"),
                'project_ids':fields.many2many('telecom.project','attendnance_summary_telecom_project_rel','summary_id','project_id',string = "Projects"),

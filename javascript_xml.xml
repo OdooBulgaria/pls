@@ -1,0 +1,28 @@
+	<t t-name = "activity_line">
+	    <tbody class="tbody_initial_line">
+	        <tr class="initial_line">
+	            <td class="cell_action"><span class="toggle_match glyphicon glyphicon-cog"></span></td>
+	            <td class="cell_employee_id"><t t-esc="widget.employee_id"/></td>
+	            <td class="cell_state"><t t-esc="widget.employee_name"/></td>
+	            <td class = "cell_local_conveyance"><t t-esc="line.local_conveyance"</td>
+<!-- 	            <td class="cell_label">
+	                <t t-if="line.name" t-esc="line.name"/>
+	                <t t-if="line.ref"> : <t t-esc="line.ref" /></t>
+	                <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t></td>
+	            <td class="cell_debit"><t t-if="line.amount &gt; 0">
+	                  <t t-esc="line.amount_str"/></t></td>
+	            <td class="cell_credit"><t t-if="line.amount &lt; 0">
+	                  <t t-esc="line.amount_str"/></t></td> -->
+	           <!--  <td class="cell_info_popover"><span class="line_info_button glyphicon glyphicon-info-sign" t-att-data-content="line.q_popover"></span></td> -->
+	        </tr>
+	    	<tr>
+			   <div class="action_pane create">
+			       <!-- NB : I use a .quick_add:empty selector. whitespace characters being a node, there shall be none -->
+			       <!-- <div class="quick_add btn-group btn-group-sm"><t t-foreach="presets" t-as="preset"><button type='button' class='btn btn-default preset' t-att-data-presetid="preset.id"><t t-esc="preset.name"/></button></t></div> -->
+			       <div class="oe_form create_form">
+			           <!-- here come some form_create_field -->
+			       </div>
+			   </div>                        	
+	    	</tr>
+	    </tbody>	
+	</t>

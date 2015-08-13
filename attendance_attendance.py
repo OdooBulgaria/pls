@@ -40,7 +40,7 @@ class attendance_attendance(osv.osv):
             Submits all the attendance.line created today and return their ID's
         '''
         #search for all the attendance.line that were created and left in pending state today
-        line_ids = self.pool.get('attendance.line').search(cr,uid,[('state','=','pending'),('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=200, order=None, context=None, count=False)
+        line_ids = self.pool.get('attendance.line').search(cr,uid,[('state','=','pending'),('date','=',datetime.now(timezone('Asia/Kolkata')).date().strftime("%Y-%m-%d"))], offset=0, limit=200, order=None, context=None, count=False)
         for line in line_ids: 
             workflow.trg_validate(SUPERUSER_ID, 'attendance.line', line, 'change_pending_done', cr)
         return line_ids
@@ -70,7 +70,7 @@ class attendance_attendance(osv.osv):
         '''
         
         #search for all the attendance.attendance that were created and left in pending state today
-        attendance_ids = self.pool.get('attendance.attendance').search(cr,uid,[('state','=','pending'),('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=200, order=None, context=None, count=False)
+        attendance_ids = self.pool.get('attendance.attendance').search(cr,uid,[('state','=','pending'),('date','=',datetime.now(timezone('Asia/Kolkata')).date().strftime("%Y-%m-%d"))], offset=0, limit=200, order=None, context=None, count=False)
         ids_passed,ids_failed = [],[]
         
         for attendance in attendance_ids: 
@@ -94,7 +94,7 @@ class attendance_attendance(osv.osv):
         all_project_ids = project.search(cr,uid,[('state','=','wip')], offset=0, limit=200, order=None, context=None, count=False)
         
         #all projects for which attendance was taken
-        attendance_taken = line_obj.search(cr,uid,[('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=200, order=None, context=None, count=False)
+        attendance_taken = line_obj.search(cr,uid,[('date','=',datetime.now(timezone('Asia/Kolkata')).date().strftime("%Y-%m-%d"))], offset=0, limit=200, order=None, context=None, count=False)
         project_ids = []
         if attendance_taken:
             project_ids = line_obj.read(cr,uid,attendance_taken,['project_id'],context=None)
@@ -265,12 +265,15 @@ class attendace_line(osv.osv):
     
     def create(self,cr,uid,vals,context=None): #working
         # create an attendance record for the manager who created the record
-        if not vals.get('attendance_id',False):
-            attendance_id = self.pool.get('attendance.attendance').create(cr,SUPERUSER_ID,{
-                                                                  'user_id':vals.get('manager_id',False),
+        attendance_id = self._check_attendance_record_created(cr,uid) 
+        if not vals.get('attendance_id',False) and context.get('project_write',False):
+            if not attendance_id:
+                attendance_id = self.pool.get('attendance.attendance').create(cr,SUPERUSER_ID,{
+                                                                  'user_id':uid,
                                                                   'date':vals.get('date',False) or datetime.now(timezone('Asia/Kolkata')),
                                                                   },context)
-            vals.update({'attendance_id':attendance_id})            
+            vals.update({'attendance_id':attendance_id[0]})
+                            
         #Ensure that the date of the employee.status.line and attendance.line is same
         if vals.get('date',False) and vals.get('emploee_status_line',False) :
             employee_status_line = []
@@ -292,7 +295,7 @@ class attendace_line(osv.osv):
         '''
             return the id, of the attendance line if taken today
         '''
-        id = self.search(cr,SUPERUSER_ID,[('project_id','=',project_id),('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=1, order=None, context=None, count=False)
+        id = self.search(cr,SUPERUSER_ID,[('project_id','=',project_id),('date','=',datetime.now(timezone('Asia/Kolkata')).date().strftime("%Y-%m-%d"))], offset=0, limit=1, order=None, context=None, count=False)
         return id
     
     #called from javascript while takiing attendance
@@ -313,7 +316,7 @@ class attendace_line(osv.osv):
         else: return False
     
     def _check_attendance_record_created(self,cr,uid):
-        id = self.pool.get('attendance.attendance').search(cr,SUPERUSER_ID,[('user_id','=',uid),('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=1, order=None, context=None, count=False)
+        id = self.pool.get('attendance.attendance').search(cr,SUPERUSER_ID,[('user_id','=',uid),('date','=',datetime.now(timezone('Asia/Kolkata')).date().strftime("%Y-%m-%d"))], offset=0, limit=1, order=None, context=None, count=False)
         return id
     
     def save_attendance_line(self,cr,uid,ids,context=None):
@@ -332,7 +335,7 @@ class attendace_line(osv.osv):
                 if time >= info.get('allowed_attendance_time',0):
                     raise osv.except_osv(_('Sorry!'), _('Time to submit attendance is over'))
         assert len(ids) == 1,'This option should only be used for a single id at a time'
-        user_id = self.read(cr,uid,ids[0],['manager_id'],context)#working
+        user_id = self.read(cr,uid,ids[0],['manager_id'],context)
         attendance_created = self._check_attendance_record_created(cr,user_id.get('manager_id',False)[0])
         attendance_obj = self.pool.get('attendance.attendance')
         if attendance_created:
@@ -380,7 +383,7 @@ class attendace_line(osv.osv):
             ''' %(employee_id))
             all_project_ids = map(lambda x: x[0],cr.fetchall()) # All the project in which the manager is involved
             if all_project_ids:
-                project_lines_taken = self.search(cr,SUPERUSER_ID,[('state','=','submitted'),('project_id.project_manager','in',[employee_id]),('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=200, order=None, context=None, count=False)
+                project_lines_taken = self.search(cr,SUPERUSER_ID,[('state','=','submitted'),('project_id.project_manager','in',[employee_id]),('date','=',datetime.now(timezone('Asia/Kolkata')).date().strftime("%Y-%m-%d"))], offset=0, limit=200, order=None, context=None, count=False)
                 if project_lines_taken:
                     project_ids_taken = map(lambda x: x.project_id.id,self.browse(cr,uid,project_lines_taken,context))
                     if set(project_ids_taken) == set(all_project_ids):
@@ -407,7 +410,7 @@ class attendace_line(osv.osv):
             # and in the process the admin attendance record is closed
             attendance_id = self._check_attendance_record_created(cr, uid)
             if attendance_id:
-                project_ids_pending = self.search(cr,SUPERUSER_ID,[('state','=','pending'),('attendance_id','in',attendance_id),('date','=',(time.strftime('%Y-%m-%d')))], offset=0, limit=200, order=None, context=None, count=False)
+                project_ids_pending = self.search(cr,SUPERUSER_ID,[('state','=','pending'),('attendance_id','in',attendance_id),('date','=',datetime.now(timezone('Asia/Kolkata')).date().strftime("%Y-%m-%d"))], offset=0, limit=200, order=None, context=None, count=False)
                 if not project_ids_pending:
                     return workflow.trg_validate(SUPERUSER_ID,'attendance.attendance',attendance_id[0],"change_pending_done",cr)
         return True
@@ -442,12 +445,13 @@ class attendace_line(osv.osv):
         list_return = []
         if project_id:
             cr.execute('''
-                select id,job_id,parent_id from hr_employee where current_project = %s 
+                select id,job_id,parent_id,current_project from hr_employee where current_project = %s 
             ''' %(project_id))
             employee_id = cr.fetchall()
             for id in employee_id:
                 list_return.append((0,0,{
                                          'date':datetime.now(timezone('Asia/Kolkata')),
+                                         'current_project':id[3],
                                          'employee_id':id[0],
                                          'designation':id[1],
                                          'manager_id':id[2]
@@ -500,7 +504,6 @@ class employee_status_line(osv.osv):
         '''
         Make sure that the project from which attendance is taken,the employee status line is overwritten on employee current project
         '''
-        # vals = {'line_id': 16, u'state': u'present', u'employee_id': 3, u'manager_id': 2, u'designation': 1}
         if context.get('project_write',False):
             project_id = self.pool.get('attendance.line').browse(cr,SUPERUSER_ID,vals.get('line_id'),context).project_id.id
             # write it in the current_project field of the employee

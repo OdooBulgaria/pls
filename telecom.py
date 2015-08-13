@@ -7,13 +7,22 @@ class telecom_project(osv.osv):
                  'state':'draft'
                  }
     
+    def _get_user_ids_group(self,cr,uid,module,group_xml_id):
+        '''
+        This method takes in the module and xml_id of the group and return the list of users present in that group
+        '''
+        groups = self.pool.get('ir.model.data').get_object_reference(cr, uid, module, group_xml_id)[1]
+        user_group=self.pool.get('res.groups').browse(cr,uid,groups)
+        user_ids=map(int,user_group.users or [])
+        return user_ids                    
+        
     def list_project(self, cr, uid, context=None):
         result = []
         list_ids = self.pool.get('attendance.attendance').fetch_ids_user(cr,uid,context)
         if list_ids:
             ng = dict(self.pool.get('telecom.project').name_search(cr,uid,'',[('id','in',list_ids[0][2])]))
         else:
-            list_ids = self.pool.get("telecom.project").search(cr,uid,[], offset=0, limit=200, order=None, context=None, count=False)
+            list_ids = self.pool.get("telecom.project").search(cr,uid,[], offset=0, limit=None, order=None, context=None, count=False)
             ng = dict(self.pool.get('telecom.project').name_search(cr,uid,'',[('id','in',list_ids)]))            
         if ng:
             ids = ng.keys()
@@ -48,6 +57,7 @@ class project_description_line(osv.osv):
                 'value':{'activity_ids':values}
                  
                }
+    _rec_name = "description_id"
     _columns={
               'description_id':fields.many2one('work.description',string="Work Description"),
               'activity_ids':fields.one2many('activity.line','activity_line',string="Activities"),

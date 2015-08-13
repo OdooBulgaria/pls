@@ -23,6 +23,7 @@
 	- Project Manager 
 	- Employees
 -  Make related user for all the Circle Heads ,Project Manager, Director otherwise they wont be able to see their employee database
+-  Set all the corporate ids other than admin and the circle head under admin. Otherwise the admin will not be able to see their projects 
 
 > **Do not leave the project managers,circle heads without related users in hr.employee**
 
@@ -94,8 +95,7 @@
 		- [x] This will also show the projects for which the attendance was not taken at all
 
 - [ ] Remove the cron button from the attendance and test it with actual cron
-- [ ] Create the attendance widget for the project manager
-- [ ] Attendance Dash Board 
-	- [ ] Corporate
-	- [ ] Manager
-	- [ ] Circle Head  
+- [x] Attendance Dash Board 
+	- [x] Corporate
+	- [x] Manager
+	- [x] Circle Head  
