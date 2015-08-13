@@ -68,11 +68,11 @@ class activity_line(osv.osv):
     _rec_name='activity_id'
     _columns={
               'activity_line':fields.many2one('project.description.line'),
-              'activity_id':fields.many2one('activity.activity',string = "Activity Name"),
+              'activity_id':fields.many2one('activity.activity',string = "Activity Name",required=True),
               'cost':fields.float(string='Customer Cost'),
-              'vendor_cost':fields.float(string="Vendor Cost"),
               'project_id':fields.related('activity_line','project_id',relation = "telecom.project",type="many2one",store=True,string="Project",readonly=True),
-              'vendor_id':fields.many2one('res.partner',string = "Vendor",domain = [('supplier','=',True)]),
+              'site_id':fields.many2one('project.site',string = "Site ID"),
+              'activity_line_line':fields.one2many('activity.line.line','line_id',string='Activity-Line Items'),
               }
       
 class telecom_circle(osv.osv):
@@ -94,3 +94,55 @@ class activity_activity(osv.osv):
     _columns = {
                 'name':fields.char('Activity Name',required = True),
                 }
+class activity_line_line(osv.osv):
+    _name='activity.line.line'
+    
+    def create(self,cr,uid,vals,context=None):
+        print "---------------------------vals ~~~~",vals
+        line_item_id=vals.get('line_id',False)
+        activity_line_obj=self.pool.get('activity.line').browse(cr,uid,line_item_id,context)
+        print "===============================activity_line_obj.activity_line.description_id------",activity_line_obj.activity_line.description_id
+        tracker_id=self.pool.get('project.tracker').create(cr,uid,{
+              'work_description_id':activity_line_obj.activity_line.description_id.id,
+              'IPR_no':False,
+              'IPR_date':False,
+              'site_id': vals.get('site_id',False),
+              'site_name':self.pool.get('project.site').browse(cr,uid,vals.get('site_id'),context),
+              'po_status':False,
+              'activity_planned':vals.get('line_id'),
+              'per_unit_Price':0.0,
+              'subvendor_rate':0.0,
+              'advance_paid-to_vendor':0.0,
+              'balance_payment3':0.0,
+              'done_by':False,
+              'activity_start_date':False,
+              'activity_end_date':False,
+              'wcc_sign_off_status':False,
+              'wcc_sign_off_date':False,
+              'quality _document_uploaded_on_P6':False,
+              'quality_document_uploaded_date':False,
+              'cql_approval_status':False,
+              'pd_approval_status':False,
+              })
+        print "---------------------------tracker_id ~~~~",tracker_id
+        vals.update({'tracker_line_id':tracker_id})
+        print "---------------------------vals",vals
+        return super(activity_line_line,self).create(cr,uid,vals,context)
+        
+    _columns={
+              'line_id':fields.many2one('activity.line',string='Activity Line'),
+              'site_id':fields.related('line_id','site_id',relation = "project.site",type="many2one",string="Site ID"),
+              'vendor_id':fields.many2one('res.partner',string="Vendor",domain=[('supplier','=',True)]),
+              'type':fields.selection(selection=[('inhouse','Inhouse'),('vendor','Vendor')],required=True,string="Activity Type"),
+              'cost':fields.float(string='Cost'),
+              'tracker_line_id':fields.many2one('project.tracker',string='Tracker Line',ondelete="cascade"),
+              }
+
+class project_site(osv.osv):
+    _name = 'project.site'
+    
+    _columns={
+              'name':fields.char(string="Site Name"),
+              'site_id':fields.char(string="Site ID"),
+              
+              }

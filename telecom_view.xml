@@ -23,8 +23,7 @@
 					<field name = "project_id" />
 					<field name = "activity_id"  />
 					<field name = "cost" />
-					<field name = "vendor_cost" />
-					<field name = "vendor_id" />
+					<field name = "site_id" />
 				</tree>
 			</field>
 		</record>    
@@ -32,19 +31,47 @@
 			<field name="name">activity.line.form.view</field>
 			<field name="model">activity.line</field>
 			<field name="arch" type="xml">
-				<form string ="Avtivity Line Tree View">
+				<form string ="Activity Line Tree View">
 					<sheet>
 						<group>
 							<field name = "project_id" />
 							<field name = "activity_id"  />
 							<field name = "cost" />
-							<field name = "vendor_cost" />
-							<field name = "vendor_id" />
+							<field name = "site_id" />
+							<field name = "activity_line_line" >
+								<tree string="Line Items" editable="bottom">
+									<field name = "line_id" />
+									<field name = "site_id"  />
+									<field name = "cost" />
+									<field name = "type" />
+									<field name = "tracker_line_id" />
+									<field name = "vendor_id" />
+								</tree>
+							</field>
 						</group>
 					</sheet>
 				</form>
 			</field>
 		</record> 
+		
+	<!-- 	<record id="activity_line_line_form_view" model="ir.ui.view">
+			<field name="name">activity.line.line.form.view</field>
+			<field name="model">activity.line.line</field>
+			<field name="arch" type="xml">
+				<form string ="Activity Line Form View">
+					<sheet>
+						<group>
+							<field name = "line_id" />
+							<field name = "site_id"  />
+							<field name = "cost" />
+							<field name = "type" />
+							<field name = "tracker_line_id" />
+							<field name = "vendor_id" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>  -->
 		
 		<!-- This view is for circle head and project manager to see when they are taking attendance -->
     	<record id="telecom_project_form_view_many2o" model="ir.ui.view">
@@ -111,20 +138,28 @@
 	                    					</group>
 	                    					<group>
 	                    						<field name="activity_ids">
-	                    							<tree string = "Activity cost" editable="bottom">
+	                    							<tree string = "Activity cost" >
 	                    								<field name = "activity_id"  />
 	                    								<field name = "cost" />
-	                    								<field name = "vendor_cost" />
-	                    								<field name = "vendor_id" />
 	                    							</tree>
-	                    							<form string = "Activity Cost">
+	                    							<form>
+	                    								<sheet>
 	                    								<group>
-	                    									<field name = "activity_id" required="1" />
-	                    									<field name = "cost" />	 
-	                    									<field name = "vendor_cost" />
-	                    									<field name = "vendor_id" />
-	                    								</group>
-	                    							</form>
+			                    							<field name = "activity_id"  />
+															<field name = "cost" />
+															<field name = "site_id"  />
+															<field name = "activity_line_line" >
+																<tree string="Line Items" editable="bottom">
+																	<field name = "site_id"  />
+																	<field name = "cost" />
+																	<field name = "type" />
+																	<field name = "tracker_line_id" />
+																	<field name = "vendor_id" attrs="{'required':[('type','=','vendor')]}"/>
+																</tree>
+															</field>
+														</group>
+														</sheet>
+													</form>
 	                    						</field>
 	                    					</group>
 	                    				</sheet>

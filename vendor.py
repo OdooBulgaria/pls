@@ -30,6 +30,6 @@ class res_partner(osv.osv):
     
     _columns={
               'project_filter_id':fields.many2one('telecom.project',"Project Filter"),
-              'activity_ids':one2many_mod2('activity.line','vendor_id',string='Activity Cost')
+#               'activity_ids':one2many_mod2('activity.line','vendor_id',string='Activity Cost')
               }
     
