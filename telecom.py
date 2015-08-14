@@ -137,9 +137,7 @@ class activity_line_line(osv.osv):
               'cql_approval_status':False,
               'pd_approval_status':False,
               })
-        print "---------------------------tracker_id ~~~~",tracker_id
         vals.update({'tracker_line_id':tracker_id})
-        print "---------------------------vals",vals
         return super(activity_line_line,self).create(cr,uid,vals,context)
         
     _columns={
@@ -148,7 +146,7 @@ class activity_line_line(osv.osv):
               'vendor_id':fields.many2one('res.partner',string="Vendor",domain=[('supplier','=',True)]),
               'type':fields.selection(selection=[('inhouse','Inhouse'),('vendor','Vendor')],required=True,string="Activity Type"),
               'cost':fields.float(string='Vendor Cost'),
-              'tracker_line_id':fields.many2one('project.tracker',string='Tracker Line',ondelete="cascade"),
+              'tracker_line_id':fields.many2one('project.tracker',string='Tracker Line',ondelete="cascade",required=True),
               'project_id':fields.related('line_id','activity_line','project_id',relation='telecom.project',type="many2one",string="Project",store=True)
               }
 

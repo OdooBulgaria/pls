@@ -385,7 +385,7 @@ class attendace_line(osv.osv):
             ''' %(employee_id))
             all_project_ids = map(lambda x: x[0],cr.fetchall()) # All the project in which the manager is involved
             if all_project_ids:
-                project_lines_taken = self.search(cr,SUPERUSER_ID,[('state','=','submitted'),('project_id.project_manager','in',[employee_id]),('date','=',datetime.now(timezone('Asia/Kolkata')).date().strftime("%Y-%m-%d"))], offset=0, limit=200, order=None, context=None, count=False)
+                project_lines_taken = self.search(cr,SUPERUSER_ID,[('state','=','submitted'),('project_id.project_manager','in',[employee_id]),('date','=',datetime.now(timezone('Asia/Kolkata')).date().strftime("%Y-%m-%d"))], offset=0, limit=None, order=None, context=None, count=False)
                 if project_lines_taken:
                     project_ids_taken = map(lambda x: x.project_id.id,self.browse(cr,uid,project_lines_taken,context))
                     if set(project_ids_taken) == set(all_project_ids):
