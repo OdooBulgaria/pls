@@ -67,12 +67,14 @@ openerp.pls.quickadd = function(instance) {
             this.last_context = context;
             this.last_group_by = group_by;
             this.old_search = _.bind(this._super, this);
+            self.project_list_sorted = []
             var o;
             self.$el.parent().find('.oe_select').children().remove().end();
             self.$el.parent().find('.oe_select').append(new Option('', ''));
             $.when(self.d).then(function(){
                 if (self.project){
                     for (var i = 0;i < self.project.length;i++){
+                    	self.project_list_sorted.push(self.project[i][0]);
                     	o = new Option(self.project[i][1], self.project[i][0]);
                         self.$el.parent().find('.oe_select').append(o);
                     }            	
@@ -85,9 +87,17 @@ openerp.pls.quickadd = function(instance) {
     	search_by_project_id: function() {
             var self = this;
             var domain = [];
+            
+            /*
+             * Check if the user is a Project Manager,Circle Head of Corporate
+             *  - If Project Manager then show all attendances for the project in which the project manager is 
+             *  - Corporate Head is able to see attendance of all his projects and the project managers under him 
+             *  - Corporate is able to see all
+             */
+            
             if (self.current_project!== null) domain.push(["line_id.project_id", "=", self.current_project]);
             else{
-            	domain.push(["line_id.manager_id", "=", self.session.uid]);
+            	domain.push(["line_id.project_id", "in", self.project_list_sorted]);
             }
             if (self.date ) {
             	domain.push(['date','=',self.date])

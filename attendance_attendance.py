@@ -400,15 +400,26 @@ class attendace_line(osv.osv):
         
         
     def change_pending_done(self,cr,uid,ids,context=None):
+        # check if the user who created the attendance line and the user who is submitting it is same or not
+        assert len(ids) == 1, "This option can only be user for single project attendance"
+        create_id = self.read(cr,uid,id[0],['manager_id'],context)
         corporate_ids = self.pool.get('attendance.attendance')._get_user_ids_group(cr,uid,'pls','telecom_corporate')
         self.save_attendance_line(cr,uid,ids,context)
         self.write(cr,SUPERUSER_ID,ids,{'state':'submitted','submitted_by':uid},context)
+        
+        #If the project line is created by some one else and submitted by someone else, Then in that case make sure that the 
+        #Attendance record of both users are closed if the conditions meet
+        
+        if create_id.get('manager_id',False):
+            if create_id.get('manager_id',False)[0] != uid :    
+                self.close_attendance_record(cr,create_id.get('manager_id',False)[0],context)
+
         if uid not in corporate_ids: # This will allow the admin to be able to submit anyone's project attendance line
             self.close_attendance_record(cr,uid,context)
         else:
             # it is a corporate user
             # check all the project lines are submitted
-            # This ensures that when cron job is run the no log is created for super user id becasue first all the attendance.line are closed
+            # This ensures that when cron job is run the no log is created for super user id because first all the attendance.line are closed
             # and in the process the admin attendance record is closed
             attendance_id = self._check_attendance_record_created(cr, uid)
             if attendance_id:
