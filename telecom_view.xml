@@ -23,8 +23,7 @@
 					<field name = "project_id" />
 					<field name = "activity_id"  />
 					<field name = "cost" />
-					<field name = "vendor_cost" />
-					<field name = "vendor_id" />
+					<field name = "site_id" />
 				</tree>
 			</field>
 		</record>    
@@ -32,19 +31,46 @@
 			<field name="name">activity.line.form.view</field>
 			<field name="model">activity.line</field>
 			<field name="arch" type="xml">
-				<form string ="Avtivity Line Tree View">
+				<form string ="Activity Line Tree View">
 					<sheet>
 						<group>
 							<field name = "project_id" />
 							<field name = "activity_id"  />
 							<field name = "cost" />
-							<field name = "vendor_cost" />
-							<field name = "vendor_id" />
+							<field name = "site_id" />
+							<field name = "activity_line_line" >
+								<tree string="Line Items" editable="bottom">
+									<field name = "line_id" />
+									<field name = "site_id"  />
+									<field name = "cost" />
+									<field name = "type" />
+									<field name = "vendor_id" />
+								</tree>
+							</field>
 						</group>
 					</sheet>
 				</form>
 			</field>
 		</record> 
+		
+	<!-- 	<record id="activity_line_line_form_view" model="ir.ui.view">
+			<field name="name">activity.line.line.form.view</field>
+			<field name="model">activity.line.line</field>
+			<field name="arch" type="xml">
+				<form string ="Activity Line Form View">
+					<sheet>
+						<group>
+							<field name = "line_id" />
+							<field name = "site_id"  />
+							<field name = "cost" />
+							<field name = "type" />
+							<field name = "tracker_line_id" />
+							<field name = "vendor_id" />
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>  -->
 		
 		<!-- This view is for circle head and project manager to see when they are taking attendance -->
     	<record id="telecom_project_form_view_many2o" model="ir.ui.view">
@@ -107,29 +133,73 @@
 	                    			<form>
 	                    				<sheet>
 	                    					<group>
-	                    						<field name="description_id" required="1" on_change="setof_associated_activities(description_id)"/>
+	                    						<field name="description_id" required="1" on_change="setof_associated_activities(description_id,parent.site_id)"/>
 	                    					</group>
 	                    					<group>
 	                    						<field name="activity_ids">
-	                    							<tree string = "Activity cost" editable="bottom">
+	                    							<tree string = "Activity cost" >
 	                    								<field name = "activity_id"  />
-	                    								<field name = "cost" />
-	                    								<field name = "vendor_cost" />
-	                    								<field name = "vendor_id" />
+	                    								<field name = "site_id"/>
+	                    								<field name = "cost"/>
 	                    							</tree>
-	                    							<form string = "Activity Cost">
+	                    							<form>
+	                    								<sheet>
 	                    								<group>
-	                    									<field name = "activity_id" required="1" />
-	                    									<field name = "cost" />	 
-	                    									<field name = "vendor_cost" />
-	                    									<field name = "vendor_id" />
-	                    								</group>
-	                    							</form>
+			                    							<field name = "activity_id"  />
+															<field name = "cost" />
+															<field name = "site_id"  />
+															<field name = "activity_line_line" >
+																<tree string="Line Items" editable="bottom">
+																	<field name = "site_id"  />
+																	<field name = "cost" />
+																	<field name = "type" />
+																	<field name = "tracker_line_id" />
+																	<field name = "vendor_id" widget="selection" attrs="{'required':[('type','=','vendor')]}"/>
+																</tree>
+															</field>
+														</group>
+														</sheet>
+													</form>
 	                    						</field>
 	                    					</group>
 	                    				</sheet>
 	                    			</form>
 	                    		</field>
+	                    	</page>
+	                    	<page string="Sites">
+	                    		<field name="site_id">
+	                    			<tree>
+	                    				<field name="name"/>
+	                    				<field name="site_id"/>
+	                    				<field name="address"/>
+	                    			</tree>
+	                    		</field>
+	                    	</page>
+	                    	<page string="Activity Tracker">
+			                	<field name="activity_tracker_ids">
+			                		<tree>
+			                			<field name="work_description_id_tracker"/>
+			                			<field name="IPR_no"/>
+			                			<field name="IPR_date"/>
+			                			<field name="site_id_tracker"/>
+			                			<field name="site_name_tracker"/>
+			                			<field name="po_status"/>
+			                			<field name="activity_planned"/>
+			                			<field name="per_unit_Price"/>
+			                			<field name="subvendor_rate"/>
+			                			<field name="advance_paid_to_vendor"/>
+			                			<field name="balance_payment3"/>
+			                			<field name="done_by"/>
+			                			<field name="activity_start_date"/>
+			                			<field name="activity_end_date"/>
+			                			<field name="wcc_sign_off_status"/>
+			                			<field name="wcc_sign_off_date"/>
+			                			<field name="quality_document_uploaded_on_P6"/>
+			                			<field name="quality_document_uploaded_date"/>
+			                			<field name="cql_approval_status"/>
+			                			<field name="pd_approval_status"/>
+			                		</tree>
+			                	</field>
 	                    	</page>
 	                    </notebook>
 					</sheet>    			
@@ -152,9 +222,8 @@
     	
     	<menuitem id="employee_menuitem" parent="telecom_main_menuitem" sequence="3" name="PLS"/>
     	<menuitem id="telecom_menu" parent="telecom_menuitem" action="telecom_action_menu" sequence="1"/>
-
-
-    	
+		
+		
     	
  		<record id="telecom_circle_tree_view" model="ir.ui.view">
 	    		<field name="name">telecom.circle.tree.view</field>
@@ -232,5 +301,51 @@
               </p>
             </field>
         </record>
+         
+        <!-- Project Site tree form view action menuitem -->
+       <record id="project_site_tree_view" model="ir.ui.view">
+    		<field name="name">project.site.tree.view</field>
+    		<field name="model">project.site</field>
+    		<field name="arch" type="xml">
+    			<tree string="Project Site Tree View">
+					<field name="name"/>
+					<field name="site_id"/>
+					<field name="address"/>
+	   			</tree>
+    		</field>
+	    </record>
+	    
+	    <record id="project_site_form_view" model="ir.ui.view">
+    		<field name="name">project.site.form.view</field>
+    		<field name="model">project.site</field>
+    		<field name="arch" type="xml">
+    			<form string="Project Site View">
+					<sheet>
+						<group>
+							<field name="name"/>
+							<field name="site_id"/>
+							<field name="address"/>
+							<field name="project_id">
+								<tree>
+									<field name="name" />
+									<field name="customer" />
+								</tree>
+							</field>
+						</group>
+					</sheet>    			
+	   			</form>
+    		</field>
+	    </record>
+
+    	<record id="project_site_action_menu" model="ir.actions.act_window">
+            <field name="name">Sites</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.site</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        
+        <menuitem id="project_site_menu" parent="telecom_menuitem" action="project_site_action_menu" sequence="10"/>
+     
     </data>
 </openerp>
