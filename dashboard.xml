@@ -11,7 +11,7 @@
 
 		<menuitem id = "menu_dashboard" name = "Dashboard" sequence = "0" />
 		<menuitem id = "child_menu_dashboard" name = "Dashboard" parent = "menu_dashboard" />
-		<menuitem id = "subchild_menu_attendance_dashboard" name = "Attendance Dashboard" parent = "child_menu_dashboard" action = "action_attendance_dashboard" />
+		<menuitem id = "subchild_menu_attendance_dashboard" name = "Attendance Dashboard" parent = "child_menu_dashboard" action = "action_attendance_dashboard" sequence="1"/>
 
 	</data>
 </openerp>
