@@ -131,7 +131,7 @@
 										<field name="employee_id" on_change="onchange_employee_id(employee_id,parent.project_id)" 
 										domain = "['|',('current_project','=',parent.project_id),('parent_id','child_of',[parent.manager_employee_id]),('id','!=',parent.manager_employee_id),]"
 										context="{'read_access':True,}"
-										/>    <!-- The context passed out here is for name_search field -->
+										widget="selection" />    <!-- The context passed out here is for name_search field -->
 										<field name = "current_project" required = "1" domain = "[('project_manager','child_of',[parent.manager_employee_id]),('state','=','wip')]" />
 										<field name = "manager_id" readonly='1' />
 										<field name = "designation" readonly="1"/>

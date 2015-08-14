@@ -263,7 +263,7 @@ class attendace_line(osv.osv):
     _name = "attendance.line"
     _description = "Attendance Line"
     
-    def create(self,cr,uid,vals,context=None): #working
+    def create(self,cr,uid,vals,context=None): 
         # create an attendance record for the manager who created the record
         attendance_id = self._check_attendance_record_created(cr,uid) 
         if not vals.get('attendance_id',False) and context.get('project_write',False):
@@ -272,7 +272,9 @@ class attendace_line(osv.osv):
                                                                   'user_id':uid,
                                                                   'date':vals.get('date',False) or datetime.now(timezone('Asia/Kolkata')),
                                                                   },context)
-            vals.update({'attendance_id':attendance_id[0]})
+                vals.update({'attendance_id':attendance_id})
+            else:
+                vals.update({'attendance_id':attendance_id[0]})
                             
         #Ensure that the date of the employee.status.line and attendance.line is same
         if vals.get('date',False) and vals.get('emploee_status_line',False) :
@@ -535,6 +537,7 @@ class employee_status_line(osv.osv):
                     'value':{
                              'designation':info and info.get('job_id',False) and info.get('job_id',False)[0] or False,
                              'manager_id':info and info.get('parent_id',False) and info.get('parent_id',False)[0] or False,
+                             'current_project':info and info.get('current_project',False) and info.get('current_project',False)[0],
                              },
                     'warning':warning,
                 }
