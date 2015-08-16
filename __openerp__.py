@@ -30,7 +30,7 @@
     """,
     'author': 'J & G Infosystems',
     'website': 'www.jginfosystems.com',
-    'depends': ['base','hr','complaint_system'],
+    'depends': ['base','hr','complaint_system','report_aeroo'],
     'data': [
              'pls_data.xml',
              'security/pls_security.xml',

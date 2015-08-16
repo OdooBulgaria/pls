@@ -402,7 +402,7 @@ class attendace_line(osv.osv):
     def change_pending_done(self,cr,uid,ids,context=None):
         # check if the user who created the attendance line and the user who is submitting it is same or not
         assert len(ids) == 1, "This option can only be user for single project attendance"
-        create_id = self.read(cr,uid,id[0],['manager_id'],context)
+        create_id = self.read(cr,uid,ids[0],['manager_id'],context)
         corporate_ids = self.pool.get('attendance.attendance')._get_user_ids_group(cr,uid,'pls','telecom_corporate')
         self.save_attendance_line(cr,uid,ids,context)
         self.write(cr,SUPERUSER_ID,ids,{'state':'submitted','submitted_by':uid},context)

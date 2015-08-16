@@ -7,7 +7,6 @@ access_attendance_attendance_employee,attendance.attendance,model_attendance_att
 access_attendance_attendance_manager,attendance.attendance,model_attendance_attendance,telecom_project_manager,1,0,0,0
 access_attendance_attendance_circle_heaad,attendance.attendance,model_attendance_attendance,telecom_circle_head,1,1,1,0
 access_attendance_attendance_coporate,attendance.attendance,model_attendance_attendance,telecom_corporate,1,1,1,1
-access_activity_line,activity.line,model_activity_line,,1,1,1,1
 access_telecom_circle,telecom.circle,model_telecom_circle,,1,1,1,1
 access_work_description,work.description,model_work_description,,1,1,1,1
 access_activity_activity,activity.activity,model_activity_activity,,1,1,1,1
@@ -17,3 +16,9 @@ access_cron_report,cron.report,model_cron_report,,1,1,1,1
 access_project_description_line_manager,project.description.line,model_project_description_line,telecom_project_manager,1,0,0,0
 access_project_description_line_circlr_head,project.description.line,model_project_description_line,telecom_circle_head,1,0,0,0
 access_project_description_line_corporate,project.description.line,model_project_description_line,telecom_corporate,1,1,1,1
+access_project_site_manager,project.site,model_project_site,telecom_project_manager,1,0,0,0
+access_project_site_circle_heaf,project.site,model_project_site,telecom_circle_head,1,1,1,0
+access_project_site_corporate_head,project.site,model_project_site,telecom_corporate,1,1,1,1
+access_activity_line_manager,activity.line,model_activity_line,telecom_project_manager,1,0,0,0
+access_activity_line_circle_head,activity.line,model_activity_line,telecom_circle_head,1,1,1,0
+access_activity_line_corporate,activity.line,model_activity_line,telecom_corporate,1,1,1,1

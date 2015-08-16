@@ -14,7 +14,7 @@
 - Make Sure that Admin gets the corporate account otherwise the cron jobs will not work
 - easy_install pytz(for timezone)
 - Install the Aeroo Reports. The installation instructions are given in the report folder
-
+- While installing there was a problem. The report_aeroo was not isntalled automatically hence PLS could not be installed completely. So first install PLS module then report_aeroo to complete the instalaltion
 ## To set up the users and accesses
 
 -  Create all users 

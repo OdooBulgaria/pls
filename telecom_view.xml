@@ -150,7 +150,6 @@
 															<field name = "site_id"  />
 															<field name = "activity_line_line" >
 																<tree string="Line Items" editable="bottom">
-																	<field name = "site_id"  />
 																	<field name = "cost" />
 																	<field name = "type" />
 																	<field name = "tracker_line_id" />
