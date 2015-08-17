@@ -53,25 +53,6 @@
 			</field>
 		</record> 
 		
-	<!-- 	<record id="activity_line_line_form_view" model="ir.ui.view">
-			<field name="name">activity.line.line.form.view</field>
-			<field name="model">activity.line.line</field>
-			<field name="arch" type="xml">
-				<form string ="Activity Line Form View">
-					<sheet>
-						<group>
-							<field name = "line_id" />
-							<field name = "site_id"  />
-							<field name = "cost" />
-							<field name = "type" />
-							<field name = "tracker_line_id" />
-							<field name = "vendor_id" />
-						</group>
-					</sheet>
-				</form>
-			</field>
-		</record>  -->
-		
 		<!-- This view is for circle head and project manager to see when they are taking attendance -->
     	<record id="telecom_project_form_view_many2o" model="ir.ui.view">
     		<field name ="name">telecom.project.form.view.m2o</field>
@@ -92,11 +73,11 @@
     		<field name="model">telecom.project</field>
     		<field name = "priority">1</field>
     		<field name="arch" type="xml">
-    			<form string="project Form View">
+    			<form string="project Form View" version="7.0">
     				<header>
     					<field name="state" widget="statusbar" clickable="1"  statusbar_visible="draft,wip,close" />
     				</header>
-    				<sheet>
+    					<br/>
 						<field name="image" widget='image' class="oe_left oe_avatar"/>
 	                    <div class="oe_title oe_left">
 	                        <div class="oe_edit_only">
@@ -144,18 +125,19 @@
 	                    							</tree>
 	                    							<form>
 	                    								<sheet>
-	                    								<group>
-			                    							<field name = "activity_id"  />
-															<field name = "cost" />
-															<field name = "site_id"  />
-															<field name = "activity_line_line" >
-																<tree string="Line Items" editable="bottom">
-																	<field name = "type" />
-																	<field name = "vendor_id" widget="selection"  attrs="{'required':[('type','=','vendor')]}"/>
-																	<field name = "cost" />
-																</tree>
-															</field>
-														</group>
+		                    								<group>
+				                    							<field name = "activity_id"  />
+																<field name = "cost" />
+																<field name = "site_id"  />
+																<field name = "activity_line_line" >
+																	<tree string="Line Items" editable="bottom">
+																		<field name = "type" />
+																		<field name = "vendor_id" widget="selection"  
+																		attrs="{'invisible':[('type','!=','vendor')],'required':[('type','=','vendor')]}"/>
+																		<field name = "cost"  attrs="{'invisible':[('type','!=','vendor')]}" />
+																	</tree>
+																</field>
+															 </group>
 														</sheet>
 													</form>
 	                    						</field>
@@ -173,34 +155,7 @@
 	                    			</tree>
 	                    		</field>
 	                    	</page>
-	                    	<page string="Activity Tracker">
-			                	<field name="activity_tracker_ids">
-			                		<tree>
-			                			<field name="work_description_id_tracker"/>
-			                			<field name="IPR_no"/>
-			                			<field name="IPR_date"/>
-			                			<field name="site_id_tracker"/>
-			                			<field name="site_name_tracker"/>
-			                			<field name="po_status"/>
-			                			<field name="activity_planned"/>
-			                			<field name="per_unit_Price"/>
-			                			<field name="subvendor_rate"/>
-			                			<field name="advance_paid_to_vendor"/>
-			                			<field name="balance_payment3"/>
-			                			<field name="done_by"/>
-			                			<field name="activity_start_date"/>
-			                			<field name="activity_end_date"/>
-			                			<field name="wcc_sign_off_status"/>
-			                			<field name="wcc_sign_off_date"/>
-			                			<field name="quality_document_uploaded_on_P6"/>
-			                			<field name="quality_document_uploaded_date"/>
-			                			<field name="cql_approval_status"/>
-			                			<field name="pd_approval_status"/>
-			                		</tree>
-			                	</field>
-	                    	</page>
 	                    </notebook>
-					</sheet>    			
     			</form>
     		</field>
     	</record>
@@ -248,7 +203,7 @@
 						<notebook>
 							<page string = "Projects">
 								<field name="project_name">
-									<tree string = "vircle project view">
+									<tree string = "circle project view">
 										<field name = "name"/>
 										<field name = "customer"/>
 										<field name = "start_date"/>

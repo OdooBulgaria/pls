@@ -129,45 +129,33 @@ class activity_activity(osv.osv):
 
 class activity_line_line(osv.osv):
     _name='activity.line.line'
-    _inherits = {'project.tracker': 'tracker_line_id'}
     
-    def create(self,cr,uid,vals,context=None):
-        line_item_id=vals.get('line_id',False)
-        activity_line_obj=self.pool.get('activity.line').browse(cr,uid,line_item_id,context)
-        tracker_id=self.pool.get('project.tracker').create(cr,uid,{
-              'work_description_id':activity_line_obj.activity_line.description_id.id,
-              'IPR_no':False,
-              'IPR_date':False,
-              'site_id': vals.get('site_id',False),
-              'site_name':vasl.get('site_id',False) and self.pool.get('project.site').browse(cr,uid,vals.get('site_id'),context) or False,
-              'po_status':False,
-              'activity_planned':vals.get('line_id'),
-              'per_unit_Price':0.0,
-              'subvendor_rate':0.0,
-              'advance_paid_to_vendor':0.0,
-              'balance_payment3':0.0,
-              'done_by':False,
-              'activity_start_date':False,
-              'activity_end_date':False,
-              'wcc_sign_off_status':False,
-              'wcc_sign_off_date':False,
-              'quality_document_uploaded_on_P6':False,
-              'quality_document_uploaded_date':False,
-              'cql_approval_status':False,
-              'pd_approval_status':False,
-              })
-        vals.update({'tracker_line_id':tracker_id})
-        return super(activity_line_line,self).create(cr,uid,vals,context)
+    def _get_balance_payment(self,cr,uid,ids,name,args,context=None):
+        res = {}
+        records = self.read(cr,uid,ids,['advance_paid_to_vendor','cost'],context)
+        for info in records:
+            balance_payment = info.get('cost',0) - info.get('advance_paid_to_vendor',0)
+            res.update({
+                        info.get('id',False):round(balance_payment,3)
+                        })
+        return res
+    
+    def _get_total_activities_cost(self,cr,uid,ids,name,args,context=None):
+        res = {}
         
     _columns={
               'line_id':fields.many2one('activity.line',string='Activity Line'),
-              'site_id':fields.related('line_id','site_id',relation = "project.site",type="many2one",string="Site"),
-              'vendor_id':fields.many2one('res.partner',string="Vendor",domain=[('supplier','=',True)]),
+              'work_description':fields.related('line_id','activity_line','description_id',type="many2one",relation="work.description",string = "Work Description"),
+              'site_id':fields.related('line_id','site_id',relation = "project.site",type="many2one",string="Site",readonly='1'),
+              'site_code':fields.related('site_id','site_id',type="char",string="Site Code",readonly='1'),
+              'vendor_id':fields.many2one('res.partner',string="Sub vendor",domain=[('supplier','=',True)]),
               'type':fields.selection(selection=[
                                                  ('inhouse','Inhouse'),('vendor','Vendor')
                                              ],required=True,string="Activity Type"),
-              'cost':fields.float(string='Vendor Cost'),
-              'tracker_line_id':fields.many2one('project.tracker',string='Tracker Line',ondelete="cascade",required=True),
-              'project_id':fields.related('line_id','activity_line','project_id',relation='telecom.project',type="many2one",string="Project",store=True)
+              'cost':fields.float(string='Sub Vendor Rate'),
+              
+              'project_id':fields.related('line_id','activity_line','project_id',relation='telecom.project',type="many2one",string="Project",store=True),
+              'balance_payment':fields.function(_get_balance_payment,string="Balance Payment"),
+              'advance_paid_to_vendor':fields.float(string='Advance paid to vendor'),
               }
 

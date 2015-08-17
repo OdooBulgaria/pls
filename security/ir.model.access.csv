@@ -22,3 +22,9 @@ access_project_site_corporate_head,project.site,model_project_site,telecom_corpo
 access_activity_line_manager,activity.line,model_activity_line,telecom_project_manager,1,0,0,0
 access_activity_line_circle_head,activity.line,model_activity_line,telecom_circle_head,1,1,1,0
 access_activity_line_corporate,activity.line,model_activity_line,telecom_corporate,1,1,1,1
+access_activity_line_line_manager,activity.line.line,model_activity_line_line,telecom_project_manager,1,0,0,0
+access_activity_line_line_circle_head,activity.line.line,model_activity_line_line,telecom_circle_head,1,1,1,0
+access_activity_line_line_corporate_head,activity.line.line,model_activity_line_line,telecom_corporate,1,1,1,1
+access_project_tracker_project_manager,project.tracker,model_project_tracker,telecom_project_manager,1,0,0,0
+access_project_tracker_circle_head,project.tracker,model_project_tracker,telecom_circle_head,1,0,0,0
+access_project_tracker_corporate,project.tracker,model_project_tracker,telecom_corporate,1,1,1,1
