@@ -150,10 +150,9 @@
 															<field name = "site_id"  />
 															<field name = "activity_line_line" >
 																<tree string="Line Items" editable="bottom">
-																	<field name = "cost" />
 																	<field name = "type" />
-																	<field name = "tracker_line_id" />
-																	<field name = "vendor_id" widget="selection" attrs="{'required':[('type','=','vendor')]}"/>
+																	<field name = "vendor_id" widget="selection"  attrs="{'required':[('type','=','vendor')]}"/>
+																	<field name = "cost" />
 																</tree>
 															</field>
 														</group>

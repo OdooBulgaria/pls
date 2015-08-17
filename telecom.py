@@ -126,6 +126,7 @@ class activity_activity(osv.osv):
     _columns = {
                 'name':fields.char('Activity Name',required = True),
                 }
+
 class activity_line_line(osv.osv):
     _name='activity.line.line'
     _inherits = {'project.tracker': 'tracker_line_id'}
@@ -162,7 +163,9 @@ class activity_line_line(osv.osv):
               'line_id':fields.many2one('activity.line',string='Activity Line'),
               'site_id':fields.related('line_id','site_id',relation = "project.site",type="many2one",string="Site"),
               'vendor_id':fields.many2one('res.partner',string="Vendor",domain=[('supplier','=',True)]),
-              'type':fields.selection(selection=[('inhouse','Inhouse'),('vendor','Vendor')],required=True,string="Activity Type"),
+              'type':fields.selection(selection=[
+                                                 ('inhouse','Inhouse'),('vendor','Vendor')
+                                             ],required=True,string="Activity Type"),
               'cost':fields.float(string='Vendor Cost'),
               'tracker_line_id':fields.many2one('project.tracker',string='Tracker Line',ondelete="cascade",required=True),
               'project_id':fields.related('line_id','activity_line','project_id',relation='telecom.project',type="many2one",string="Project",store=True)
