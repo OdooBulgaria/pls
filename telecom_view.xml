@@ -132,9 +132,9 @@
 																<field name = "activity_line_line" >
 																	<tree string="Line Items" editable="bottom">
 																		<field name = "type" />
-																		<field name = "vendor_id" widget="selection"  
-																		attrs="{'invisible':[('type','!=','vendor')],'required':[('type','=','vendor')]}"/>
-																		<field name = "cost"  attrs="{'invisible':[('type','!=','vendor')]}" />
+																		<field name = "vendor_id"   
+																		attrs="{'required':[('type','=','vendor')]}"/>
+																		<field name = "cost"   />
 																	</tree>
 																</field>
 															 </group>
