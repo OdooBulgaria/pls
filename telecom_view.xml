@@ -123,7 +123,7 @@
 	                    							<form>
 	                    								<sheet>
 		                    								<group>
-				                    							<field name = "activity_id"  />
+				                    							<field name = "activity_id" on_change="onchange_for_activity_cost(activity_id)"/>
 																<field name = "cost" />
 																<field name = "activity_line_line" >
 																	<tree string="Line Items" editable="bottom">
@@ -170,9 +170,10 @@
 	    		<field name="name">telecom.circle.tree.view</field>
 	    		<field name="model">telecom.circle</field>
 	    		<field name="arch" type="xml">
-	    			<tree string="circle Tree View">
+	    			<tree string="circle Tree View" editable="bottom">
 						<field name="name"/>
 						<field name="circle_head"/>
+						<field name="project_name" />
 		   			</tree>
 	    		</field>
 	    </record>

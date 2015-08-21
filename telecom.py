@@ -88,6 +88,15 @@ class activity_line(osv.osv):
     _name='activity.line'
     _rec_name='activity_id'
     
+    def onchange_for_activity_cost(self,cr,uid,id,activity_id,context):
+        values={}
+        activity=self.pool.get('customer.contract').search(cr,uid,[('activity_id','=',activity_id)],context=None)
+        activity_cost=self.pool.get('customer.contract').read(cr,uid,activity,['cost'],context=None)[0].get('cost',0.0)
+
+        return {
+                'value':{'cost':activity_cost}
+               }
+        
     _columns={
               'activity_line':fields.many2one('project.description.line'),
               'activity_id':fields.many2one('activity.activity',string = "Activity Name",required=True),
