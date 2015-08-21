@@ -40,7 +40,14 @@
 								</sheet>
 							</form>
 						</field>
- 
+					</page>
+					<page string ="Contracts" attrs="{'invisible':[('customer','=',False)]}">
+						<field name="contracts">
+							<tree editable="bottom">
+								<field name="activity_id"/>
+								<field name="cost"/>
+							</tree>
+						</field>
 					</page>
 				</xpath>
             </field>

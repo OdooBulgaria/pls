@@ -23,7 +23,6 @@
 					<field name = "project_id" />
 					<field name = "activity_id"  />
 					<field name = "cost" />
-					<field name = "site_id" />
 				</tree>
 			</field>
 		</record>    
@@ -37,7 +36,6 @@
 							<field name = "project_id" />
 							<field name = "activity_id"  />
 							<field name = "cost" />
-							<field name = "site_id" />
 							<field name = "activity_line_line" >
 								<tree string="Line Items" editable="bottom">
 									<field name = "line_id" />
@@ -114,13 +112,12 @@
 	                    			<form>
 	                    				<sheet>
 	                    					<group>
-	                    						<field name="description_id" required="1" on_change="setof_associated_activities(description_id,parent.site_id)"/>
+	                    						<field name="description_id" required="1" on_change="setof_associated_activities(description_id)"/>
 	                    					</group>
 	                    					<group>
 	                    						<field name="activity_ids">
 	                    							<tree string = "Activity cost" >
 	                    								<field name = "activity_id"  />
-	                    								<field name = "site_id"/>
 	                    								<field name = "cost"/>
 	                    							</tree>
 	                    							<form>
@@ -128,9 +125,9 @@
 		                    								<group>
 				                    							<field name = "activity_id"  />
 																<field name = "cost" />
-																<field name = "site_id"  />
 																<field name = "activity_line_line" >
 																	<tree string="Line Items" editable="bottom">
+																		<field name = "site_id" />
 																		<field name = "type" />
 																		<field name = "vendor_id" widget="selection"  
 																		attrs="{'invisible':[('type','!=','vendor')],'required':[('type','=','vendor')]}"/>
@@ -144,15 +141,6 @@
 	                    					</group>
 	                    				</sheet>
 	                    			</form>
-	                    		</field>
-	                    	</page>
-	                    	<page string="Sites">
-	                    		<field name="site_id">
-	                    			<tree>
-	                    				<field name="name"/>
-	                    				<field name="site_id"/>
-	                    				<field name="address"/>
-	                    			</tree>
 	                    		</field>
 	                    	</page>
 	                    </notebook>
@@ -278,12 +266,6 @@
 							<field name="name"/>
 							<field name="site_id"/>
 							<field name="address"/>
-							<field name="project_id">
-								<tree>
-									<field name="name" />
-									<field name="customer" />
-								</tree>
-							</field>
 						</group>
 					</sheet>    			
 	   			</form>

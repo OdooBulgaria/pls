@@ -7,7 +7,7 @@ class project_site(osv.osv):
               'name':fields.char(string="Site Name"),
               'site_id':fields.char(string="Site ID"),
               'address':fields.text(string='Site Address'),
-              'project_id':fields.many2many('telecom.project','telecom_project_project_site_rel','site_id','project_id',string="Projects")
+#               'project_id':fields.many2many('telecom.project','telecom_project_project_site_rel','site_id','project_id',string="Projects")
               }
 
 
@@ -55,29 +55,26 @@ class telecom_project(osv.osv):
               'state':fields.selection([
                                     ('draft','Draft'),('wip','WIP'),('close','Close')
                                     ],help = "Attendance will only be considered for the WIP state"),
-              'site_id':fields.many2many('project.site','telecom_project_project_site_rel','project_id','site_id',string="Project Sites"),
               'activity_tracker_ids':fields.one2many('activity.line.line','project_id',string="Activity Trackers")
               }
 class project_description_line(osv.osv):
     _name="project.description.line"  
     _rec_name = "description_id"
     
-    def setof_associated_activities(self,cr,uid,ids,description_id,site_id,context=None):
-        description=self.pool.get('work.description').browse(cr, uid, description_id,context)
+    def setof_associated_activities(self,cr,uid,ids,description_id,context=None):
+        description=self.pool.get('work.description').browse(cr, uid, description_id,context=None)
         values=[]
-        if len(site_id[0][2])!=0 :
+        customer_id=self.browse(cr,uid,ids[0],context=None).project_id.customer.id
+        
+        if description_id:
             for i in description.activity_ids:
-                for j in site_id[0][2]:
-                    values.append((0,0,{'activity_id':i.id,
-                                    'site_id':j
-                                    }))
-        else:
-            for i in description.activity_ids:
+                activity=self.pool.get('customer.contract').search(cr,uid,[('activity_id','=',i.id)],context=None)
+                activity_cost=self.pool.get('customer.contract').read(cr,uid,activity,['cost'],context=None)[0].get('cost',0.0)
                 values.append((0,0,{'activity_id':i.id,
-                                    'site_id':False}))
+                                    'cost':activity_cost,
+                                    }))
         return {
                 'value':{'activity_ids':values}
-                 
                }
         
         
@@ -91,19 +88,12 @@ class activity_line(osv.osv):
     _name='activity.line'
     _rec_name='activity_id'
     
-    def name_get(self,cr,uid,ids,context=None):
-        res = []
-        for record in self.read(cr,uid,ids,['activity_id','site_id'],context):
-            name = record.get('activity_id',False) and record.get('activity_id')[1]+'['+ (record.get('site_id',False) and record.get('site_id',False)[1] or "No Site Defined") +']' 
-            res.append((record.get('id'),name))
-        return res
-    
     _columns={
               'activity_line':fields.many2one('project.description.line'),
               'activity_id':fields.many2one('activity.activity',string = "Activity Name",required=True),
               'cost':fields.float(string='Customer Cost'),
               'project_id':fields.related('activity_line','project_id',relation = "telecom.project",type="many2one",store=True,string="Project",readonly=True),
-              'site_id':fields.many2one('project.site',string = "Site"),
+#               'site_id':fields.many2one('project.site',string = "Site"),
               'activity_line_line':fields.one2many('activity.line.line','line_id',string='Activity-Line Items'),
               }
       
@@ -146,7 +136,7 @@ class activity_line_line(osv.osv):
     _columns={
               'line_id':fields.many2one('activity.line',string='Activity Line'),
               'work_description':fields.related('line_id','activity_line','description_id',type="many2one",relation="work.description",string = "Work Description"),
-              'site_id':fields.related('line_id','site_id',relation = "project.site",type="many2one",string="Site",readonly='1'),
+              'site_id':fields.many2one("project.site",string="Site"),
               'site_code':fields.related('site_id','site_id',type="char",string="Site Code",readonly='1'),
               'vendor_id':fields.many2one('res.partner',string="Sub vendor",domain=[('supplier','=',True)]),
               'type':fields.selection(selection=[
@@ -158,4 +148,3 @@ class activity_line_line(osv.osv):
               'balance_payment':fields.function(_get_balance_payment,string="Balance Payment"),
               'advance_paid_to_vendor':fields.float(string='Advance paid to vendor'),
               }
-
