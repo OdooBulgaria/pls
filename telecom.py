@@ -87,6 +87,7 @@ class project_description_line(osv.osv):
               'activity_ids':fields.one2many('activity.line','activity_line',string="Activities"),
               'project_id':fields.many2one('telecom.project')
               }
+    
 class activity_line(osv.osv):
     _name='activity.line'
     _rec_name='activity_id'
@@ -111,7 +112,6 @@ class telecom_circle(osv.osv):
     _name='telecom.circle'
     _columns={'name':fields.char(string='Circle Name',required=True),
               'project_name':fields.one2many('telecom.project','circle',string='Projects'),
-              'circle_head':fields.many2one('res.users',string="Circle Head / Regional Manager"),
               }
     
 class work_description(osv.osv):  

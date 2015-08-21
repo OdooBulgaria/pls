@@ -184,7 +184,6 @@
 	    		<field name="arch" type="xml">
 	    			<tree string="circle Tree View">
 						<field name="name"/>
-						<field name="circle_head"/>
 		   			</tree>
 	    		</field>
 	    </record>
@@ -198,11 +197,10 @@
     				<sheet>
 						<group>
 							<field name="name"/>
-							<field name="circle_head"/>
 						</group>
 						<notebook>
-							<page string = "Projects">
-								<field name="project_name">
+							<page string = "Projects" >
+								<field name="project_name" readonly="1">
 									<tree string = "circle project view">
 										<field name = "name"/>
 										<field name = "customer"/>
