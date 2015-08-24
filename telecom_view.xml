@@ -173,7 +173,6 @@
 	    			<tree string="circle Tree View" editable="bottom">
 						<field name="name"/>
 						<field name="circle_head"/>
-						<field name="project_name" />
 		   			</tree>
 	    		</field>
 	    </record>
