@@ -147,7 +147,7 @@ class activity_line_line(osv.osv):
     _columns={
               'line_id':fields.many2one('activity.line',string='Activity Line'),
               'work_description':fields.related('line_id','activity_line','description_id',type="many2one",relation="work.description",string = "Work Description"),
-              'site_id':fields.many2one("project.site",string="Site"),
+              'site_id':fields.many2one("project.site",string="Site Name"),
               'site_code':fields.related('site_id','site_id',type="char",string="Site Code",readonly='1'),
               'vendor_id':fields.many2one('res.partner',string="Sub vendor",domain=[('supplier','=',True)]),
               'type':fields.selection(selection=[

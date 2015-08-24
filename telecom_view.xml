@@ -170,7 +170,7 @@
 	    		<field name="name">telecom.circle.tree.view</field>
 	    		<field name="model">telecom.circle</field>
 	    		<field name="arch" type="xml">
-	    			<tree string="circle Tree View" editable="bottom">
+	    			<tree string="circle Tree View" >
 						<field name="name"/>
 		   			</tree>
 	    		</field>
