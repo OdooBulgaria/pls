@@ -61,21 +61,23 @@ class project_description_line(osv.osv):
     _name="project.description.line"  
     _rec_name = "description_id"
     
-    def setof_associated_activities(self,cr,uid,ids,description_id,context=None):
-        description=self.pool.get('work.description').browse(cr, uid, description_id,context=None)
-        values=[]
-        customer_id=self.browse(cr,uid,ids[0],context=None).project_id.customer.id
-        
-        if description_id:
-            for i in description.activity_ids:
-                activity=self.pool.get('customer.contract').search(cr,uid,[('activity_id','=',i.id)],context=None)
-                activity_cost=self.pool.get('customer.contract').read(cr,uid,activity,['cost'],context=None)[0].get('cost',0.0)
-                values.append((0,0,{'activity_id':i.id,
-                                    'cost':activity_cost,
-                                    }))
-        return {
-                'value':{'activity_ids':values}
-               }
+    def onchange_setof_associated_activities(self,cr,uid,ids,description_id,context=None):
+        if ids:
+            description=self.pool.get('work.description').browse(cr, uid, description_id,context=None)
+            values=[]
+            customer_id=self.browse(cr,uid,ids[0],context=None).project_id.customer.id
+            
+            if description_id:
+                for i in description.activity_ids:
+                    activity=self.pool.get('customer.contract').search(cr,uid,[('activity_id','=',i.id)],context=None)
+                    activity_cost=self.pool.get('customer.contract').read(cr,uid,activity,['cost'],context=None)[0].get('cost',0.0)
+                    values.append((0,0,{'activity_id':i.id,
+                                        'cost':activity_cost,
+                                        }))
+            return {
+                    'value':{'activity_ids':values}
+                   }
+        return {}
         
         
     

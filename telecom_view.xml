@@ -112,7 +112,7 @@
 	                    			<form>
 	                    				<sheet>
 	                    					<group>
-	                    						<field name="description_id" required="1" on_change="setof_associated_activities(description_id)"/>
+	                    						<field name="description_id" required="1" on_change="onchange_setof_associated_activities(description_id)"/>
 	                    					</group>
 	                    					<group>
 	                    						<field name="activity_ids">
