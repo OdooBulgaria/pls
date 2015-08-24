@@ -23,7 +23,6 @@
 					<field name = "project_id" />
 					<field name = "activity_id"  />
 					<field name = "cost" />
-					<field name = "site_id" />
 				</tree>
 			</field>
 		</record>    
@@ -37,7 +36,6 @@
 							<field name = "project_id" />
 							<field name = "activity_id"  />
 							<field name = "cost" />
-							<field name = "site_id" />
 							<field name = "activity_line_line" >
 								<tree string="Line Items" editable="bottom">
 									<field name = "line_id" />
@@ -114,23 +112,22 @@
 	                    			<form>
 	                    				<sheet>
 	                    					<group>
-	                    						<field name="description_id" required="1" on_change="setof_associated_activities(description_id,parent.site_id)"/>
+	                    						<field name="description_id" required="1" on_change="onchange_setof_associated_activities(description_id)"/>
 	                    					</group>
 	                    					<group>
 	                    						<field name="activity_ids">
 	                    							<tree string = "Activity cost" >
 	                    								<field name = "activity_id"  />
-	                    								<field name = "site_id"/>
 	                    								<field name = "cost"/>
 	                    							</tree>
 	                    							<form>
 	                    								<sheet>
 		                    								<group>
-				                    							<field name = "activity_id"  />
+				                    							<field name = "activity_id" on_change="onchange_for_activity_cost(activity_id)"/>
 																<field name = "cost" />
-																<field name = "site_id"  />
 																<field name = "activity_line_line" >
 																	<tree string="Line Items" editable="bottom">
+																		<field name = "site_id" />
 																		<field name = "type" />
 																		<field name = "vendor_id"   
 																		attrs="{'required':[('type','=','vendor')]}"/>
@@ -144,15 +141,6 @@
 	                    					</group>
 	                    				</sheet>
 	                    			</form>
-	                    		</field>
-	                    	</page>
-	                    	<page string="Sites">
-	                    		<field name="site_id">
-	                    			<tree>
-	                    				<field name="name"/>
-	                    				<field name="site_id"/>
-	                    				<field name="address"/>
-	                    			</tree>
 	                    		</field>
 	                    	</page>
 	                    </notebook>
@@ -182,7 +170,7 @@
 	    		<field name="name">telecom.circle.tree.view</field>
 	    		<field name="model">telecom.circle</field>
 	    		<field name="arch" type="xml">
-	    			<tree string="circle Tree View">
+	    			<tree string="circle Tree View" editable="bottom">
 						<field name="name"/>
 		   			</tree>
 	    		</field>
@@ -276,12 +264,6 @@
 							<field name="name"/>
 							<field name="site_id"/>
 							<field name="address"/>
-							<field name="project_id">
-								<tree>
-									<field name="name" />
-									<field name="customer" />
-								</tree>
-							</field>
 						</group>
 					</sheet>    			
 	   			</form>
