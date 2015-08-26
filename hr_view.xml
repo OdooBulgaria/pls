@@ -41,8 +41,8 @@
 					<field name="emp_type" required="1" on_change="reset_company_name(emp_type)"/>
 					</group>
 					<group>
-					<!-- <label for="company_name" class="oe_edit_only" attrs="{'invisible':[('emp_type','=','Inhouse')]}"/>
-				 -->	<field name="company_name" attrs="{'required':[('emp_type','=','Vendor')],'invisible':[('emp_type','=','Inhouse')]}"/>
+					<!-- <label for="company_name" class="oe_edit_only" attrs="{'invisible':[('emp_type','=','inhouse')]}"/>
+				 -->	<field name="company_name" attrs="{'required':[('emp_type','=','vendor')],'invisible':[('emp_type','=','inhouse')]}"/>
 				</group>
 				</group>
 				</xpath>

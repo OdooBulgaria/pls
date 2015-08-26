@@ -38,7 +38,7 @@ class hr_employee(osv.osv):
         
     _columns={
               'doj':fields.date(string='Date of Joining'),
-              'emp_type':fields.selection(string="Employee Type",selection=[('Inhouse','Inhouse'),('Vendor','Vendor')]),
+              'emp_type':fields.selection(string="Employee Type",selection=[('inhouse','Inhouse'),('vendor','Vendor')]),
               'company_name':fields.many2one('res.partner',string='Vendor Company'),
               'current_project':fields.many2one('telecom.project',string='Current Project'),
               }
