@@ -92,9 +92,19 @@ class activity_line(osv.osv):
     _rec_name='activity_id'
     
     def onchange_for_activity_cost(self,cr,uid,id,activity_id,context):
-        values={}
-        activity=self.pool.get('customer.contract').search(cr,uid,[('activity_id','=',activity_id)],context=None)
-        activity_cost=self.pool.get('customer.contract').read(cr,uid,activity,['cost'],context=None)[0].get('cost',0.0)
+        activity_cost=0.0
+        print "activity_id------------------------",activity_id
+        print "id==================",id
+        
+        if activity_id:
+            customer_id=self.browse(cr,uid,id,context=None).project_id.customer.id
+            print "customer_id-------------------------------",customer_id
+            if customer_id:
+                activity=self.pool.get('customer.contract').search(cr,uid,[('activity_id','=',activity_id),('id','=',customer_id)],context=None)
+                print "activity======================",activity
+                if activity:
+                    activity_cost=self.pool.get('customer.contract').read(cr,uid,activity,['cost'],context=None)[0].get('cost',0.0)
+                    print "activity_cost----------------------------",activity_cost
 
         return {
                 'value':{'cost':activity_cost}
