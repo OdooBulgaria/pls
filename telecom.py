@@ -61,22 +61,21 @@ class project_description_line(osv.osv):
     _name="project.description.line"  
     _rec_name = "description_id"
     
-    def onchange_setof_associated_activities(self,cr,uid,ids,description_id,context=None):
-        if ids:
-            description=self.pool.get('work.description').browse(cr, uid, description_id,context=None)
-            values=[]
-            customer_id=self.browse(cr,uid,ids[0],context=None).project_id.customer.id
-            
-            if description_id:
-                for i in description.activity_ids:
-                    activity=self.pool.get('customer.contract').search(cr,uid,[('activity_id','=',i.id)],context=None)
+    def onchange_setof_associated_activities(self,cr,uid,ids,description_id,customer_id,context=None):
+        description=self.pool.get('work.description').browse(cr, uid, description_id,context=None)
+        values=[]
+        if description_id:
+            for i in description.activity_ids:
+                activity_cost=0.0
+                activity=self.pool.get('customer.contract').search(cr,uid,[('activity_id','=',i.id),('res_partner_id','=',customer_id)],context=None)
+                if activity:
                     activity_cost=self.pool.get('customer.contract').read(cr,uid,activity,['cost'],context=None)[0].get('cost',0.0)
-                    values.append((0,0,{'activity_id':i.id,
-                                        'cost':activity_cost,
-                                        }))
-            return {
-                    'value':{'activity_ids':values}
-                   }
+                values.append((0,0,{'activity_id':i.id,
+                                'cost':activity_cost,
+                                }))
+        return {
+                'value':{'activity_ids':values}
+               }
         return {}
         
         
@@ -91,21 +90,14 @@ class activity_line(osv.osv):
     _name='activity.line'
     _rec_name='activity_id'
     
-    def onchange_for_activity_cost(self,cr,uid,id,activity_id,context):
+    def onchange_for_activity_cost(self,cr,uid,id,activity_id,context=None):
         activity_cost=0.0
-        print "activity_id------------------------",activity_id
-        print "id==================",id
-        
-        if activity_id:
-            customer_id=self.browse(cr,uid,id,context=None).project_id.customer.id
-            print "customer_id-------------------------------",customer_id
-            if customer_id:
-                activity=self.pool.get('customer.contract').search(cr,uid,[('activity_id','=',activity_id),('id','=',customer_id)],context=None)
-                print "activity======================",activity
-                if activity:
-                    activity_cost=self.pool.get('customer.contract').read(cr,uid,activity,['cost'],context=None)[0].get('cost',0.0)
-                    print "activity_cost----------------------------",activity_cost
-
+        customer_id=context.get('customer_id',False)
+        activity_cost=0.0
+        if customer_id:
+            activity=self.pool.get('customer.contract').search(cr,uid,[('activity_id','=',activity_id),('res_partner_id','=',customer_id)],context=None)
+            if activity:
+                activity_cost=self.pool.get('customer.contract').read(cr,uid,activity,['cost'],context=None)[0].get('cost',0.0)
         return {
                 'value':{'cost':activity_cost}
                }
@@ -115,7 +107,6 @@ class activity_line(osv.osv):
               'activity_id':fields.many2one('activity.activity',string = "Activity Name",required=True),
               'cost':fields.float(string='Customer Cost'),
               'project_id':fields.related('activity_line','project_id',relation = "telecom.project",type="many2one",store=True,string="Project",readonly=True),
-#               'site_id':fields.many2one('project.site',string = "Site"),
               'activity_line_line':fields.one2many('activity.line.line','line_id',string='Activity-Line Items'),
               }
       

@@ -104,7 +104,7 @@
 	                    </group>
 	                    <notebook>
 	                    	<page string = "Work Description">
-	                    		<field name="line_id" >
+	                    		<field name="line_id">
 	                    			<tree string= "Work Description Line">
 	                    				<field name="description_id"/>
 	                    				<field name="activity_ids"/>
@@ -112,10 +112,10 @@
 	                    			<form>
 	                    				<sheet>
 	                    					<group>
-	                    						<field name="description_id" required="1" on_change="onchange_setof_associated_activities(description_id)"/>
+	                    						<field name="description_id" required="1" on_change="onchange_setof_associated_activities(description_id,parent.customer)"/>
 	                    					</group>
 	                    					<group>
-	                    						<field name="activity_ids">
+	                    						<field name="activity_ids" context="{'customer_id':parent.customer}">
 	                    							<tree string = "Activity cost" >
 	                    								<field name = "activity_id"  />
 	                    								<field name = "cost"/>
