@@ -82,8 +82,9 @@ class project_description_line(osv.osv):
     
     _columns={
               'description_id':fields.many2one('work.description',string="Work Description"),
+              'unlock_description_id':fields.boolean("Unlock Work Description"),
               'activity_ids':fields.one2many('activity.line','activity_line',string="Activities"),
-              'project_id':fields.many2one('telecom.project')
+              'project_id':fields.many2one('telecom.project',required=True, ondelete='cascade', select=True, readonly=True)
               }
     
 class activity_line(osv.osv):
@@ -103,7 +104,7 @@ class activity_line(osv.osv):
                }
         
     _columns={
-              'activity_line':fields.many2one('project.description.line'),
+              'activity_line':fields.many2one('project.description.line',required=True, ondelete='cascade', select=True, readonly=True),
               'activity_id':fields.many2one('activity.activity',string = "Activity Name",required=True),
               'cost':fields.float(string='Customer Cost'),
               'project_id':fields.related('activity_line','project_id',relation = "telecom.project",type="many2one",store=True,string="Project",readonly=True),
@@ -146,7 +147,7 @@ class activity_line_line(osv.osv):
         res = {}
         
     _columns={
-              'line_id':fields.many2one('activity.line',string='Activity Line'),
+              'line_id':fields.many2one('activity.line',string='Activity Line',required=True, ondelete='cascade', select=True, readonly=True),
               'work_description':fields.related('line_id','activity_line','description_id',type="many2one",relation="work.description",string = "Work Description"),
               'site_id':fields.many2one("project.site",string="Site",required=True),
               'site_code':fields.related('site_id','site_id',type="char",string="Site Code",readonly='1'),
