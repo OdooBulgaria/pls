@@ -61,9 +61,9 @@
 				<xpath expr = "/form/sheet/notebook/page/group/group/field[@name ='job_id' ]" position = "attributes">
 					<attribute name="string">Designation</attribute>
 				</xpath>
-				<xpath expr = "/form/sheet/notebook/page[@string ='HR Settings' ]" position = "after">
+				<!-- <xpath expr = "/form/sheet/notebook/page[@string ='HR Settings' ]" position = "after">
 					<page string="Attendance"/>
-				</xpath>
+				</xpath> -->
 			</field>
        </record>
        <record id="action3" model="ir.actions.act_window">
