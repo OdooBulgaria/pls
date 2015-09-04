@@ -556,6 +556,7 @@ class employee_status_line(osv.osv):
     _defaults = {
                  'date':datetime.now(timezone('Asia/Kolkata')),
                  }
+
     _rec_name = 'employee_id'
     
     _columns ={
@@ -572,7 +573,7 @@ class employee_status_line(osv.osv):
                                      ('tour',"On Tour"),
                                      ],string = "Status",required=True ),
                'remarks':fields.text('Remarks'),
-               'line_id':fields.many2one('attendance.line',ondelete='cascade',select=True),
+               'line_id':fields.many2one('attendance.line',required =True,ondelete="cascade",select=True),
                }
     
     

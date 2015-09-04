@@ -182,7 +182,6 @@
                         <div class="oe_title oe_right">
 							<field name="state" widget="statusbar"  statusbar_visible="pending,submitted" />
 						</div>
-						
 						<notebook>
 							<page string = "Employee Attendance" >
 								<field name = "emploee_status_line" nolabel = "1" >
