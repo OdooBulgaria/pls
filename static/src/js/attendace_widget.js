@@ -33,7 +33,6 @@ openerp.pls = function(instance, local) {
     	     .filter([['id', '=', self.session.uid]])
     	     .limit(1)
     	     .all().then(function (result) {
-    	    	 	console.log(result[0].allowed_attendance_time);
     	    	 	var d = new Date();
     	    	 	var n = d.getHours();
     	    	 	var  m = d.getMinutes();
