@@ -46,6 +46,14 @@ class project_description_line(osv.osv):
     _name="project.description.line"  
     _rec_name = "description_id"
     
+    def create(self,cr,uid,vals,context=None):
+        vals.update({"unlock_description_id":True})
+        super(project_description_line,self).create(cr,uid,vals,context)
+        
+    def write(self,cr,uid,ids,vals,context=None):
+        vals.update({"unlock_description_id":True})
+        super(project_description_line,self).write(cr,uid,ids,vals,context)        
+    
     def onchange_setof_associated_activities(self,cr,uid,ids,description_id,customer_id,context=None):
         description=self.pool.get('work.description').browse(cr, uid, description_id,context=None)
         values=[]
