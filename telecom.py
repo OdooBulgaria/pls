@@ -27,21 +27,6 @@ class telecom_project(osv.osv):
         user_ids=map(int,user_group.users or [])
         return user_ids                    
         
-    def list_project(self, cr, uid, context=None):
-        result = []
-        list_ids = self.pool.get('attendance.attendance').fetch_ids_user(cr,uid,context)
-        if list_ids:
-            ng = dict(self.pool.get('telecom.project').name_search(cr,uid,'',[('id','in',list_ids[0][2])]))
-        else:
-            list_ids = self.pool.get("telecom.project").search(cr,uid,[], offset=0, limit=None, order=None, context=None, count=False)
-            ng = dict(self.pool.get('telecom.project').name_search(cr,uid,'',[('id','in',list_ids)]))            
-        if ng:
-            ids = ng.keys()
-            for project in self.pool.get('telecom.project').browse(cr, uid, ids, context=context):
-                result.append((project.id,ng[project.id]))
-        return result
-
-    
     _columns={
               'name':fields.char(string='Project Name',required =True),
               'project_manager':fields.many2many('hr.employee','telecom_project_hr_employee_rel','project_id','manager_id',string='Project Manager / Project Coordinator',help="Project Coordinator"),
