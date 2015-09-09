@@ -73,6 +73,6 @@
 		</record>
 		
 		<menuitem id = "menu_child_cron" parent = "parent_menu_attendance" name = "Cron"/>
-		<menuitem id = "subchild_child_cron" parent = "menu_child_cron" action = "action_cron_report" name = "Reports" />
+		<menuitem id = "subchild_child_cron" parent = "menu_child_cron" groups = "pls.telecom_corporate" action = "action_cron_report" name = "Reports" />
 	</data>
 </openerp>
