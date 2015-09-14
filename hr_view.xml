@@ -42,7 +42,7 @@
 					</group>
 					<group>
 					<!-- <label for="company_name" class="oe_edit_only" attrs="{'invisible':[('emp_type','=','inhouse')]}"/>
-				 -->	<field name="company_name" attrs="{'required':[('emp_type','=','vendor')],'invisible':[('emp_type','=','inhouse')]}"/>
+				 -->	<field name="company_name" widget="selection" domain = "[('supplier','=',True)]" attrs="{'required':[('emp_type','=','vendor')],'invisible':[('emp_type','=','inhouse')]}"/>
 				</group>
 				</group>
 				</xpath>

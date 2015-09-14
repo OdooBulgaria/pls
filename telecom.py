@@ -1,4 +1,5 @@
 from openerp.osv import fields, osv
+from openerp import SUPERUSER_ID
 
 class project_site(osv.osv):
     _name = 'project.site'
@@ -125,9 +126,16 @@ class activity_activity(osv.osv):
 
 class activity_line_line(osv.osv):
     _name='activity.line.line'
+    _descrition = "Activity Line Line telcome module"    
+    
+    def read(self,cr,uid,ids,fields=None, context=None, load='_classic_read'):
+        uid= SUPERUSER_ID
+        print "======================lists",fields
+        return super(activity_line_line,self).read(cr,uid,ids,fields=fields, context=context, load='_classic_read')
     
     def _get_balance_payment(self,cr,uid,ids,name,args,context=None):
         res = {}
+        uid = SUPERUSER_ID
         records = self.read(cr,uid,ids,['advance_paid_to_vendor','cost'],context)
         for info in records:
             balance_payment = info.get('cost',0) - info.get('advance_paid_to_vendor',0)
@@ -136,8 +144,6 @@ class activity_line_line(osv.osv):
                         })
         return res
     
-    def _get_total_activities_cost(self,cr,uid,ids,name,args,context=None):
-        res = {}
         
     _columns={
               'line_id':fields.many2one('activity.line',string='Activity Line',required=True, ondelete='cascade', select=True, readonly=True),
