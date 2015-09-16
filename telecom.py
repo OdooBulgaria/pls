@@ -127,11 +127,14 @@ class activity_activity(osv.osv):
 class activity_line_line(osv.osv):
     _name='activity.line.line'
     _descrition = "Activity Line Line telcome module"    
+    _rec_name = "line_id"
     
     def read(self,cr,uid,ids,fields=None, context=None, load='_classic_read'):
         uid= SUPERUSER_ID
-        print "======================lists",fields
         return super(activity_line_line,self).read(cr,uid,ids,fields=fields, context=context, load='_classic_read')
+    
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        return super(activity_line_line,self).name_search(cr, user, name=name, args=args, operator=operator, context=context, limit=100)
     
     def _get_balance_payment(self,cr,uid,ids,name,args,context=None):
         res = {}
@@ -147,7 +150,7 @@ class activity_line_line(osv.osv):
         
     _columns={
               'line_id':fields.many2one('activity.line',string='Activity Line',required=True, ondelete='cascade', select=True, readonly=True),
-              'work_description':fields.related('line_id','activity_line','description_id',type="many2one",relation="work.description",string = "Work Description"),
+              'work_description':fields.related('line_id','activity_line','description_id',type="many2one",relation="work.description",string = "Work Description",store=True),
               'site_id':fields.many2one("project.site",string="Site",required=True),
               'site_code':fields.related('site_id','site_id',type="char",string="Site Code",readonly='1'),
               'vendor_id':fields.many2one('res.partner',string="Sub vendor",domain=[('supplier','=',True)]),
