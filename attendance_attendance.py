@@ -571,6 +571,8 @@ class employee_status_line(osv.osv):
                                      ('leave','Leave'),
                                      ('terminated','Terminated'),
                                      ('tour',"On Tour"),
+                                     ('resigned','Resigned'),
+                                     ('absconding','Absconding'),
                                      ],string = "Status",required=True ),
                'remarks':fields.text('Remarks'),
                'line_id':fields.many2one('attendance.line',required =True,ondelete="cascade",select=True),
