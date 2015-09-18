@@ -1,5 +1,7 @@
 from openerp.osv import fields, osv
 from openerp import SUPERUSER_ID
+from lxml import  etree
+from openerp.osv.orm import setup_modifiers
 
 class project_site(osv.osv):
     _name = 'project.site'
@@ -128,6 +130,21 @@ class activity_line_line(osv.osv):
     _name='activity.line.line'
     _descrition = "Activity Line Line telcome module"    
     _rec_name = "line_id"
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='tree', context=None, toolbar=False, submenu=False):
+        res=super(activity_line_line,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        corporate_ids = self.pool.get('attendance.attendance')._get_user_ids_group(cr,uid,'pls','telecom_corporate')
+        print "-------------------------------",context,view_type
+        if uid not in corporate_ids:
+            doc = etree.XML(res['arch'])
+            for node in doc.xpath("//field[@name='project_id']"):
+                emp_id  = self.pool.get('res.users').browse(cr,uid,uid,context).emp_id.id
+                print "emp_id================================",emp_id
+                node.set('domain',"[('project_id.project_manager','in',[emp_id])]")
+                setup_modifiers(node, res['fields']['project_id'])
+                res['arch'] = etree.tostring(doc)
+        print "-----------------------------res",res
+        return res
     
     def read(self,cr,uid,ids,fields=None, context=None, load='_classic_read'):
         uid= SUPERUSER_ID
