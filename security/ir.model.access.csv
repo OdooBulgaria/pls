@@ -25,3 +25,6 @@ access_activity_line_corporate,activity.line,model_activity_line,telecom_corpora
 access_activity_line_line_manager,activity.line.line,model_activity_line_line,telecom_project_manager,1,0,0,0
 access_activity_line_line_circle_head,activity.line.line,model_activity_line_line,telecom_circle_head,1,1,1,0
 access_activity_line_line_corporate_head,activity.line.line,model_activity_line_line,telecom_corporate,1,1,1,1
+access_resource_resource_manager,resource.resource,model_resource_resource,telecom_project_manager,1,0,0,0
+access_resource_resource_cirlce,resource.resource,model_resource_resource,telecom_circle_head,1,1,1,0
+access_resource_resource_corporate,resource.resource,model_resource_resource,telecom_corporate,1,1,1,1

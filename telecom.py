@@ -43,7 +43,7 @@ class telecom_project(osv.osv):
               'state':fields.selection([
                                     ('draft','Draft'),('wip','WIP'),('close','Close')
                                     ],help = "Attendance will only be considered for the WIP state"),
-              'activity_tracker_ids':fields.one2many('activity.line.line','project_id',string="Activity Trackers")
+              'activity_tracker_ids':fields.one2many('activity.line.line','project_id',"Activity Lines")
               }
 class project_description_line(osv.osv):
     _name="project.description.line"  
@@ -125,58 +125,3 @@ class activity_activity(osv.osv):
     _columns = {
                 'name':fields.char('Activity Name',required = True),
                 }
-
-class activity_line_line(osv.osv):
-    _name='activity.line.line'
-    _descrition = "Activity Line Line telcome module"    
-    _rec_name = "line_id"
-    
-    def fields_view_get(self, cr, uid, view_id=None, view_type='tree', context=None, toolbar=False, submenu=False):
-        res=super(activity_line_line,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
-        corporate_ids = self.pool.get('attendance.attendance')._get_user_ids_group(cr,uid,'pls','telecom_corporate')
-        print "-------------------------------",context,view_type
-        if uid not in corporate_ids:
-            doc = etree.XML(res['arch'])
-            for node in doc.xpath("//field[@name='project_id']"):
-                emp_id  = self.pool.get('res.users').browse(cr,uid,uid,context).emp_id.id
-                print "emp_id================================",emp_id
-                node.set('domain',"[('project_id.project_manager','in',[emp_id])]")
-                setup_modifiers(node, res['fields']['project_id'])
-                res['arch'] = etree.tostring(doc)
-        print "-----------------------------res",res
-        return res
-    
-    def read(self,cr,uid,ids,fields=None, context=None, load='_classic_read'):
-        uid= SUPERUSER_ID
-        return super(activity_line_line,self).read(cr,uid,ids,fields=fields, context=context, load='_classic_read')
-    
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
-        return super(activity_line_line,self).name_search(cr, user, name=name, args=args, operator=operator, context=context, limit=100)
-    
-    def _get_balance_payment(self,cr,uid,ids,name,args,context=None):
-        res = {}
-        uid = SUPERUSER_ID
-        records = self.read(cr,uid,ids,['advance_paid_to_vendor','cost'],context)
-        for info in records:
-            balance_payment = info.get('cost',0) - info.get('advance_paid_to_vendor',0)
-            res.update({
-                        info.get('id',False):round(balance_payment,3)
-                        })
-        return res
-    
-        
-    _columns={
-              'line_id':fields.many2one('activity.line',string='Activity Line',required=True, ondelete='cascade', select=True, readonly=True),
-              'work_description':fields.related('line_id','activity_line','description_id',type="many2one",relation="work.description",string = "Work Description",store=True),
-              'site_id':fields.many2one("project.site",string="Site",required=True),
-              'site_code':fields.related('site_id','site_id',type="char",string="Site Code",readonly='1'),
-              'vendor_id':fields.many2one('res.partner',string="Sub vendor",domain=[('supplier','=',True)]),
-              'type':fields.selection(selection=[
-                                                 ('inhouse','Inhouse'),('vendor','Vendor')
-                                             ],required=True,string="Activity Type"),
-              'cost':fields.float(string='Sub Vendor Rate'),
-              
-              'project_id':fields.related('line_id','activity_line','project_id',relation='telecom.project',type="many2one",string="Project",store=True),
-              'balance_payment':fields.function(_get_balance_payment,string="Balance Payment"),
-              'advance_paid_to_vendor':fields.float(string='Advance paid to vendor'),
-              }
