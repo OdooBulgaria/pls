@@ -1,20 +1,13 @@
 from openerp import models, fields, api, _
+from openerp import SUPERUSER_ID
 
 class activity_line_line(models.Model):
     _name='activity.line.line'
-    _description = "Activity Line Line telcome module"    
+    _description = "Activity Line Line telcom module"    
     _rec_name = "line_id"
     
-    def read(self,cr,uid,ids,fields=None, context=None, load='_classic_read'):
-        return super(activity_line_line,self).read(cr,uid,ids,fields=fields, context=context, load='_classic_read')
-    
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
-        return super(activity_line_line,self).name_search(cr, user, name=name, args=args, operator=operator, context=context, limit=100)
-    
-    
-    
     @api.multi
-    @api.depends()
+    @api.depends('cost','advance_paid_to_vendor')
     def _get_balance_payment(self):
         res = {}
         for info in self:
