@@ -40,10 +40,10 @@
 		
 		<!-- -Creating access rules -->
 	    <record model="ir.rule" id="hr_employee_access_project_manager">
-	        <field name="name">Employee Access Rule for Manager</field>
+	        <field name="name">Employee Access Rule for Employee</field>
 	        <field name="model_id" ref="model_hr_employee"/>
 	        <field name="domain_force">[('parent_id.user_id','=',user.id)]</field>
-			<field name="groups" eval="[(4, ref('telecom_project_manager'))]" />
+			<field name="groups" eval="[(4, ref('telecom_employee'))]" />
 	    </record>
 	    <record model="ir.rule" id="hr_employee_access_circle_head">
 	        <field name="name">Employee Access Rule for Circle Head</field>
@@ -66,11 +66,5 @@
 			<field name="groups" eval="[(4, ref('telecom_project_manager'))]" />
 	    </record>	
 	    
-	    <record model="ir.rule" id="hr_employee_access_telecom_employee">
-	        <field name="name">HR EMPLOYEE Access for Telecom Employees</field>
-	        <field name="model_id" ref="model_hr_employee"/>
-	        <field name="domain_force">[('user_id','=',user.id)]</field>
-			<field name="groups" eval="[(4, ref('telecom_employee'))]" />
-	    </record>	
 	</data>
 </openerp>

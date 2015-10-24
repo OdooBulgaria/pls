@@ -250,15 +250,14 @@
 		<record id = "view_employee_status_line_tree" model="ir.ui.view">
 			<field name = "name">Employee Attendance Line</field>
             <field name="model">employee.status.line</field>
-            <field name = "priority">1</field>
+            <field name = "priority" eval = "10"/>
             <field name="arch" type="xml">
             	<tree string = "Employee Attendance Lines">
-            		<field name = "date" invisible="not context.get('hide_date',False)" />
 					<field name = "employee_id" />
 					<field name = "designation" />
 					<field name = "manager_id" />
 					<field name = "state" />
-					<field name = "current_project" />
+					<field name = "current_project" invisible="not context.get('hide_project',False)" />
 					<field name = "remarks" />
             	</tree>
             </field>

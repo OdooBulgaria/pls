@@ -10,14 +10,14 @@ class activity_line_line(models.Model):
     @api.depends('cost','advance_paid_to_vendor')
     def _get_balance_payment(self):
         res = {}
-        for info in self:
-            info.balance_payment = info.cost - info.advance_paid_to_vendor
+        for info in self.sudo():
+            info.balance_payment = max(info.cost - info.advance_paid_to_vendor,0)
             
     line_id = fields.Many2one('activity.line',string ="Activity Line",required=True, ondelete='cascade', select=True, readonly=True)
     work_description = fields.Many2one(related = "line_id.activity_line.description_id",relation = "work.description",string = "Work description",store=True)
-    site_id = fields.Many2one('project.site',string = "Site",required=True)
-    site_code = fields.Char(related = 'site_id.site_id',string="Site Code",readonly=True)
-    vendor_id = fields.Many2one('res.partner',string = "Sub Vendor",domain = [('supplier','=',True)])
+    site_id = fields.Many2one('project.site',string = "Site Name",required=True)
+    site_code = fields.Char(related = 'site_id.site_id',string="Site ID",readonly=True)
+    vendor_id = fields.Many2one('res.partner',string = "Sub Vendor Name",domain = [('supplier','=',True)])
     type = fields.Selection(selection=[
                                        ('inhouse','Inhouse'),('vendor','Vendor')
                                        ],required = True,string = "Activity Type")

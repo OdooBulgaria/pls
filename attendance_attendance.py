@@ -501,6 +501,7 @@ class attendace_line(osv.osv):
                 'submitted_by':fields.many2one('res.users',"Submitted By"),
                 'manager_employee_id':fields.many2one('hr.employee'), #this field is required to set domain on employee_id field in xml view
                 'project_id':fields.many2one('telecom.project',"Project",states={'submitted':[('readonly',True)]},required=True),
+                'circle_id':fields.related('project_id', 'circle', type="many2one", relation="telecom.circle", string="Circle", store=True),
                 'attendance_id':fields.many2one('attendance.attendance',"Attendance Record",states={'submitted':[('readonly',True)]},required =True,ondelete="cascade",select=True),
                 'state':fields.selection([
                                           ('pending','Pending'),
@@ -512,6 +513,26 @@ class attendace_line(osv.osv):
 class employee_status_line(osv.osv):
     _name = "employee.status.line" 
     _description = "Employee Status Line"
+    
+    #called from javascript
+    def compute_attendance_count(self,cr,uid,domain):
+#         [['line_id.project_id', '=', 1], ['date', '=', '2015-10-23']]
+        line_ids = self.search(cr,uid,domain)
+        str_line_ids = tuple(map(str,line_ids))
+        if line_ids:
+            cr.execute( '''
+           SELECT upper(line.state),count(line.state) 
+           FROM employee_status_line as line 
+               left join attendance_line as attendance on attendance.id = line.line_id 
+           WHERE line.id in ({0}) 
+           GROUP BY line.state 
+           '''.format(",".join(str(elem) for elem in line_ids)))
+            count = cr.fetchall()
+            if count:
+                status = map(lambda x:x[0],count)
+                status_count = map(lambda x:x[1],count)
+                return {'status':status,'status_count':status_count}
+        return False
     
     def create(self,cr,uid,vals,context=None):
         '''
@@ -561,14 +582,16 @@ class employee_status_line(osv.osv):
     
     _columns ={
                'employee_id':fields.many2one('hr.employee',"Employee Name",required=True),
-               'manager_id':fields.many2one('hr.employee',"Reporting Manager"),
+               'manager_id':fields.many2one('hr.employee',"Reporting To"),
                'current_project':fields.many2one('telecom.project',"Current Project"),
                'date':fields.date('Date',required = True),
                'designation':fields.many2one("hr.job",string="Designation"),
                'state':fields.selection([
                                      ('present','Present'),
                                      ('absent','Absent'),
-                                     ('leave','Leave'),
+                                     ('casual_leave','Casual Leave'),
+                                     ('medical_leave','Medical Leave'),
+                                     ('holiday','Holiday'),
                                      ('terminated','Terminated'),
                                      ('tour',"On Tour"),
                                      ('resigned','Resigned'),

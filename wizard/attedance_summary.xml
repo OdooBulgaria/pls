@@ -41,6 +41,6 @@
             <field name="view_mode">form</field>
             <field name = "target">new</field>
          </record>		
-		<menuitem id = "subchild_menu_attendance_summary" name = "Employee Attendance" sequence="2" parent = "child_menu_dashboard" action = "action_attendance_summary" />         
+		<menuitem id = "subchild_menu_attendance_summary" name = "Export Employee Attendance" sequence="20" parent = "child_parent_menu_attendance" action = "action_attendance_summary" />         
 	</data>
 </openerp>

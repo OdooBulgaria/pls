@@ -58,6 +58,19 @@
 				<xpath expr = "/form/sheet/notebook/page/group/group/field[@name ='parent_id' ]" position = "after">
 					<field name= "current_project"/>
 				</xpath>
+				<xpath expr="/form/sheet/notebook/page[@string='HR Settings']" position = "before">
+					<page string = "Cost to Company">
+						<group>
+							<group>
+								<field name="cost_to_company"/>
+							</group>
+							<group>
+								<field name = "cost_to_company_monthly" /> 
+								<field name = "cost_to_company_day" />
+							</group>						
+						</group>
+					</page>					
+				</xpath>
 				<xpath expr = "/form/sheet/notebook/page/group/group/field[@name ='job_id' ]" position = "attributes">
 					<attribute name="string">Designation</attribute>
 				</xpath>

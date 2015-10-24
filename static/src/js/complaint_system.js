@@ -34,18 +34,26 @@ openerp.pls.quickadd = function(instance) {
             self.date = null;
             self.current_project= null
             self.project = null;
+            self.status_count_widget=$("");
+            self.circle = null;
+            self.current_circle = null;
 		},
     	start:function(){
     		var self = this;
     		var defs = []
             self.date = (new Date()).format("Y-m-d");
     		self.d = $.Deferred();
+    		self.circle_d = $.Deferred()
             return this._super.apply(this, arguments).then(function(){
             	self.$el.parent().prepend(QWeb.render("attendance_dashboard", {widget: this}));
-                self.$el.parent().find('.oe_select').change(function() {
+                self.$el.parent().find('.oe_select_project').change(function() {
                 		self.current_project = this.value === '' ? null : parseInt(this.value);
     	                self.do_search(self.last_domain, self.last_context, self.last_group_by);
     	            });            	
+                self.$el.parent().find('.oe_select_circle').change(function() {
+            		self.current_circle = this.value === '' ? null : parseInt(this.value);
+	                self.do_search(self.last_domain, self.last_context, self.last_group_by);
+	            });            	                
             	
                 self.$el.parent().find("input#from").change(function(){
                 	if (this.value !== "") 
@@ -59,6 +67,11 @@ openerp.pls.quickadd = function(instance) {
                 	self.project = result
                 	self.d.resolve();
                 }));
+            	var mod = new instance.web.Model("telecom.project", self.dataset.context, self.dataset.domain);
+                defs.push(mod.call("list_circle", []).then(function(result) {
+                	self.circle = result
+                	self.circle_d.resolve();
+                }));                
                 return $.when(defs)
             });  		
     	},
@@ -70,33 +83,47 @@ openerp.pls.quickadd = function(instance) {
             this.last_group_by = group_by;
             this.old_search = _.bind(this._super, this);
             self.project_list_sorted = []
+            self.circle_list_sorted = []
             var o;
-            self.$el.parent().find('.oe_select').children().remove().end();
-            self.$el.parent().find('.oe_select').append(new Option('', ''));
-            $.when(self.d).then(function(){
+            self.$el.parent().find('.oe_select_project').children().remove().end();
+            self.$el.parent().find('.oe_select_circle').children().remove().end();
+            self.$el.parent().find('.oe_select_project').append(new Option('', ''));
+            self.$el.parent().find('.oe_select_circle').append(new Option('', ''));
+            $.when(self.d,self.circle_d).then(function(){
                 if (self.project){
                     for (var i = 0;i < self.project.length;i++){
                     	self.project_list_sorted.push(self.project[i][0]);
                     	o = new Option(self.project[i][1], self.project[i][0]);
-                        self.$el.parent().find('.oe_select').append(o);
+                        self.$el.parent().find('.oe_select_project').append(o);
                     }            	
-                    self.$el.parent().find('.oe_select')[0].value = self.current_project;
-                }                        	
+                    self.$el.parent().find('.oe_select_project')[0].value = self.current_project;
+                }
+                if (self.circle){
+                    for (var i = 0;i < self.circle.length;i++){
+                    	self.circle_list_sorted.push(self.circle[i][0]);
+                    	o = new Option(self.circle[i][1], self.circle[i][0]);
+                        self.$el.parent().find('.oe_select_circle').append(o);
+                    }            	
+                    self.$el.parent().find('.oe_select_circle')[0].value = self.current_circle;
+                }
+                return self.search_by_project_id();
             });
-            return self.search_by_project_id();    		
     	},
     	
     	search_by_project_id: function() {
             var self = this;
             var domain = [];
-            
+            var model = new instance.web.Model("employee.status.line");
             /*
              * Check if the user is a Project Manager,Circle Head of Corporate
              *  - If Project Manager then show all attendances for the project in which the project manager is 
              *  - Corporate Head is able to see attendance of all his projects and the project managers under him 
              *  - Corporate is able to see all
              */
-            
+            if (self.current_circle !== null) domain.push(["line_id.circle_id","=",self.current_circle]);
+            else{
+            	domain.push(["line_id.circle_id", "in", self.circle_list_sorted])
+            }
             if (self.current_project!== null) domain.push(["line_id.project_id", "=", self.current_project]);
             else{
             	domain.push(["line_id.project_id", "in", self.project_list_sorted]);
@@ -105,9 +132,16 @@ openerp.pls.quickadd = function(instance) {
             	domain.push(['date','=',self.date])
             }
             self.last_context["project_id"] = self.current_project === null ? false : self.current_project;
-            var compound_domain = new instance.web.CompoundDomain(self.last_domain, domain);
-            self.dataset.domain = compound_domain.eval();
-            return self.old_search(compound_domain, self.last_context, self.last_group_by);            	
+            model.call('compute_attendance_count',[domain]).then(function(result){
+            	if (result){
+            		self.status_count_widget.remove();
+            		self.status_count_widget = $(QWeb.render("status_count", {'status':result.status,'status_count':result.status_count})) 
+                	self.$el.parent().find('div.oe_account_quickadd.ui-toolbar').append(self.status_count_widget)
+            	}
+            	var compound_domain = new instance.web.CompoundDomain(self.last_domain, domain);
+                self.dataset.domain = compound_domain.eval();
+                return self.old_search(compound_domain, self.last_context, self.last_group_by);            	            	
+            })
         },            	
     });
 }

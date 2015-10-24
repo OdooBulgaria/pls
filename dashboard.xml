@@ -1,10 +1,11 @@
 <openerp>
 	<data>
+
 		<record id = "action_attendance_dashboard" model="ir.actions.act_window">
-            <field name="name">Attendance Dashboard</field>
+            <field name="name">Attendance</field>
             <field name="res_model">employee.status.line</field>
             <field name = "domain">[('line_id.state','=','submitted')]</field>
-            <field name = "context">{'hide_date':True}</field>
+            <field name = "context">{'hide_project':False}</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree_attendance_dashboard</field>
          </record>
