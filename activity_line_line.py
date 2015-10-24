@@ -23,5 +23,5 @@ class activity_line_line(models.Model):
                                        ],required = True,string = "Activity Type")
     cost = fields.Float(string = "Sub Vendor Rate")
     project_id = fields.Many2one(related = "line_id.activity_line.project_id",relation = "telecom.project",string = "Project",store=True)
-    balance_payment = fields.Float(compute=_get_balance_payment,string = "Balance Payment")    
-    advance_paid_to_vendor = fields.Float("Advance Paid to vendor")
+    balance_payment = fields.Float(compute=_get_balance_payment,string = "Vendor Payment Outstanding")    
+    advance_paid_to_vendor = fields.Float("Vendor Payment Done")
